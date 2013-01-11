@@ -4,7 +4,7 @@
  By Anthony Stirk M0UPU 
  
  October 2012 Version 3
- Subversion 3.24
+ Subversion 3.25
  
  Thanks and credits :
  
@@ -41,6 +41,12 @@
 #include <util/crc16.h>
 #include <SPI.h>
 #include <RF22.h>
+#include "ax25modem.h"
+#include "geofence.h"
+static const uint8_t PROGMEM _sine_table[] = {
+#include "sine_table.h"
+};
+
 RF22 rf22;
 /* CONFIGURABLE BITS */
 #define ASCII 7          // ASCII 7 or 8
@@ -59,8 +65,12 @@ RF22 rf22;
  */
 
 #define RFM22B_PIN 10
-#define RFM22B_SDN 3
-#define STATUS_LED 4            // PAVA R7 Boards have an LED on PIN4
+#define RFM22B_SDN A5
+#define STATUS_LED 7            // PAVA ATLAS R7 Boards have an LED on PIN7
+#define GPS_ENABLE 5
+#define HX1_POWER  6
+#define HX1_ENABLE 4
+#define HX1_TXD    11
 
 #define POWERSAVING      // Comment out to turn power saving off
 
@@ -91,6 +101,8 @@ int test=0;
 
 void setup() {
   pinMode(STATUS_LED, OUTPUT); 
+  pinMode(GPS_ENABLE, OUTPUT);
+  digitalWrite(GPS_ENABLE,HIGH); // Turn the GPS On
   blinkled(6);
   Serial.begin(9600);
   blinkled(5);
