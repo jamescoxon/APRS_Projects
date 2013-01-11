@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+<Document><name>KML file with UK Territorial Waters</name>
+<description>Source http://www.ukho.gov.uk/ProductsandServices/Services/Documents/UK%20Territorial%20Sea%20Limits.pdf</description>
+<Style id="rangecolour">
+<LineStyle><color>660000FF</color><width>1</width></LineStyle>
+<PolyStyle><color>660000FF</color></PolyStyle>
+</Style>
+<Style id="linecolour">
+<LineStyle><color>660000FF</color><width>3</width></LineStyle>
+</Style>
+<Placemark><name>distribution/range</name>
+<description></description>
+<styleUrl>#linecolour</styleUrl>
+<LineString>
+<tessellate>1</tessellate><altitudeMode>clampToGround</altitudeMode>
+<coordinates>
+2.06543,52.908902,0.0 
+1.604004,50.999929,0.0 
+0.944824,50.708634,0.0 
+-7.119141,49.525208,0.0 
+-5.218506,53.514185,0.0 
+-8.470459,54.335744,0.0 
+-7.635498,58.602611,0.0 
+-0.582275,61.143235,0.0 
+-1.098633,55.178868,0.0 
+2.06543,52.908902,0.0 
+</coordinates>
+</LineString>
+</Placemark>
+</Document>
+</kml>
