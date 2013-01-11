@@ -242,7 +242,7 @@ ISR(TIMER2_OVF_vect)
 void ax25_init(void)
 {
 	/* Fast PWM mode, non-inverting output on OC2A */
-	TCCR2A = _BV(COM2A1) | _BV(WGM21) | _BV(WGM20);
+	TCCR2A = _BV(COM2A1) | _BV(WGM21) | _BV(WGM20);  
 	TCCR2B = _BV(CS20);
 	
 	/* Make sure radio is not enabled */
