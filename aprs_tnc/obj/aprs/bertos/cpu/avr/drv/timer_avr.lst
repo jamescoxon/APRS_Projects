@@ -1,0 +1,76 @@
+   1               		.file	"timer_avr.c"
+   2               	__SREG__ = 0x3f
+   3               	__SP_H__ = 0x3e
+   4               	__SP_L__ = 0x3d
+   5               	__CCP__  = 0x34
+   6               	__tmp_reg__ = 0
+   7               	__zero_reg__ = 1
+  15               	.Ltext0:
+  16               		.section	.text.timer_hw_init,"ax",@progbits
+  17               	.global	timer_hw_init
+  19               	timer_hw_init:
+  20               	.LFB10:
+  21               	.LSM0:
+  22               	/* prologue: function */
+  23               	/* frame size = 0 */
+  24               	.LSM1:
+  25               	/* #APP */
+  26               	 ;  122 "bertos/cpu/avr/drv/timer_avr.c" 1
+  27 0000 9FB7      		in r25,__SREG__
+  28 0002 F894      		cli
+  29               	 ;  0 "" 2
+  30               	.LVL0:
+  31               	.LSM2:
+  32               	/* #NOAPP */
+  33 0004 83E0      		ldi r24,lo8(3)	 ;  7	*movqi/2	[length = 1]
+  34 0006 85BB      		out 53-32,r24	 ;  8	*movqi/3	[length = 1]
+  35               	.LSM3:
+  36 0008 1092 B600 		sts 182,__zero_reg__	 ;  10	*movqi/3	[length = 2]
+  37               	.LSM4:
+  38 000c 14BC      		out 68-32,__zero_reg__	 ;  12	*movqi/3	[length = 1]
+  39               	.LSM5:
+  40 000e 15BC      		out 69-32,__zero_reg__	 ;  14	*movqi/3	[length = 1]
+  41               	.LSM6:
+  42 0010 82E0      		ldi r24,lo8(2)	 ;  16	*movqi/2	[length = 1]
+  43 0012 84BD      		out 68-32,r24	 ;  17	*movqi/3	[length = 1]
+  44               	.LSM7:
+  45 0014 85B5      		in r24,69-32	 ;  19	*movqi/4	[length = 1]
+  46 0016 8360      		ori r24,lo8(3)	 ;  20	iorqi3/2	[length = 1]
+  47 0018 85BD      		out 69-32,r24	 ;  22	*movqi/3	[length = 1]
+  48               	.LSM8:
+  49 001a 16BC      		out 70-32,__zero_reg__	 ;  24	*movqi/3	[length = 1]
+  50               	.LSM9:
+  51 001c 89EF      		ldi r24,lo8(-7)	 ;  26	*movqi/2	[length = 1]
+  52 001e 87BD      		out 71-32,r24	 ;  27	*movqi/3	[length = 1]
+  53               	.LSM10:
+  54 0020 EEE6      		ldi r30,lo8(110)	 ;  28	*movhi/4	[length = 2]
+  55 0022 F0E0      		ldi r31,hi8(110)
+  56 0024 8081      		ld r24,Z	 ;  29	*movqi/4	[length = 1]
+  57 0026 8E7F      		andi r24,lo8(-2)	 ;  30	andqi3/2	[length = 1]
+  58 0028 8083      		st Z,r24	 ;  32	*movqi/3	[length = 1]
+  59               	.LSM11:
+  60 002a 8081      		ld r24,Z	 ;  34	*movqi/4	[length = 1]
+  61 002c 8260      		ori r24,lo8(2)	 ;  35	iorqi3/2	[length = 1]
+  62 002e 8083      		st Z,r24	 ;  37	*movqi/3	[length = 1]
+  63               	.LSM12:
+  64               	/* #APP */
+  65               	 ;  147 "bertos/cpu/avr/drv/timer_avr.c" 1
+  66 0030 9FBF      		out __SREG__,r25
+  67               	 ;  0 "" 2
+  68               	/* epilogue start */
+  69               	.LSM13:
+  70               	/* #NOAPP */
+  71 0032 0895      		ret	 ;  49	return	[length = 1]
+  72               	.LFE10:
+  98               	.Letext0:
+DEFINED SYMBOLS
+                            *ABS*:00000000 timer_avr.c
+C:\DOCUME~1\develer\IMPOST~1\Temp/cckyvhzW.s:2      *ABS*:0000003f __SREG__
+C:\DOCUME~1\develer\IMPOST~1\Temp/cckyvhzW.s:3      *ABS*:0000003e __SP_H__
+C:\DOCUME~1\develer\IMPOST~1\Temp/cckyvhzW.s:4      *ABS*:0000003d __SP_L__
+C:\DOCUME~1\develer\IMPOST~1\Temp/cckyvhzW.s:5      *ABS*:00000034 __CCP__
+C:\DOCUME~1\develer\IMPOST~1\Temp/cckyvhzW.s:6      *ABS*:00000000 __tmp_reg__
+C:\DOCUME~1\develer\IMPOST~1\Temp/cckyvhzW.s:7      *ABS*:00000001 __zero_reg__
+C:\DOCUME~1\develer\IMPOST~1\Temp/cckyvhzW.s:19     .text.timer_hw_init:00000000 timer_hw_init
+
+NO UNDEFINED SYMBOLS

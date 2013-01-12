@@ -1,0 +1,55 @@
+   1               		.file	"event.c"
+   2               	__SREG__ = 0x3f
+   3               	__SP_H__ = 0x3e
+   4               	__SP_L__ = 0x3d
+   5               	__CCP__  = 0x34
+   6               	__tmp_reg__ = 0
+   7               	__zero_reg__ = 1
+  15               	.Ltext0:
+  16               		.section	.text.event_hook_ignore,"ax",@progbits
+  17               	.global	event_hook_ignore
+  19               	event_hook_ignore:
+  20               	.LFB5:
+  21               	.LSM0:
+  22               	.LVL0:
+  23               	/* prologue: function */
+  24               	/* frame size = 0 */
+  25               	/* epilogue start */
+  26               	.LSM1:
+  27 0000 0895      		ret	 ;  16	return	[length = 1]
+  28               	.LFE5:
+  30               		.section	.text.event_hook_softint,"ax",@progbits
+  31               	.global	event_hook_softint
+  33               	event_hook_softint:
+  34               	.LFB6:
+  35               	.LSM2:
+  36               	.LVL1:
+  37               	/* prologue: function */
+  38               	/* frame size = 0 */
+  39 0000 FC01      		movw r30,r24	 ;  2	*movhi/1	[length = 1]
+  40               	.LSM3:
+  41 0002 2281      		ldd r18,Z+2	 ;  8	*movhi/2	[length = 2]
+  42 0004 3381      		ldd r19,Z+3
+  43 0006 8481      		ldd r24,Z+4	 ;  9	*movhi/2	[length = 2]
+  44 0008 9581      		ldd r25,Z+5
+  45               	.LVL2:
+  46 000a F901      		movw r30,r18	 ;  10	call_insn/2	[length = 2]
+  47 000c 0995      		icall
+  48               	.LVL3:
+  49               	/* epilogue start */
+  50               	.LSM4:
+  51 000e 0895      		ret	 ;  22	return	[length = 1]
+  52               	.LFE6:
+  86               	.Letext0:
+DEFINED SYMBOLS
+                            *ABS*:00000000 event.c
+C:\DOCUME~1\develer\IMPOST~1\Temp/cc7GSPYn.s:2      *ABS*:0000003f __SREG__
+C:\DOCUME~1\develer\IMPOST~1\Temp/cc7GSPYn.s:3      *ABS*:0000003e __SP_H__
+C:\DOCUME~1\develer\IMPOST~1\Temp/cc7GSPYn.s:4      *ABS*:0000003d __SP_L__
+C:\DOCUME~1\develer\IMPOST~1\Temp/cc7GSPYn.s:5      *ABS*:00000034 __CCP__
+C:\DOCUME~1\develer\IMPOST~1\Temp/cc7GSPYn.s:6      *ABS*:00000000 __tmp_reg__
+C:\DOCUME~1\develer\IMPOST~1\Temp/cc7GSPYn.s:7      *ABS*:00000001 __zero_reg__
+C:\DOCUME~1\develer\IMPOST~1\Temp/cc7GSPYn.s:19     .text.event_hook_ignore:00000000 event_hook_ignore
+C:\DOCUME~1\develer\IMPOST~1\Temp/cc7GSPYn.s:33     .text.event_hook_softint:00000000 event_hook_softint
+
+NO UNDEFINED SYMBOLS

@@ -1,0 +1,762 @@
+   1               		.file	"kfile.c"
+   2               	__SREG__ = 0x3f
+   3               	__SP_H__ = 0x3e
+   4               	__SP_L__ = 0x3d
+   5               	__CCP__  = 0x34
+   6               	__tmp_reg__ = 0
+   7               	__zero_reg__ = 1
+  15               	.Ltext0:
+  16               		.section	.text.kfile_genericClose,"ax",@progbits
+  17               	.global	kfile_genericClose
+  19               	kfile_genericClose:
+  20               	.LFB41:
+  21               	.LSM0:
+  22               	.LVL0:
+  23               	/* prologue: function */
+  24               	/* frame size = 0 */
+  25               	.LSM1:
+  26 0000 80E0      		ldi r24,lo8(0)	 ;  10	*movhi/4	[length = 2]
+  27 0002 90E0      		ldi r25,hi8(0)
+  28               	.LVL1:
+  29               	/* epilogue start */
+  30 0004 0895      		ret	 ;  23	return	[length = 1]
+  31               	.LFE41:
+  33               		.section	.text.kfile_generic,"ax",@progbits
+  35               	kfile_generic:
+  36               	.LFB43:
+  37               	.LSM2:
+  38               	.LVL2:
+  39               	/* prologue: function */
+  40               	/* frame size = 0 */
+  41               	.LSM3:
+  42 0000 80E0      		ldi r24,lo8(0)	 ;  10	*movhi/4	[length = 2]
+  43 0002 90E0      		ldi r25,hi8(0)
+  44               	.LVL3:
+  45               	/* epilogue start */
+  46 0004 0895      		ret	 ;  23	return	[length = 1]
+  47               	.LFE43:
+  49               		.section	.text.kfile_genericReopen,"ax",@progbits
+  50               	.global	kfile_genericReopen
+  52               	kfile_genericReopen:
+  53               	.LFB40:
+  54               	.LSM4:
+  55               	.LVL4:
+  56 0000 CF93      		push r28	 ;  67	*pushqi/1	[length = 1]
+  57 0002 DF93      		push r29	 ;  68	*pushqi/1	[length = 1]
+  58               	/* prologue: function */
+  59               	/* frame size = 0 */
+  60 0004 EC01      		movw r28,r24	 ;  2	*movhi/1	[length = 1]
+  61               	.LBB33:
+  62               	.LBB34:
+  63               	.LSM5:
+  64 0006 8A85      		ldd r24,Y+10	 ;  6	*movhi/2	[length = 2]
+  65 0008 9B85      		ldd r25,Y+11
+  66               	.LVL5:
+  67 000a 892B      		or r24,r25	 ;  7	tsthi/1	[length = 1]
+  68 000c 01F4      		brne .L6	 ;  8	branch	[length = 1]
+  69               	.LBE34:
+  70 000e 80E0      		ldi r24,lo8(__c.1435)	 ;  13	*movhi/4	[length = 2]
+  71 0010 90E0      		ldi r25,hi8(__c.1435)
+  72 0012 60E0      		ldi r22,lo8(__c.1437)	 ;  14	*movhi/4	[length = 2]
+  73 0014 70E0      		ldi r23,hi8(__c.1437)
+  74 0016 47E0      		ldi r20,lo8(263)	 ;  15	*movhi/4	[length = 2]
+  75 0018 51E0      		ldi r21,hi8(263)
+  76 001a 0E94 0000 		call __bassert_P	 ;  16	call_value_insn/3	[length = 2]
+  77               	.L6:
+  78               	.LBB35:
+  79               	.LSM6:
+  80 001e EA85      		ldd r30,Y+10	 ;  20	*movhi/2	[length = 2]
+  81 0020 FB85      		ldd r31,Y+11
+  82 0022 CE01      		movw r24,r28	 ;  21	*movhi/1	[length = 1]
+  83 0024 0995      		icall	 ;  22	call_value_insn/1	[length = 1]
+  84               	.LBE35:
+  85               	.LBE33:
+  86               	.LBB36:
+  87               	.LBB37:
+  88               	.LSM7:
+  89 0026 8885      		ldd r24,Y+8	 ;  23	*movhi/2	[length = 2]
+  90 0028 9985      		ldd r25,Y+9
+  91 002a 892B      		or r24,r25	 ;  24	tsthi/1	[length = 1]
+  92 002c 01F4      		brne .L7	 ;  25	branch	[length = 1]
+  93               	.LBE37:
+  94 002e 80E0      		ldi r24,lo8(__c.1421)	 ;  30	*movhi/4	[length = 2]
+  95 0030 90E0      		ldi r25,hi8(__c.1421)
+  96 0032 60E0      		ldi r22,lo8(__c.1423)	 ;  31	*movhi/4	[length = 2]
+  97 0034 70E0      		ldi r23,hi8(__c.1423)
+  98 0036 41E0      		ldi r20,lo8(257)	 ;  32	*movhi/4	[length = 2]
+  99 0038 51E0      		ldi r21,hi8(257)
+ 100 003a 0E94 0000 		call __bassert_P	 ;  33	call_value_insn/3	[length = 2]
+ 101               	.L7:
+ 102               	.LBB38:
+ 103               	.LSM8:
+ 104 003e E885      		ldd r30,Y+8	 ;  37	*movhi/2	[length = 2]
+ 105 0040 F985      		ldd r31,Y+9
+ 106 0042 CE01      		movw r24,r28	 ;  38	*movhi/1	[length = 1]
+ 107 0044 40E0      		ldi r20,lo8(0)	 ;  39	*movsi/2	[length = 4]
+ 108 0046 50E0      		ldi r21,hi8(0)
+ 109 0048 60E0      		ldi r22,hlo8(0)
+ 110 004a 70E0      		ldi r23,hhi8(0)
+ 111 004c 20E0      		ldi r18,lo8(0)	 ;  40	*movhi/4	[length = 2]
+ 112 004e 30E0      		ldi r19,hi8(0)
+ 113 0050 0995      		icall	 ;  41	call_value_insn/1	[length = 1]
+ 114               	.LBE38:
+ 115               	.LBE36:
+ 116               	.LSM9:
+ 117 0052 CE01      		movw r24,r28	 ;  75	*movhi/1	[length = 1]
+ 118               	.LVL6:
+ 119               	/* epilogue start */
+ 120 0054 DF91      		pop r29	 ;  71	popqi	[length = 1]
+ 121 0056 CF91      		pop r28	 ;  72	popqi	[length = 1]
+ 122 0058 0895      		ret	 ;  73	return_from_epilogue	[length = 1]
+ 123               	.LFE40:
+ 125               		.section	.text.kfile_genericSeek,"ax",@progbits
+ 126               	.global	kfile_genericSeek
+ 128               	kfile_genericSeek:
+ 129               	.LFB39:
+ 130               	.LSM10:
+ 131               	.LVL7:
+ 132               	/* prologue: function */
+ 133               	/* frame size = 0 */
+ 134 0000 FC01      		movw r30,r24	 ;  2	*movhi/1	[length = 1]
+ 135 0002 DB01      		movw r26,r22	 ;  3	*movsi/1	[length = 2]
+ 136 0004 CA01      		movw r24,r20
+ 137               	.LVL8:
+ 138               	.LSM11:
+ 139 0006 2130      		cpi r18,1	 ;  8	cmphi/2	[length = 2]
+ 140 0008 3105      		cpc r19,__zero_reg__
+ 141 000a 01F0      		breq .L12	 ;  9	branch	[length = 1]
+ 142               	.LVL9:
+ 143 000c 2130      		cpi r18,1	 ;  10	cmphi/2	[length = 2]
+ 144 000e 3105      		cpc r19,__zero_reg__
+ 145 0010 00F0      		brlo .L11	 ;  11	branch	[length = 1]
+ 146 0012 2230      		cpi r18,2	 ;  12	cmphi/2	[length = 2]
+ 147 0014 3105      		cpc r19,__zero_reg__
+ 148 0016 01F4      		brne .L17	 ;  13	branch	[length = 1]
+ 149               	.LSM12:
+ 150 0018 408D      		ldd r20,Z+24	 ;  18	*movsi/3	[length = 4]
+ 151 001a 518D      		ldd r21,Z+25
+ 152 001c 628D      		ldd r22,Z+26
+ 153 001e 738D      		ldd r23,Z+27
+ 154               	.LVL10:
+ 155 0020 00C0      		rjmp .L14	 ;  90	jump	[length = 1]
+ 156               	.LVL11:
+ 157               	.L12:
+ 158               	.LSM13:
+ 159 0022 4489      		ldd r20,Z+20	 ;  23	*movsi/3	[length = 4]
+ 160 0024 5589      		ldd r21,Z+21
+ 161 0026 6689      		ldd r22,Z+22
+ 162 0028 7789      		ldd r23,Z+23
+ 163               	.LVL12:
+ 164 002a 00C0      		rjmp .L14	 ;  92	jump	[length = 1]
+ 165               	.LVL13:
+ 166               	.L17:
+ 167               	.LSM14:
+ 168 002c 80E0      		ldi r24,lo8(__c.1926)	 ;  31	*movhi/4	[length = 2]
+ 169 002e 90E0      		ldi r25,hi8(__c.1926)
+ 170               	.LVL14:
+ 171 0030 60E0      		ldi r22,lo8(__c.1928)	 ;  32	*movhi/4	[length = 2]
+ 172 0032 70E0      		ldi r23,hi8(__c.1928)
+ 173 0034 42EC      		ldi r20,lo8(194)	 ;  33	*movhi/4	[length = 2]
+ 174 0036 50E0      		ldi r21,hi8(194)
+ 175               	.LVL15:
+ 176 0038 0E94 0000 		call __bassert_P	 ;  34	call_value_insn/3	[length = 2]
+ 177               	.LVL16:
+ 178 003c 2FEF      		ldi r18,lo8(-1)	 ;  35	*movsi/5	[length = 4]
+ 179 003e 3FEF      		ldi r19,hi8(-1)
+ 180 0040 4FEF      		ldi r20,hlo8(-1)
+ 181 0042 5FEF      		ldi r21,hhi8(-1)
+ 182 0044 00C0      		rjmp .L15	 ;  94	jump	[length = 1]
+ 183               	.LVL17:
+ 184               	.L11:
+ 185               	.LSM15:
+ 186 0046 40E0      		ldi r20,lo8(0)	 ;  40	*movsi/2	[length = 4]
+ 187 0048 50E0      		ldi r21,hi8(0)
+ 188 004a 60E0      		ldi r22,hlo8(0)
+ 189 004c 70E0      		ldi r23,hhi8(0)
+ 190               	.LVL18:
+ 191               	.L14:
+ 192               	.LSM16:
+ 193 004e 9A01      		movw r18,r20	 ;  83	*movsi/1	[length = 2]
+ 194 0050 AB01      		movw r20,r22
+ 195               	.LVL19:
+ 196 0052 280F      		add r18,r24	 ;  43	addsi3/1	[length = 4]
+ 197 0054 391F      		adc r19,r25
+ 198 0056 4A1F      		adc r20,r26
+ 199 0058 5B1F      		adc r21,r27
+ 200 005a 248B      		std Z+20,r18	 ;  44	*movsi/4	[length = 4]
+ 201 005c 358B      		std Z+21,r19
+ 202 005e 468B      		std Z+22,r20
+ 203 0060 578B      		std Z+23,r21
+ 204               	.L15:
+ 205               	.LSM17:
+ 206 0062 B901      		movw r22,r18	 ;  89	*movhi/1	[length = 1]
+ 207 0064 CA01      		movw r24,r20	 ;  88	*movhi/1	[length = 1]
+ 208               	.LVL20:
+ 209               	/* epilogue start */
+ 210 0066 0895      		ret	 ;  86	return	[length = 1]
+ 211               	.LFE39:
+ 213               		.section	.text.kfile_getc,"ax",@progbits
+ 214               	.global	kfile_getc
+ 216               	kfile_getc:
+ 217               	.LFB36:
+ 218               	.LSM18:
+ 219               	.LVL21:
+ 220 0000 0F93      		push r16	 ;  68	*pushqi/1	[length = 1]
+ 221 0002 1F93      		push r17	 ;  69	*pushqi/1	[length = 1]
+ 222 0004 DF93      		push r29	 ;  70	*pushhi/1	[length = 2]
+ 223 0006 CF93      		push r28
+ 224 0008 0F92      		push __tmp_reg__	 ;  76	*addhi3_sp_R_pc2	[length = 1]
+ 225 000a CDB7      		in r28,__SP_L__	 ;  77	*movhi_sp/2	[length = 2]
+ 226 000c DEB7      		in r29,__SP_H__
+ 227               	/* prologue: function */
+ 228               	/* frame size = 1 */
+ 229 000e 8C01      		movw r16,r24	 ;  2	*movhi/1	[length = 1]
+ 230               	.LBB39:
+ 231               	.LBB40:
+ 232               	.LSM19:
+ 233 0010 DC01      		movw r26,r24	 ;  63	*movhi/1	[length = 1]
+ 234 0012 8D91      		ld r24,X+	 ;  6	*movhi/2	[length = 2]
+ 235 0014 9C91      		ld r25,X
+ 236               	.LVL22:
+ 237 0016 892B      		or r24,r25	 ;  7	tsthi/1	[length = 1]
+ 238 0018 01F4      		brne .L19	 ;  8	branch	[length = 1]
+ 239               	.LBE40:
+ 240 001a 80E0      		ldi r24,lo8(__c.1361)	 ;  13	*movhi/4	[length = 2]
+ 241 001c 90E0      		ldi r25,hi8(__c.1361)
+ 242 001e 60E0      		ldi r22,lo8(__c.1363)	 ;  14	*movhi/4	[length = 2]
+ 243 0020 70E0      		ldi r23,hi8(__c.1363)
+ 244 0022 49EE      		ldi r20,lo8(233)	 ;  15	*movhi/4	[length = 2]
+ 245 0024 50E0      		ldi r21,hi8(233)
+ 246 0026 0E94 0000 		call __bassert_P	 ;  16	call_value_insn/3	[length = 2]
+ 247               	.L19:
+ 248               	.LSM20:
+ 249 002a D801      		movw r26,r16	 ;  64	*movhi/1	[length = 1]
+ 250 002c ED91      		ld r30,X+	 ;  20	*movhi/2	[length = 2]
+ 251 002e FC91      		ld r31,X
+ 252 0030 C801      		movw r24,r16	 ;  21	*movhi/1	[length = 1]
+ 253 0032 BE01      		movw r22,r28	 ;  65	*movhi/1	[length = 1]
+ 254 0034 6F5F      		subi r22,lo8(-(1))	 ;  22	*addhi3/4	[length = 2]
+ 255 0036 7F4F      		sbci r23,hi8(-(1))
+ 256 0038 41E0      		ldi r20,lo8(1)	 ;  23	*movhi/4	[length = 2]
+ 257 003a 50E0      		ldi r21,hi8(1)
+ 258 003c 0995      		icall	 ;  24	call_value_insn/1	[length = 1]
+ 259               	.LBE39:
+ 260               	.LSM21:
+ 261 003e 0197      		sbiw r24,1	 ;  26	cmphi/2	[length = 2]
+ 262 0040 01F0      		breq .L20	 ;  27	branch	[length = 1]
+ 263 0042 2FEF      		ldi r18,lo8(-1)	 ;  29	*movhi/4	[length = 2]
+ 264 0044 3FEF      		ldi r19,hi8(-1)
+ 265 0046 00C0      		rjmp .L21	 ;  90	jump	[length = 1]
+ 266               	.L20:
+ 267               	.LSM22:
+ 268 0048 8981      		ldd r24,Y+1	 ;  34	*movqi/4	[length = 1]
+ 269               	.LVL23:
+ 270 004a 282F      		mov r18,r24	 ;  66	*movqi/1	[length = 1]
+ 271 004c 30E0      		ldi r19,lo8(0)	 ;  67	*movqi/2	[length = 1]
+ 272               	.LVL24:
+ 273               	.L21:
+ 274               	.LSM23:
+ 275 004e C901      		movw r24,r18	 ;  89	*movhi/1	[length = 1]
+ 276               	.LVL25:
+ 277               	/* epilogue start */
+ 278 0050 0F90      		pop __tmp_reg__	 ;  83	*addhi3_sp_R_pc2	[length = 1]
+ 279 0052 CF91      		pop r28	 ;  84	pophi	[length = 2]
+ 280 0054 DF91      		pop r29
+ 281 0056 1F91      		pop r17	 ;  85	popqi	[length = 1]
+ 282 0058 0F91      		pop r16	 ;  86	popqi	[length = 1]
+ 283               	.LVL26:
+ 284 005a 0895      		ret	 ;  87	return_from_epilogue	[length = 1]
+ 285               	.LFE36:
+ 287               		.section	.text.kfile_resync,"ax",@progbits
+ 288               	.global	kfile_resync
+ 290               	kfile_resync:
+ 291               	.LFB42:
+ 292               	.LSM24:
+ 293               	.LVL27:
+ 294 0000 AF92      		push r10	 ;  61	*pushqi/1	[length = 1]
+ 295 0002 BF92      		push r11	 ;  62	*pushqi/1	[length = 1]
+ 296 0004 CF92      		push r12	 ;  63	*pushqi/1	[length = 1]
+ 297 0006 DF92      		push r13	 ;  64	*pushqi/1	[length = 1]
+ 298 0008 EF92      		push r14	 ;  65	*pushqi/1	[length = 1]
+ 299 000a FF92      		push r15	 ;  66	*pushqi/1	[length = 1]
+ 300 000c 0F93      		push r16	 ;  67	*pushqi/1	[length = 1]
+ 301 000e 1F93      		push r17	 ;  68	*pushqi/1	[length = 1]
+ 302 0010 CF93      		push r28	 ;  69	*pushqi/1	[length = 1]
+ 303 0012 DF93      		push r29	 ;  70	*pushqi/1	[length = 1]
+ 304               	/* prologue: function */
+ 305               	/* frame size = 0 */
+ 306 0014 EC01      		movw r28,r24	 ;  2	*movhi/1	[length = 1]
+ 307 0016 5A01      		movw r10,r20	 ;  3	*movsi/1	[length = 2]
+ 308 0018 6B01      		movw r12,r22
+ 309               	.LBB41:
+ 310               	.LBB42:
+ 311               	.LBB43:
+ 312               	.LSM25:
+ 313               	/* #APP */
+ 314               	 ;  131 "bertos/drv/timer.h" 1
+ 315 001a 8FB7      		in r24,__SREG__
+ 316 001c F894      		cli
+ 317               	 ;  0 "" 2
+ 318               	.LVL28:
+ 319               	/* #NOAPP */
+ 320 001e E090 0000 		lds r14,_clock	 ;  8	*movsi/3	[length = 8]
+ 321 0022 F090 0000 		lds r15,(_clock)+1
+ 322 0026 0091 0000 		lds r16,(_clock)+2
+ 323 002a 1091 0000 		lds r17,(_clock)+3
+ 324               	.LVL29:
+ 325               	/* #APP */
+ 326               	 ;  131 "bertos/drv/timer.h" 1
+ 327 002e 8FBF      		out __SREG__,r24
+ 328               	 ;  0 "" 2
+ 329               	.LVL30:
+ 330               	/* #NOAPP */
+ 331               	.L25:
+ 332               	.LBE43:
+ 333               	.LBE42:
+ 334               	.LBE41:
+ 335               	.LSM26:
+ 336 0030 CE01      		movw r24,r28	 ;  12	*movhi/1	[length = 1]
+ 337               	.LVL31:
+ 338 0032 0E94 0000 		call kfile_getc	 ;  13	call_value_insn/3	[length = 2]
+ 339               	.LVL32:
+ 340 0036 8F5F      		subi r24,lo8(-1)	 ;  15	cmphi/3	[length = 3]
+ 341 0038 9F4F      		sbci r25,hi8(-1)
+ 342 003a 01F0      		breq .L24	 ;  16	branch	[length = 1]
+ 343               	.LBB44:
+ 344               	.LBB45:
+ 345               	.LBB46:
+ 346               	.LSM27:
+ 347               	/* #APP */
+ 348               	 ;  131 "bertos/drv/timer.h" 1
+ 349 003c 8FB7      		in r24,__SREG__
+ 350 003e F894      		cli
+ 351               	 ;  0 "" 2
+ 352               	.LVL33:
+ 353               	/* #NOAPP */
+ 354 0040 E090 0000 		lds r14,_clock	 ;  19	*movsi/3	[length = 8]
+ 355 0044 F090 0000 		lds r15,(_clock)+1
+ 356 0048 0091 0000 		lds r16,(_clock)+2
+ 357 004c 1091 0000 		lds r17,(_clock)+3
+ 358               	/* #APP */
+ 359               	 ;  131 "bertos/drv/timer.h" 1
+ 360 0050 8FBF      		out __SREG__,r24
+ 361               	 ;  0 "" 2
+ 362               	/* #NOAPP */
+ 363               	.L24:
+ 364               	.LBE46:
+ 365               	.LBE45:
+ 366               	.LBE44:
+ 367               	.LBB47:
+ 368               	.LBB48:
+ 369               	.LBB49:
+ 370               	/* #APP */
+ 371               	 ;  131 "bertos/drv/timer.h" 1
+ 372 0052 2FB7      		in r18,__SREG__
+ 373 0054 F894      		cli
+ 374               	 ;  0 "" 2
+ 375               	.LVL34:
+ 376               	/* #NOAPP */
+ 377 0056 8091 0000 		lds r24,_clock	 ;  24	*movsi/3	[length = 8]
+ 378 005a 9091 0000 		lds r25,(_clock)+1
+ 379 005e A091 0000 		lds r26,(_clock)+2
+ 380 0062 B091 0000 		lds r27,(_clock)+3
+ 381               	.LVL35:
+ 382               	/* #APP */
+ 383               	 ;  131 "bertos/drv/timer.h" 1
+ 384 0066 2FBF      		out __SREG__,r18
+ 385               	 ;  0 "" 2
+ 386               	/* #NOAPP */
+ 387               	.LBE49:
+ 388               	.LBE48:
+ 389               	.LBE47:
+ 390               	.LSM28:
+ 391 0068 8E19      		sub r24,r14	 ;  27	subsi3/1	[length = 4]
+ 392 006a 9F09      		sbc r25,r15
+ 393 006c A00B      		sbc r26,r16
+ 394 006e B10B      		sbc r27,r17
+ 395 0070 A816      		cp r10,r24	 ;  28	cmpsi/1	[length = 4]
+ 396 0072 B906      		cpc r11,r25
+ 397 0074 CA06      		cpc r12,r26
+ 398 0076 DB06      		cpc r13,r27
+ 399 0078 04F4      		brge .L25	 ;  29	branch	[length = 1]
+ 400               	.LBB50:
+ 401               	.LBB51:
+ 402               	.LSM29:
+ 403 007a 8E85      		ldd r24,Y+14	 ;  31	*movhi/2	[length = 2]
+ 404 007c 9F85      		ldd r25,Y+15
+ 405               	.LVL36:
+ 406 007e 892B      		or r24,r25	 ;  32	tsthi/1	[length = 1]
+ 407 0080 01F4      		brne .L26	 ;  33	branch	[length = 1]
+ 408               	.LBE51:
+ 409 0082 80E0      		ldi r24,lo8(__c.1463)	 ;  38	*movhi/4	[length = 2]
+ 410 0084 90E0      		ldi r25,hi8(__c.1463)
+ 411 0086 60E0      		ldi r22,lo8(__c.1465)	 ;  39	*movhi/4	[length = 2]
+ 412 0088 70E0      		ldi r23,hi8(__c.1465)
+ 413 008a 43E1      		ldi r20,lo8(275)	 ;  40	*movhi/4	[length = 2]
+ 414 008c 51E0      		ldi r21,hi8(275)
+ 415 008e 0E94 0000 		call __bassert_P	 ;  41	call_value_insn/3	[length = 2]
+ 416               	.LVL37:
+ 417               	.L26:
+ 418               	.LBB52:
+ 419               	.LSM30:
+ 420 0092 EE85      		ldd r30,Y+14	 ;  45	*movhi/2	[length = 2]
+ 421 0094 FF85      		ldd r31,Y+15
+ 422 0096 CE01      		movw r24,r28	 ;  46	*movhi/1	[length = 1]
+ 423 0098 0995      		icall	 ;  47	call_insn/1	[length = 1]
+ 424               	.LVL38:
+ 425               	/* epilogue start */
+ 426               	.LBE52:
+ 427               	.LBE50:
+ 428               	.LSM31:
+ 429 009a DF91      		pop r29	 ;  73	popqi	[length = 1]
+ 430 009c CF91      		pop r28	 ;  74	popqi	[length = 1]
+ 431               	.LVL39:
+ 432 009e 1F91      		pop r17	 ;  75	popqi	[length = 1]
+ 433 00a0 0F91      		pop r16	 ;  76	popqi	[length = 1]
+ 434 00a2 FF90      		pop r15	 ;  77	popqi	[length = 1]
+ 435 00a4 EF90      		pop r14	 ;  78	popqi	[length = 1]
+ 436               	.LVL40:
+ 437 00a6 DF90      		pop r13	 ;  79	popqi	[length = 1]
+ 438 00a8 CF90      		pop r12	 ;  80	popqi	[length = 1]
+ 439 00aa BF90      		pop r11	 ;  81	popqi	[length = 1]
+ 440 00ac AF90      		pop r10	 ;  82	popqi	[length = 1]
+ 441               	.LVL41:
+ 442 00ae 0895      		ret	 ;  83	return_from_epilogue	[length = 1]
+ 443               	.LFE42:
+ 445               		.section	.text.kfile_putc,"ax",@progbits
+ 446               	.global	kfile_putc
+ 448               	kfile_putc:
+ 449               	.LFB35:
+ 450               	.LSM32:
+ 451               	.LVL42:
+ 452 0000 FF92      		push r15	 ;  72	*pushqi/1	[length = 1]
+ 453 0002 0F93      		push r16	 ;  73	*pushqi/1	[length = 1]
+ 454 0004 1F93      		push r17	 ;  74	*pushqi/1	[length = 1]
+ 455 0006 DF93      		push r29	 ;  75	*pushhi/1	[length = 2]
+ 456 0008 CF93      		push r28
+ 457 000a 0F92      		push __tmp_reg__	 ;  81	*addhi3_sp_R_pc2	[length = 1]
+ 458 000c CDB7      		in r28,__SP_L__	 ;  82	*movhi_sp/2	[length = 2]
+ 459 000e DEB7      		in r29,__SP_H__
+ 460               	/* prologue: function */
+ 461               	/* frame size = 1 */
+ 462 0010 F82E      		mov r15,r24	 ;  57	*movqi/1	[length = 1]
+ 463 0012 8B01      		movw r16,r22	 ;  3	*movhi/1	[length = 1]
+ 464               	.LSM33:
+ 465 0014 8983      		std Y+1,r24	 ;  8	*movqi/3	[length = 1]
+ 466               	.LVL43:
+ 467               	.LBB53:
+ 468               	.LBB54:
+ 469               	.LSM34:
+ 470 0016 DB01      		movw r26,r22	 ;  67	*movhi/1	[length = 1]
+ 471 0018 1296      		adiw r26,2	 ;  9	*movhi/2	[length = 4]
+ 472 001a 8D91      		ld r24,X+
+ 473 001c 9C91      		ld r25,X
+ 474 001e 1397      		sbiw r26,2+1
+ 475               	.LVL44:
+ 476 0020 892B      		or r24,r25	 ;  10	tsthi/1	[length = 1]
+ 477 0022 01F4      		brne .L30	 ;  11	branch	[length = 1]
+ 478               	.LBE54:
+ 479 0024 80E0      		ldi r24,lo8(__c.1377)	 ;  16	*movhi/4	[length = 2]
+ 480 0026 90E0      		ldi r25,hi8(__c.1377)
+ 481 0028 60E0      		ldi r22,lo8(__c.1379)	 ;  17	*movhi/4	[length = 2]
+ 482 002a 70E0      		ldi r23,hi8(__c.1379)
+ 483               	.LVL45:
+ 484 002c 4FEE      		ldi r20,lo8(239)	 ;  18	*movhi/4	[length = 2]
+ 485 002e 50E0      		ldi r21,hi8(239)
+ 486 0030 0E94 0000 		call __bassert_P	 ;  19	call_value_insn/3	[length = 2]
+ 487               	.LVL46:
+ 488               	.L30:
+ 489               	.LSM35:
+ 490 0034 D801      		movw r26,r16	 ;  68	*movhi/1	[length = 1]
+ 491 0036 1296      		adiw r26,2	 ;  23	*movhi/2	[length = 4]
+ 492 0038 ED91      		ld r30,X+
+ 493 003a FC91      		ld r31,X
+ 494 003c 1397      		sbiw r26,2+1
+ 495 003e C801      		movw r24,r16	 ;  24	*movhi/1	[length = 1]
+ 496 0040 BE01      		movw r22,r28	 ;  69	*movhi/1	[length = 1]
+ 497 0042 6F5F      		subi r22,lo8(-(1))	 ;  25	*addhi3/4	[length = 2]
+ 498 0044 7F4F      		sbci r23,hi8(-(1))
+ 499 0046 41E0      		ldi r20,lo8(1)	 ;  26	*movhi/4	[length = 2]
+ 500 0048 50E0      		ldi r21,hi8(1)
+ 501 004a 0995      		icall	 ;  27	call_value_insn/1	[length = 1]
+ 502               	.LBE53:
+ 503               	.LSM36:
+ 504 004c 0197      		sbiw r24,1	 ;  29	cmphi/2	[length = 2]
+ 505 004e 01F0      		breq .L31	 ;  30	branch	[length = 1]
+ 506 0050 2FEF      		ldi r18,lo8(-1)	 ;  32	*movhi/4	[length = 2]
+ 507 0052 3FEF      		ldi r19,hi8(-1)
+ 508 0054 00C0      		rjmp .L32	 ;  96	jump	[length = 1]
+ 509               	.L31:
+ 510               	.LSM37:
+ 511 0056 2F2D      		mov r18,r15	 ;  70	*movqi/1	[length = 1]
+ 512 0058 30E0      		ldi r19,lo8(0)	 ;  71	*movqi/2	[length = 1]
+ 513               	.L32:
+ 514               	.LSM38:
+ 515 005a C901      		movw r24,r18	 ;  95	*movhi/1	[length = 1]
+ 516               	/* epilogue start */
+ 517 005c 0F90      		pop __tmp_reg__	 ;  88	*addhi3_sp_R_pc2	[length = 1]
+ 518 005e CF91      		pop r28	 ;  89	pophi	[length = 2]
+ 519 0060 DF91      		pop r29
+ 520 0062 1F91      		pop r17	 ;  90	popqi	[length = 1]
+ 521 0064 0F91      		pop r16	 ;  91	popqi	[length = 1]
+ 522               	.LVL47:
+ 523 0066 FF90      		pop r15	 ;  92	popqi	[length = 1]
+ 524               	.LVL48:
+ 525 0068 0895      		ret	 ;  93	return_from_epilogue	[length = 1]
+ 526               	.LFE35:
+ 528               		.section	.text.kfile_print,"ax",@progbits
+ 529               	.global	kfile_print
+ 531               	kfile_print:
+ 532               	.LFB38:
+ 533               	.LSM39:
+ 534               	.LVL49:
+ 535 0000 0F93      		push r16	 ;  88	*pushqi/1	[length = 1]
+ 536 0002 1F93      		push r17	 ;  89	*pushqi/1	[length = 1]
+ 537 0004 CF93      		push r28	 ;  90	*pushqi/1	[length = 1]
+ 538 0006 DF93      		push r29	 ;  91	*pushqi/1	[length = 1]
+ 539               	/* prologue: function */
+ 540               	/* frame size = 0 */
+ 541 0008 8C01      		movw r16,r24	 ;  30	*movhi/1	[length = 1]
+ 542 000a EB01      		movw r28,r22	 ;  31	*movhi/1	[length = 1]
+ 543 000c 00C0      		rjmp .L35	 ;  101	jump	[length = 1]
+ 544               	.LVL50:
+ 545               	.L38:
+ 546               	.LSM40:
+ 547 000e 9927      		clr r25	 ;  40	extendqihi2/1	[length = 3]
+ 548 0010 87FD      		sbrc r24,7
+ 549 0012 9095      		com r25
+ 550 0014 B801      		movw r22,r16	 ;  41	*movhi/1	[length = 1]
+ 551 0016 0E94 0000 		call kfile_putc	 ;  42	call_value_insn/3	[length = 2]
+ 552 001a 8F5F      		subi r24,lo8(-1)	 ;  44	cmphi/3	[length = 3]
+ 553 001c 9F4F      		sbci r25,hi8(-1)
+ 554 001e 01F4      		brne .L36	 ;  45	branch	[length = 1]
+ 555 0020 2FEF      		ldi r18,lo8(-1)	 ;  47	*movhi/4	[length = 2]
+ 556 0022 3FEF      		ldi r19,hi8(-1)
+ 557 0024 00C0      		rjmp .L37	 ;  103	jump	[length = 1]
+ 558               	.L36:
+ 559 0026 2196      		adiw r28,1	 ;  52	*addhi3/2	[length = 1]
+ 560               	.LVL51:
+ 561               	.L35:
+ 562               	.LSM41:
+ 563 0028 8881      		ld r24,Y	 ;  55	*movqi/4	[length = 1]
+ 564 002a 8823      		tst r24	 ;  57	tstqi	[length = 1]
+ 565 002c 01F4      		brne .L38	 ;  58	branch	[length = 1]
+ 566 002e 20E0      		ldi r18,lo8(0)	 ;  60	*movhi/4	[length = 2]
+ 567 0030 30E0      		ldi r19,hi8(0)
+ 568               	.L37:
+ 569               	.LSM42:
+ 570 0032 C901      		movw r24,r18	 ;  100	*movhi/1	[length = 1]
+ 571               	/* epilogue start */
+ 572 0034 DF91      		pop r29	 ;  94	popqi	[length = 1]
+ 573 0036 CF91      		pop r28	 ;  95	popqi	[length = 1]
+ 574               	.LVL52:
+ 575 0038 1F91      		pop r17	 ;  96	popqi	[length = 1]
+ 576 003a 0F91      		pop r16	 ;  97	popqi	[length = 1]
+ 577               	.LVL53:
+ 578 003c 0895      		ret	 ;  98	return_from_epilogue	[length = 1]
+ 579               	.LFE38:
+ 581               		.section	.text.kfile_init,"ax",@progbits
+ 582               	.global	kfile_init
+ 584               	kfile_init:
+ 585               	.LFB44:
+ 586               	.LSM43:
+ 587               	.LVL54:
+ 588 0000 CF93      		push r28	 ;  47	*pushqi/1	[length = 1]
+ 589 0002 DF93      		push r29	 ;  48	*pushqi/1	[length = 1]
+ 590               	/* prologue: function */
+ 591               	/* frame size = 0 */
+ 592 0004 EC01      		movw r28,r24	 ;  2	*movhi/1	[length = 1]
+ 593               	.LSM44:
+ 594 0006 0097      		sbiw r24,0	 ;  6	tsthi/1	[length = 1]
+ 595 0008 01F4      		brne .L41	 ;  7	branch	[length = 1]
+ 596 000a 80E0      		ldi r24,lo8(__c.1960)	 ;  12	*movhi/4	[length = 2]
+ 597 000c 90E0      		ldi r25,hi8(__c.1960)
+ 598               	.LVL55:
+ 599 000e 60E0      		ldi r22,lo8(__c.1962)	 ;  13	*movhi/4	[length = 2]
+ 600 0010 70E0      		ldi r23,hi8(__c.1962)
+ 601 0012 41E1      		ldi r20,lo8(273)	 ;  14	*movhi/4	[length = 2]
+ 602 0014 51E0      		ldi r21,hi8(273)
+ 603 0016 0E94 0000 		call __bassert_P	 ;  15	call_value_insn/3	[length = 2]
+ 604               	.LVL56:
+ 605               	.L41:
+ 606               	.LSM45:
+ 607 001a 8CE1      		ldi r24,lo8(28)	 ;  18	*movqi/2	[length = 1]
+ 608 001c FE01      		movw r30,r28	 ;  46	*movhi/1	[length = 1]
+ 609 001e 1192      		st Z+,__zero_reg__	 ;  20	*clrmemqi	[length = 3]
+ 610 0020 8A95      	        dec r24
+ 611 0022 01F4      		brne .-6
+ 612               	.LSM46:
+ 613 0024 20E0      		ldi r18,lo8(gs(kfile_generic))	 ;  21	*movhi/4	[length = 2]
+ 614 0026 30E0      		ldi r19,hi8(gs(kfile_generic))
+ 615 0028 3F87      		std Y+15,r19	 ;  22	*movhi/3	[length = 2]
+ 616 002a 2E87      		std Y+14,r18
+ 617               	.LSM47:
+ 618 002c 80E0      		ldi r24,lo8(gs(kfile_genericClose))	 ;  23	*movhi/4	[length = 2]
+ 619 002e 90E0      		ldi r25,hi8(gs(kfile_genericClose))
+ 620 0030 9F83      		std Y+7,r25	 ;  24	*movhi/3	[length = 2]
+ 621 0032 8E83      		std Y+6,r24
+ 622               	.LSM48:
+ 623 0034 3D87      		std Y+13,r19	 ;  26	*movhi/3	[length = 2]
+ 624 0036 2C87      		std Y+12,r18
+ 625               	.LSM49:
+ 626 0038 3B87      		std Y+11,r19	 ;  28	*movhi/3	[length = 2]
+ 627 003a 2A87      		std Y+10,r18
+ 628               	.LSM50:
+ 629 003c 3983      		std Y+1,r19	 ;  30	*movhi/3	[length = 2]
+ 630 003e 2883      		st Y,r18
+ 631               	.LSM51:
+ 632 0040 80E0      		ldi r24,lo8(gs(kfile_genericReopen))	 ;  31	*movhi/4	[length = 2]
+ 633 0042 90E0      		ldi r25,hi8(gs(kfile_genericReopen))
+ 634 0044 9D83      		std Y+5,r25	 ;  32	*movhi/3	[length = 2]
+ 635 0046 8C83      		std Y+4,r24
+ 636               	.LSM52:
+ 637 0048 80E0      		ldi r24,lo8(gs(kfile_genericSeek))	 ;  33	*movhi/4	[length = 2]
+ 638 004a 90E0      		ldi r25,hi8(gs(kfile_genericSeek))
+ 639 004c 9987      		std Y+9,r25	 ;  34	*movhi/3	[length = 2]
+ 640 004e 8887      		std Y+8,r24
+ 641               	.LSM53:
+ 642 0050 3B83      		std Y+3,r19	 ;  36	*movhi/3	[length = 2]
+ 643 0052 2A83      		std Y+2,r18
+ 644               	/* epilogue start */
+ 645               	.LSM54:
+ 646 0054 DF91      		pop r29	 ;  51	popqi	[length = 1]
+ 647 0056 CF91      		pop r28	 ;  52	popqi	[length = 1]
+ 648               	.LVL57:
+ 649 0058 0895      		ret	 ;  53	return_from_epilogue	[length = 1]
+ 650               	.LFE44:
+ 652               		.section	.text.kfile_printf,"ax",@progbits
+ 653               	.global	kfile_printf
+ 655               	kfile_printf:
+ 656               	.LFB37:
+ 657               	.LSM55:
+ 658               	.LVL58:
+ 659 0000 DF93      		push r29	 ;  45	*pushhi/1	[length = 2]
+ 660 0002 CF93      		push r28
+ 661 0004 CDB7      		in r28,__SP_L__	 ;  46	*movhi_sp/2	[length = 2]
+ 662 0006 DEB7      		in r29,__SP_H__
+ 663               	/* prologue: function */
+ 664               	/* frame size = 0 */
+ 665               	.LSM56:
+ 666 0008 FE01      		movw r30,r28	 ;  44	*movhi/1	[length = 1]
+ 667 000a 3996      		adiw r30,9	 ;  7	*addhi3/2	[length = 1]
+ 668               	.LSM57:
+ 669 000c 8F81      		ldd r24,Y+7	 ;  11	*movhi/2	[length = 2]
+ 670 000e 9885      		ldd r25,Y+8
+ 671 0010 60E0      		ldi r22,lo8(gs(kfile_putc))	 ;  12	*movhi/4	[length = 2]
+ 672 0012 70E0      		ldi r23,hi8(gs(kfile_putc))
+ 673 0014 4D81      		ldd r20,Y+5	 ;  13	*movhi/2	[length = 2]
+ 674 0016 5E81      		ldd r21,Y+6
+ 675 0018 9F01      		movw r18,r30	 ;  52	*movhi/1	[length = 1]
+ 676 001a 0E94 0000 		call _formatted_write	 ;  15	call_value_insn/3	[length = 2]
+ 677               	/* epilogue start */
+ 678               	.LSM58:
+ 679 001e CF91      		pop r28	 ;  49	pophi	[length = 2]
+ 680 0020 DF91      		pop r29
+ 681 0022 0895      		ret	 ;  50	return_from_epilogue	[length = 1]
+ 682               	.LFE37:
+ 684               		.section	.progmem.data,"a",@progbits
+ 687               	__c.1962:
+ 688 0000 6265 7274 		.string	"bertos/kern/kfile.c"
+ 688      6F73 2F6B 
+ 688      6572 6E2F 
+ 688      6B66 696C 
+ 688      652E 6300 
+ 691               	__c.1960:
+ 692 0014 6664 00   		.string	"fd"
+ 695               	__c.1465:
+ 696 0017 6265 7274 		.string	"bertos/kern/kfile.h"
+ 696      6F73 2F6B 
+ 696      6572 6E2F 
+ 696      6B66 696C 
+ 696      652E 6800 
+ 699               	__c.1463:
+ 700 002b 6664 2D3E 		.string	"fd->clearerr"
+ 700      636C 6561 
+ 700      7265 7272 
+ 700      00
+ 703               	__c.1437:
+ 704 0038 6265 7274 		.string	"bertos/kern/kfile.h"
+ 704      6F73 2F6B 
+ 704      6572 6E2F 
+ 704      6B66 696C 
+ 704      652E 6800 
+ 707               	__c.1435:
+ 708 004c 6664 2D3E 		.string	"fd->flush"
+ 708      666C 7573 
+ 708      6800 
+ 711               	__c.1423:
+ 712 0056 6265 7274 		.string	"bertos/kern/kfile.h"
+ 712      6F73 2F6B 
+ 712      6572 6E2F 
+ 712      6B66 696C 
+ 712      652E 6800 
+ 715               	__c.1421:
+ 716 006a 6664 2D3E 		.string	"fd->seek"
+ 716      7365 656B 
+ 716      00
+ 719               	__c.1928:
+ 720 0073 6265 7274 		.string	"bertos/kern/kfile.c"
+ 720      6F73 2F6B 
+ 720      6572 6E2F 
+ 720      6B66 696C 
+ 720      652E 6300 
+ 723               	__c.1926:
+ 724 0087 3000      		.string	"0"
+ 727               	__c.1363:
+ 728 0089 6265 7274 		.string	"bertos/kern/kfile.h"
+ 728      6F73 2F6B 
+ 728      6572 6E2F 
+ 728      6B66 696C 
+ 728      652E 6800 
+ 731               	__c.1361:
+ 732 009d 6664 2D3E 		.string	"fd->read"
+ 732      7265 6164 
+ 732      00
+ 735               	__c.1379:
+ 736 00a6 6265 7274 		.string	"bertos/kern/kfile.h"
+ 736      6F73 2F6B 
+ 736      6572 6E2F 
+ 736      6B66 696C 
+ 736      652E 6800 
+ 739               	__c.1377:
+ 740 00ba 6664 2D3E 		.string	"fd->write"
+ 740      7772 6974 
+ 740      6500 
+ 837               	.Letext0:
+DEFINED SYMBOLS
+                            *ABS*:00000000 kfile.c
+C:\DOCUME~1\develer\IMPOST~1\Temp/ccu40t5q.s:2      *ABS*:0000003f __SREG__
+C:\DOCUME~1\develer\IMPOST~1\Temp/ccu40t5q.s:3      *ABS*:0000003e __SP_H__
+C:\DOCUME~1\develer\IMPOST~1\Temp/ccu40t5q.s:4      *ABS*:0000003d __SP_L__
+C:\DOCUME~1\develer\IMPOST~1\Temp/ccu40t5q.s:5      *ABS*:00000034 __CCP__
+C:\DOCUME~1\develer\IMPOST~1\Temp/ccu40t5q.s:6      *ABS*:00000000 __tmp_reg__
+C:\DOCUME~1\develer\IMPOST~1\Temp/ccu40t5q.s:7      *ABS*:00000001 __zero_reg__
+C:\DOCUME~1\develer\IMPOST~1\Temp/ccu40t5q.s:19     .text.kfile_genericClose:00000000 kfile_genericClose
+C:\DOCUME~1\develer\IMPOST~1\Temp/ccu40t5q.s:35     .text.kfile_generic:00000000 kfile_generic
+C:\DOCUME~1\develer\IMPOST~1\Temp/ccu40t5q.s:52     .text.kfile_genericReopen:00000000 kfile_genericReopen
+C:\DOCUME~1\develer\IMPOST~1\Temp/ccu40t5q.s:707    .progmem.data:0000004c __c.1435
+C:\DOCUME~1\develer\IMPOST~1\Temp/ccu40t5q.s:703    .progmem.data:00000038 __c.1437
+C:\DOCUME~1\develer\IMPOST~1\Temp/ccu40t5q.s:715    .progmem.data:0000006a __c.1421
+C:\DOCUME~1\develer\IMPOST~1\Temp/ccu40t5q.s:711    .progmem.data:00000056 __c.1423
+C:\DOCUME~1\develer\IMPOST~1\Temp/ccu40t5q.s:128    .text.kfile_genericSeek:00000000 kfile_genericSeek
+C:\DOCUME~1\develer\IMPOST~1\Temp/ccu40t5q.s:723    .progmem.data:00000087 __c.1926
+C:\DOCUME~1\develer\IMPOST~1\Temp/ccu40t5q.s:719    .progmem.data:00000073 __c.1928
+C:\DOCUME~1\develer\IMPOST~1\Temp/ccu40t5q.s:216    .text.kfile_getc:00000000 kfile_getc
+C:\DOCUME~1\develer\IMPOST~1\Temp/ccu40t5q.s:731    .progmem.data:0000009d __c.1361
+C:\DOCUME~1\develer\IMPOST~1\Temp/ccu40t5q.s:727    .progmem.data:00000089 __c.1363
+C:\DOCUME~1\develer\IMPOST~1\Temp/ccu40t5q.s:290    .text.kfile_resync:00000000 kfile_resync
+C:\DOCUME~1\develer\IMPOST~1\Temp/ccu40t5q.s:699    .progmem.data:0000002b __c.1463
+C:\DOCUME~1\develer\IMPOST~1\Temp/ccu40t5q.s:695    .progmem.data:00000017 __c.1465
+C:\DOCUME~1\develer\IMPOST~1\Temp/ccu40t5q.s:448    .text.kfile_putc:00000000 kfile_putc
+C:\DOCUME~1\develer\IMPOST~1\Temp/ccu40t5q.s:739    .progmem.data:000000ba __c.1377
+C:\DOCUME~1\develer\IMPOST~1\Temp/ccu40t5q.s:735    .progmem.data:000000a6 __c.1379
+C:\DOCUME~1\develer\IMPOST~1\Temp/ccu40t5q.s:531    .text.kfile_print:00000000 kfile_print
+C:\DOCUME~1\develer\IMPOST~1\Temp/ccu40t5q.s:584    .text.kfile_init:00000000 kfile_init
+C:\DOCUME~1\develer\IMPOST~1\Temp/ccu40t5q.s:691    .progmem.data:00000014 __c.1960
+C:\DOCUME~1\develer\IMPOST~1\Temp/ccu40t5q.s:687    .progmem.data:00000000 __c.1962
+C:\DOCUME~1\develer\IMPOST~1\Temp/ccu40t5q.s:655    .text.kfile_printf:00000000 kfile_printf
+
+UNDEFINED SYMBOLS
+__bassert_P
+_clock
+_formatted_write

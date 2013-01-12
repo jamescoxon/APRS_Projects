@@ -1,0 +1,345 @@
+   1               		.file	"crc_ccitt.c"
+   2               	__SREG__ = 0x3f
+   3               	__SP_H__ = 0x3e
+   4               	__SP_L__ = 0x3d
+   5               	__CCP__  = 0x34
+   6               	__tmp_reg__ = 0
+   7               	__zero_reg__ = 1
+  15               	.Ltext0:
+  16               		.section	.text.crc_ccitt,"ax",@progbits
+  17               	.global	crc_ccitt
+  19               	crc_ccitt:
+  20               	.LFB3:
+  21               	.LSM0:
+  22               	.LVL0:
+  23 0000 CF93      		push r28	 ;  96	*pushqi/1	[length = 1]
+  24 0002 DF93      		push r29	 ;  97	*pushqi/1	[length = 1]
+  25               	/* prologue: function */
+  26               	/* frame size = 0 */
+  27 0004 DC01      		movw r26,r24	 ;  31	*movhi/1	[length = 1]
+  28               	.LSM1:
+  29 0006 EB01      		movw r28,r22	 ;  92	*movhi/1	[length = 1]
+  30               	.LVL1:
+  31 0008 00C0      		rjmp .L2	 ;  109	jump	[length = 1]
+  32               	.LVL2:
+  33               	.L3:
+  34               	.LSM2:
+  35 000a 8991      		ld r24,Y+	 ;  41	*movqi/4	[length = 1]
+  36               	.LBB5:
+  37               	.LBB6:
+  38               	.LSM3:
+  39 000c 2B2F      		mov r18,r27	 ;  106	*lshrhi3_const/3	[length = 2]
+  40 000e 3327      		clr r19
+  41               	.LBB7:
+  42 0010 E82F      		mov r30,r24	 ;  94	*movqi/1	[length = 1]
+  43               	.LVL3:
+  44 0012 F0E0      		ldi r31,lo8(0)	 ;  95	*movqi/2	[length = 1]
+  45 0014 EA27      		eor r30,r26	 ;  45	xorhi3	[length = 2]
+  46 0016 FB27      		eor r31,r27
+  47               	.LVL4:
+  48 0018 F070      		andi r31,hi8(255)	 ;  46	andhi3/2	[length = 2]
+  49 001a EE0F      		lsl r30	 ;  105	*ashlhi3_const/2	[length = 2]
+  50 001c FF1F      		rol r31
+  51 001e E050      		subi r30,lo8(-(crc_ccitt_tab))	 ;  49	*addhi3/4	[length = 2]
+  52 0020 F040      		sbci r31,hi8(-(crc_ccitt_tab))
+  53               	/* #APP */
+  54               	 ;  60 "bertos/algo/crc_ccitt.h" 1
+  55 0022 A591      		lpm r26, Z+
+  56 0024 B491      		lpm r27, Z
+  57               		
+  58               	 ;  0 "" 2
+  59               	/* #NOAPP */
+  60               	.LBE7:
+  61 0026 A227      		eor r26,r18	 ;  51	xorhi3	[length = 2]
+  62 0028 B327      		eor r27,r19
+  63 002a 4150      		subi r20,lo8(-(-1))	 ;  52	*addhi3/4	[length = 2]
+  64 002c 5040      		sbci r21,hi8(-(-1))
+  65               	.LVL5:
+  66               	.L2:
+  67               	.LBE6:
+  68               	.LBE5:
+  69               	.LSM4:
+  70 002e 4115      		cp r20,__zero_reg__	 ;  56	tsthi/2	[length = 2]
+  71 0030 5105      		cpc r21,__zero_reg__
+  72 0032 01F4      		brne .L3	 ;  57	branch	[length = 1]
+  73               	.LSM5:
+  74 0034 CD01      		movw r24,r26	 ;  104	*movhi/1	[length = 1]
+  75               	.LVL6:
+  76               	/* epilogue start */
+  77 0036 DF91      		pop r29	 ;  100	popqi	[length = 1]
+  78 0038 CF91      		pop r28	 ;  101	popqi	[length = 1]
+  79               	.LVL7:
+  80 003a 0895      		ret	 ;  102	return_from_epilogue	[length = 1]
+  81               	.LFE3:
+  83               	.global	crc_ccitt_tab
+  84               		.section	.progmem.data,"a",@progbits
+  87               	crc_ccitt_tab:
+  88 0000 0000      		.word	0
+  89 0002 8911      		.word	4489
+  90 0004 1223      		.word	8978
+  91 0006 9B32      		.word	12955
+  92 0008 2446      		.word	17956
+  93 000a AD57      		.word	22445
+  94 000c 3665      		.word	25910
+  95 000e BF74      		.word	29887
+  96 0010 488C      		.word	-29624
+  97 0012 C19D      		.word	-25151
+  98 0014 5AAF      		.word	-20646
+  99 0016 D3BE      		.word	-16685
+ 100 0018 6CCA      		.word	-13716
+ 101 001a E5DB      		.word	-9243
+ 102 001c 7EE9      		.word	-5762
+ 103 001e F7F8      		.word	-1801
+ 104 0020 8110      		.word	4225
+ 105 0022 0801      		.word	264
+ 106 0024 9333      		.word	13203
+ 107 0026 1A22      		.word	8730
+ 108 0028 A556      		.word	22181
+ 109 002a 2C47      		.word	18220
+ 110 002c B775      		.word	30135
+ 111 002e 3E64      		.word	25662
+ 112 0030 C99C      		.word	-25399
+ 113 0032 408D      		.word	-29376
+ 114 0034 DBBF      		.word	-16421
+ 115 0036 52AE      		.word	-20910
+ 116 0038 EDDA      		.word	-9491
+ 117 003a 64CB      		.word	-13468
+ 118 003c FFF9      		.word	-1537
+ 119 003e 76E8      		.word	-6026
+ 120 0040 0221      		.word	8450
+ 121 0042 8B30      		.word	12427
+ 122 0044 1002      		.word	528
+ 123 0046 9913      		.word	5017
+ 124 0048 2667      		.word	26406
+ 125 004a AF76      		.word	30383
+ 126 004c 3444      		.word	17460
+ 127 004e BD55      		.word	21949
+ 128 0050 4AAD      		.word	-21174
+ 129 0052 C3BC      		.word	-17213
+ 130 0054 588E      		.word	-29096
+ 131 0056 D19F      		.word	-24623
+ 132 0058 6EEB      		.word	-5266
+ 133 005a E7FA      		.word	-1305
+ 134 005c 7CC8      		.word	-14212
+ 135 005e F5D9      		.word	-9739
+ 136 0060 8331      		.word	12675
+ 137 0062 0A20      		.word	8202
+ 138 0064 9112      		.word	4753
+ 139 0066 1803      		.word	792
+ 140 0068 A777      		.word	30631
+ 141 006a 2E66      		.word	26158
+ 142 006c B554      		.word	21685
+ 143 006e 3C45      		.word	17724
+ 144 0070 CBBD      		.word	-16949
+ 145 0072 42AC      		.word	-21438
+ 146 0074 D99E      		.word	-24871
+ 147 0076 508F      		.word	-28848
+ 148 0078 EFFB      		.word	-1041
+ 149 007a 66EA      		.word	-5530
+ 150 007c FDD8      		.word	-9987
+ 151 007e 74C9      		.word	-13964
+ 152 0080 0442      		.word	16900
+ 153 0082 8D53      		.word	21389
+ 154 0084 1661      		.word	24854
+ 155 0086 9F70      		.word	28831
+ 156 0088 2004      		.word	1056
+ 157 008a A915      		.word	5545
+ 158 008c 3227      		.word	10034
+ 159 008e BB36      		.word	14011
+ 160 0090 4CCE      		.word	-12724
+ 161 0092 C5DF      		.word	-8251
+ 162 0094 5EED      		.word	-4770
+ 163 0096 D7FC      		.word	-809
+ 164 0098 6888      		.word	-30616
+ 165 009a E199      		.word	-26143
+ 166 009c 7AAB      		.word	-21638
+ 167 009e F3BA      		.word	-17677
+ 168 00a0 8552      		.word	21125
+ 169 00a2 0C43      		.word	17164
+ 170 00a4 9771      		.word	29079
+ 171 00a6 1E60      		.word	24606
+ 172 00a8 A114      		.word	5281
+ 173 00aa 2805      		.word	1320
+ 174 00ac B337      		.word	14259
+ 175 00ae 3A26      		.word	9786
+ 176 00b0 CDDE      		.word	-8499
+ 177 00b2 44CF      		.word	-12476
+ 178 00b4 DFFD      		.word	-545
+ 179 00b6 56EC      		.word	-5034
+ 180 00b8 E998      		.word	-26391
+ 181 00ba 6089      		.word	-30368
+ 182 00bc FBBB      		.word	-17413
+ 183 00be 72AA      		.word	-21902
+ 184 00c0 0663      		.word	25350
+ 185 00c2 8F72      		.word	29327
+ 186 00c4 1440      		.word	16404
+ 187 00c6 9D51      		.word	20893
+ 188 00c8 2225      		.word	9506
+ 189 00ca AB34      		.word	13483
+ 190 00cc 3006      		.word	1584
+ 191 00ce B917      		.word	6073
+ 192 00d0 4EEF      		.word	-4274
+ 193 00d2 C7FE      		.word	-313
+ 194 00d4 5CCC      		.word	-13220
+ 195 00d6 D5DD      		.word	-8747
+ 196 00d8 6AA9      		.word	-22166
+ 197 00da E3B8      		.word	-18205
+ 198 00dc 788A      		.word	-30088
+ 199 00de F19B      		.word	-25615
+ 200 00e0 8773      		.word	29575
+ 201 00e2 0E62      		.word	25102
+ 202 00e4 9550      		.word	20629
+ 203 00e6 1C41      		.word	16668
+ 204 00e8 A335      		.word	13731
+ 205 00ea 2A24      		.word	9258
+ 206 00ec B116      		.word	5809
+ 207 00ee 3807      		.word	1848
+ 208 00f0 CFFF      		.word	-49
+ 209 00f2 46EE      		.word	-4538
+ 210 00f4 DDDC      		.word	-8995
+ 211 00f6 54CD      		.word	-12972
+ 212 00f8 EBB9      		.word	-17941
+ 213 00fa 62A8      		.word	-22430
+ 214 00fc F99A      		.word	-25863
+ 215 00fe 708B      		.word	-29840
+ 216 0100 0884      		.word	-31736
+ 217 0102 8195      		.word	-27263
+ 218 0104 1AA7      		.word	-22758
+ 219 0106 93B6      		.word	-18797
+ 220 0108 2CC2      		.word	-15828
+ 221 010a A5D3      		.word	-11355
+ 222 010c 3EE1      		.word	-7874
+ 223 010e B7F0      		.word	-3913
+ 224 0110 4008      		.word	2112
+ 225 0112 C919      		.word	6601
+ 226 0114 522B      		.word	11090
+ 227 0116 DB3A      		.word	15067
+ 228 0118 644E      		.word	20068
+ 229 011a ED5F      		.word	24557
+ 230 011c 766D      		.word	28022
+ 231 011e FF7C      		.word	31999
+ 232 0120 8994      		.word	-27511
+ 233 0122 0085      		.word	-31488
+ 234 0124 9BB7      		.word	-18533
+ 235 0126 12A6      		.word	-23022
+ 236 0128 ADD2      		.word	-11603
+ 237 012a 24C3      		.word	-15580
+ 238 012c BFF1      		.word	-3649
+ 239 012e 36E0      		.word	-8138
+ 240 0130 C118      		.word	6337
+ 241 0132 4809      		.word	2376
+ 242 0134 D33B      		.word	15315
+ 243 0136 5A2A      		.word	10842
+ 244 0138 E55E      		.word	24293
+ 245 013a 6C4F      		.word	20332
+ 246 013c F77D      		.word	32247
+ 247 013e 7E6C      		.word	27774
+ 248 0140 0AA5      		.word	-23286
+ 249 0142 83B4      		.word	-19325
+ 250 0144 1886      		.word	-31208
+ 251 0146 9197      		.word	-26735
+ 252 0148 2EE3      		.word	-7378
+ 253 014a A7F2      		.word	-3417
+ 254 014c 3CC0      		.word	-16324
+ 255 014e B5D1      		.word	-11851
+ 256 0150 4229      		.word	10562
+ 257 0152 CB38      		.word	14539
+ 258 0154 500A      		.word	2640
+ 259 0156 D91B      		.word	7129
+ 260 0158 666F      		.word	28518
+ 261 015a EF7E      		.word	32495
+ 262 015c 744C      		.word	19572
+ 263 015e FD5D      		.word	24061
+ 264 0160 8BB5      		.word	-19061
+ 265 0162 02A4      		.word	-23550
+ 266 0164 9996      		.word	-26983
+ 267 0166 1087      		.word	-30960
+ 268 0168 AFF3      		.word	-3153
+ 269 016a 26E2      		.word	-7642
+ 270 016c BDD0      		.word	-12099
+ 271 016e 34C1      		.word	-16076
+ 272 0170 C339      		.word	14787
+ 273 0172 4A28      		.word	10314
+ 274 0174 D11A      		.word	6865
+ 275 0176 580B      		.word	2904
+ 276 0178 E77F      		.word	32743
+ 277 017a 6E6E      		.word	28270
+ 278 017c F55C      		.word	23797
+ 279 017e 7C4D      		.word	19836
+ 280 0180 0CC6      		.word	-14836
+ 281 0182 85D7      		.word	-10363
+ 282 0184 1EE5      		.word	-6882
+ 283 0186 97F4      		.word	-2921
+ 284 0188 2880      		.word	-32728
+ 285 018a A191      		.word	-28255
+ 286 018c 3AA3      		.word	-23750
+ 287 018e B3B2      		.word	-19789
+ 288 0190 444A      		.word	19012
+ 289 0192 CD5B      		.word	23501
+ 290 0194 5669      		.word	26966
+ 291 0196 DF78      		.word	30943
+ 292 0198 600C      		.word	3168
+ 293 019a E91D      		.word	7657
+ 294 019c 722F      		.word	12146
+ 295 019e FB3E      		.word	16123
+ 296 01a0 8DD6      		.word	-10611
+ 297 01a2 04C7      		.word	-14588
+ 298 01a4 9FF5      		.word	-2657
+ 299 01a6 16E4      		.word	-7146
+ 300 01a8 A990      		.word	-28503
+ 301 01aa 2081      		.word	-32480
+ 302 01ac BBB3      		.word	-19525
+ 303 01ae 32A2      		.word	-24014
+ 304 01b0 C55A      		.word	23237
+ 305 01b2 4C4B      		.word	19276
+ 306 01b4 D779      		.word	31191
+ 307 01b6 5E68      		.word	26718
+ 308 01b8 E11C      		.word	7393
+ 309 01ba 680D      		.word	3432
+ 310 01bc F33F      		.word	16371
+ 311 01be 7A2E      		.word	11898
+ 312 01c0 0EE7      		.word	-6386
+ 313 01c2 87F6      		.word	-2425
+ 314 01c4 1CC4      		.word	-15332
+ 315 01c6 95D5      		.word	-10859
+ 316 01c8 2AA1      		.word	-24278
+ 317 01ca A3B0      		.word	-20317
+ 318 01cc 3882      		.word	-32200
+ 319 01ce B193      		.word	-27727
+ 320 01d0 466B      		.word	27462
+ 321 01d2 CF7A      		.word	31439
+ 322 01d4 5448      		.word	18516
+ 323 01d6 DD59      		.word	23005
+ 324 01d8 622D      		.word	11618
+ 325 01da EB3C      		.word	15595
+ 326 01dc 700E      		.word	3696
+ 327 01de F91F      		.word	8185
+ 328 01e0 8FF7      		.word	-2161
+ 329 01e2 06E6      		.word	-6650
+ 330 01e4 9DD4      		.word	-11107
+ 331 01e6 14C5      		.word	-15084
+ 332 01e8 ABB1      		.word	-20053
+ 333 01ea 22A0      		.word	-24542
+ 334 01ec B992      		.word	-27975
+ 335 01ee 3083      		.word	-31952
+ 336 01f0 C77B      		.word	31687
+ 337 01f2 4E6A      		.word	27214
+ 338 01f4 D558      		.word	22741
+ 339 01f6 5C49      		.word	18780
+ 340 01f8 E33D      		.word	15843
+ 341 01fa 6A2C      		.word	11370
+ 342 01fc F11E      		.word	7921
+ 343 01fe 780F      		.word	3960
+ 368               	.Letext0:
+DEFINED SYMBOLS
+                            *ABS*:00000000 crc_ccitt.c
+C:\DOCUME~1\develer\IMPOST~1\Temp/ccnG40Se.s:2      *ABS*:0000003f __SREG__
+C:\DOCUME~1\develer\IMPOST~1\Temp/ccnG40Se.s:3      *ABS*:0000003e __SP_H__
+C:\DOCUME~1\develer\IMPOST~1\Temp/ccnG40Se.s:4      *ABS*:0000003d __SP_L__
+C:\DOCUME~1\develer\IMPOST~1\Temp/ccnG40Se.s:5      *ABS*:00000034 __CCP__
+C:\DOCUME~1\develer\IMPOST~1\Temp/ccnG40Se.s:6      *ABS*:00000000 __tmp_reg__
+C:\DOCUME~1\develer\IMPOST~1\Temp/ccnG40Se.s:7      *ABS*:00000001 __zero_reg__
+C:\DOCUME~1\develer\IMPOST~1\Temp/ccnG40Se.s:19     .text.crc_ccitt:00000000 crc_ccitt
+C:\DOCUME~1\develer\IMPOST~1\Temp/ccnG40Se.s:87     .progmem.data:00000000 crc_ccitt_tab
+
+NO UNDEFINED SYMBOLS
