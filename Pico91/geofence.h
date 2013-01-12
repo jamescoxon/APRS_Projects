@@ -2,6 +2,7 @@
 /*=======================================================================*/
 /* Copyright 2010-2012 Nigel Smart <nigel@projectswift.co.uk>            */
 /* And Philip Heron <phil@sanslogic.co.uk>                               */
+/* Fences amended by Anthony Stirk <upuaut@gmail.com>                    */
 /* Additional Help from Jon Sowman & Adam Greig of Cambridge University  */
 /* Spaceflight (www.cusf.co.uk)                                          */
 /*                                                                       */

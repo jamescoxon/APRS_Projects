@@ -1,7 +1,7 @@
 /*
- AVA 70cms Tracker
+ AVA 70cms/APRS Tracker
  
- By Anthony Stirk M0UPU 
+ By Anthony Stirk M0UPU / James Coxon M6JCX
  
  October 2012 Version 3
  Subversion 3.25
@@ -48,7 +48,11 @@ static const uint8_t PROGMEM _sine_table[] = {
 };
 
 RF22 rf22;
+/*
 /* CONFIGURABLE BITS */
+*/
+#define POWERSAVING      // Comment out to turn power saving off
+#define APRS_TX_INTERVAL  1  // APRS TX Interval in Minutes
 #define ASCII 7          // ASCII 7 or 8
 #define STOPBITS 2       // Either 1 or 2
 #define TXDELAY 0        // Delay between sentence TX's
@@ -56,7 +60,7 @@ RF22 rf22;
 #define RADIO_FREQUENCY 434.331
 #define RADIO_POWER  0x04
 /*
-                       0x02  5db (3mW)
+ 0x02  5db (3mW)
  0x03  8db (6mW)
  0x04 11db (12mW)
  0x05 14db (25mW)
@@ -66,13 +70,22 @@ RF22 rf22;
 
 #define RFM22B_PIN 10
 #define RFM22B_SDN A5
-#define STATUS_LED 7            // PAVA ATLAS R7 Boards have an LED on PIN7
+#define STATUS_LED 7            // PAVA/ATLAS R7 Boards have an LED on PIN7
 #define GPS_ENABLE 5
 #define HX1_POWER  6
 #define HX1_ENABLE 4
 #define HX1_TXD    11
 
-#define POWERSAVING      // Comment out to turn power saving off
+#define BAUD_RATE      (1200)
+#define TABLE_SIZE     (512)
+#define PREAMBLE_BYTES (25)
+#define REST_BYTES     (5)
+
+#define PLAYBACK_RATE    (F_CPU / 256)
+#define SAMPLES_PER_BAUD (PLAYBACK_RATE / BAUD_RATE)
+#define PHASE_DELTA_1200 (((TABLE_SIZE * 1200L) << 7) / PLAYBACK_RATE)
+#define PHASE_DELTA_2200 (((TABLE_SIZE * 2200L) << 7) / PLAYBACK_RATE)
+#define PHASE_DELTA_XOR  (PHASE_DELTA_1200 ^ PHASE_DELTA_2200)
 
 uint8_t buf[60]; 
 char txstring[80];
@@ -83,21 +96,26 @@ volatile int txi;
 volatile int txj;
 volatile int count=1;
 volatile boolean lockvariables = 0;
+volatile static uint8_t *_txbuf = 0;
+volatile static uint8_t  _txlen = 0;
+
 uint8_t lock =0, sats = 0, hour = 0, minute = 0, second = 0;
 uint8_t oldhour = 0, oldminute = 0, oldsecond = 0;
 int navmode = 0, battv=0, rawbattv=0, GPSerror = 0, lat_int=0,lon_int=0,txnulls=10;
 int32_t lat = 0, lon = 0, alt = 0, maxalt = 0, lat_dec = 0, lon_dec =0, battvaverage=0;
 int psm_status = 0;
-int rfm_temp;
+int rfm_temp, aprs_tx_status = 0;
 int32_t tslf=0;
-int errorstatus=0; /* Bit 0 = GPS Error Condition Noted Switch to Max Performance Mode
+int errorstatus=0; /* 
+ Bit 0 = GPS Error Condition Noted Switch to Max Performance Mode
  Bit 1 = GPS Error Condition Noted Cold Boot GPS
  Bit 2 = RFM22B Error Condition Noted, RFM22B Power Cycled
  Bit 3 = Current Dynamic Model 0 = Flight 1 = Pedestrian
  Bit 4 = PSM Status 0 = PSM On 1 = PSM Off                   
  Bit 5 = Lock 0 = GPS Locked 1= Not Locked
  */
-int test=0;
+char comment[3];
+unsigned long _aprs_tx_timer;
 
 void setup() {
   pinMode(STATUS_LED, OUTPUT); 
@@ -167,6 +185,19 @@ void loop()
     errorstatus &= ~(1 << 4);
   }
 #endif
+  if (aprs_tx_status==0)
+  {
+    _aprs_tx_timer=millis();
+    aprs_tx_status=1;
+  }
+  if( (_aprs_tx_timer+(APRS_TX_INTERVAL*60000))>=millis()) {
+    aprs_tx_status=0;
+    // Initiated APRS transmission here
+    //  send_APRS();
+  }
+
+
+
 
   if(!lockvariables) {
 
@@ -243,7 +274,7 @@ void sendUBX(uint8_t *MSG, uint8_t len) {
 uint8_t gps_check_nav(void)
 {
   uint8_t request[8] = {
-    0xB5, 0x62, 0x06, 0x24, 0x00, 0x00, 0x2A, 0x84                                               };
+    0xB5, 0x62, 0x06, 0x24, 0x00, 0x00, 0x2A, 0x84                                                 };
   sendUBX(request, 8);
 
   // Get the message back from the GPS
@@ -363,7 +394,7 @@ void gps_check_lock()
   // Construct the request to the GPS
   uint8_t request[8] = {
     0xB5, 0x62, 0x01, 0x06, 0x00, 0x00,
-    0x07, 0x16                                                                                                      };
+    0x07, 0x16                                                                                                        };
   sendUBX(request, 8);
 
   // Get the message back from the GPS
@@ -403,7 +434,7 @@ void setGPS_DynamicModel6()
     0x03, 0x00, 0x00, 0x00, 0x00, 0x10, 0x27, 0x00, 0x00,
     0x05, 0x00, 0xFA, 0x00, 0xFA, 0x00, 0x64, 0x00, 0x2C,
     0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x16, 0xDC                                               };
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x16, 0xDC                                                 };
   while(!gps_set_sucess)
   {
     sendUBX(setdm6, sizeof(setdm6)/sizeof(uint8_t));
@@ -419,7 +450,7 @@ void setGPS_DynamicModel3()
     0x03, 0x00, 0x00, 0x00, 0x00, 0x10, 0x27, 0x00, 0x00,
     0x05, 0x00, 0xFA, 0x00, 0xFA, 0x00, 0x64, 0x00, 0x2C,
     0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x13, 0x76                                               };
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x13, 0x76                                                 };
   while(!gps_set_sucess)
   {
     sendUBX(setdm3, sizeof(setdm3)/sizeof(uint8_t));
@@ -433,7 +464,7 @@ void gps_get_position()
   // Request a NAV-POSLLH message from the GPS
   uint8_t request[8] = {
     0xB5, 0x62, 0x01, 0x02, 0x00, 0x00, 0x03,
-    0x0A                                                                                                  };
+    0x0A                                                                                                    };
   sendUBX(request, 8);
 
   // Get the message back from the GPS
@@ -478,7 +509,7 @@ void gps_get_time()
   // Send a NAV-TIMEUTC message to the receiver
   uint8_t request[8] = {
     0xB5, 0x62, 0x01, 0x21, 0x00, 0x00,
-    0x22, 0x67                                                                                                };
+    0x22, 0x67                                                                                                  };
   sendUBX(request, 8);
 
   // Get the message back from the GPS
@@ -631,26 +662,26 @@ void setGPS_Cyclic() {
     0x10, 0x27, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 
     0x00, 0x00, 0x00, 0x2C, 0x01, 0x00, 0x00, 0x4F, 0xC1, 
     0x03, 0x00, 0x87, 0x02, 0x00, 0x00, 0xFF, 0x00, 0x00, 
-    0x00, 0x64, 0x40, 0x01, 0x00, 0xE3, 0x65                                   };
+    0x00, 0x64, 0x40, 0x01, 0x00, 0xE3, 0x65                                     };
   sendUBX(setCyclic, sizeof(setCyclic)/sizeof(uint8_t));
 }
 
 void setGPS_PowerSaveMode() {
   // Power Save Mode 
   uint8_t setPSM[] = { 
-    0xB5, 0x62, 0x06, 0x11, 0x02, 0x00, 0x08, 0x01, 0x22, 0x92                                                               }; // Setup for Power Save Mode (Default Cyclic 1s)
+    0xB5, 0x62, 0x06, 0x11, 0x02, 0x00, 0x08, 0x01, 0x22, 0x92                                                                 }; // Setup for Power Save Mode (Default Cyclic 1s)
   sendUBX(setPSM, sizeof(setPSM)/sizeof(uint8_t));
 }
 
 void setGps_MaxPerformanceMode() {
   //Set GPS for Max Performance Mode
   uint8_t setMax[] = { 
-    0xB5, 0x62, 0x06, 0x11, 0x02, 0x00, 0x08, 0x00, 0x21, 0x91                                                               }; // Setup for Max Power Mode
+    0xB5, 0x62, 0x06, 0x11, 0x02, 0x00, 0x08, 0x00, 0x21, 0x91                                                                 }; // Setup for Max Power Mode
   sendUBX(setMax, sizeof(setMax)/sizeof(uint8_t));
 }
 void resetGPS() {
   uint8_t set_reset[] = {
-    0xB5, 0x62, 0x06, 0x04, 0x04, 0x00, 0xFF, 0x87, 0x00, 0x00, 0x94, 0xF5                                     };
+    0xB5, 0x62, 0x06, 0x04, 0x04, 0x00, 0xFF, 0x87, 0x00, 0x00, 0x94, 0xF5                                       };
   sendUBX(set_reset, sizeof(set_reset)/sizeof(uint8_t));
 }
 
@@ -693,15 +724,213 @@ void wait(unsigned long delaytime) // Arduino Delay doesn't get CPU Speeds below
   }
 }
 
+char *ax25_base91enc(char *s, uint8_t n, uint32_t v)
+{
+  /* Creates a Base-91 representation of the value in v in the string */
+  /* pointed to by s, n-characters long. String length should be n+1. */
+
+  for(s += n, *s = '\0'; n; n--)
+  {
+    *(--s) = v % 91 + 33;
+    v /= 91;
+  }
+
+  return(s);
+}
+void tx_aprs()
+{
+  char slat[5];
+  char slng[5];
+  char stlm[9];
+  static uint16_t seq = 0;
+  double aprs_lat, aprs_lon;
+
+  /* Convert the UBLOX-style coordinates to
+   	 * the APRS compressed format */
+  aprs_lat = 900000000 - lat;
+  aprs_lat = aprs_lat / 26 - aprs_lat / 2710 + aprs_lat / 15384615;
+  aprs_lon = 900000000 + lon / 2;
+  aprs_lon = aprs_lon / 26 - aprs_lon / 2710 + aprs_lon / 15384615;
+
+  int32_t aprs_alt = alt * 32808 / 10000;
+
+  /* Construct the compressed telemetry format */
+  ax25_base91enc(stlm + 0, 2, seq);
+
+  ax25_frame(
+  APRS_CALLSIGN, APRS_SSID,
+  "APRS", 0,
+  //0, 0, 0, 0,
+  "WIDE1", 1, "WIDE2",1,
+  //"WIDE2", 1,
+  "!/%s%sO   /A=%06ld|%s|%s/M0UPU,%d",
+  ax25_base91enc(slat, 4, aprs_lat),
+  ax25_base91enc(slng, 4, aprs_lon),
+  aprs_alt, stlm, comment, count
+    );
+
+  seq++;
+}
+
+void ax25_init(void)
+{
+  /* Fast PWM mode, non-inverting output on OC2A */
+  TCCR2A = _BV(COM2A1) | _BV(WGM21) | _BV(WGM20);
+  TCCR2B = _BV(CS20);
+
+  /* Make sure radio is not enabled */
+  //PORTA &= ~TXENABLE;
+
+  /* Enable pins for output (Port A pin 4 and Port D pin 7) */
+  //DDRA |= TXENABLE;
+  pinMode(HX1_TXD, OUTPUT);
+}
 
 
+void send_APRS() {
+  ax25_init();
+  digitalWrite(HX1_POWER, HIGH);
+  wait(100);
+  digitalWrite(HX1_ENABLE, HIGH);
+  wait(100);
+  tx_aprs();
+  wait(100);
+  digitalWrite(HX1_POWER, LOW);
+  digitalWrite(HX1_ENABLE, LOW);
+}
 
+void ax25_frame(char *scallsign, char sssid, char *dcallsign, char dssid,
+char *path1, char ttl1, char *path2, char ttl2, char *data, ...)
+{
+  static uint8_t frame[100];
+  uint8_t *s;
+  uint16_t x;
+  va_list va;
 
+  va_start(va, data);
 
+  /* Pause while there is still data transmitting */
+  while(_txlen);
 
+  /* Write in the callsigns and paths */
+  s = _ax25_callsign(frame, dcallsign, dssid);
+  s = _ax25_callsign(s, scallsign, sssid);
+  if(path1) s = _ax25_callsign(s, path1, ttl1);
+  if(path2) s = _ax25_callsign(s, path2, ttl2);
 
+  /* Mark the end of the callsigns */
+  s[-1] |= 1;
 
+  *(s++) = 0x03; /* Control, 0x03 = APRS-UI frame */
+  *(s++) = 0xF0; /* Protocol ID: 0xF0 = no layer 3 data */
 
+  vsnprintf((char *) s, 100 - (s - frame) - 2, data, va);
+  va_end(va);
+
+  /* Calculate and append the checksum */
+  for(x = 0xFFFF, s = frame; *s; s++)
+    x = _crc_ccitt_update(x, *s);
+
+  *(s++) = ~(x & 0xFF);
+  *(s++) = ~((x >> 8) & 0xFF);
+
+  /* Point the interrupt at the data to be transmit */
+  _txbuf = frame;
+  _txlen = s - frame;
+
+  /* Enable the timer and key the radio */
+  TIMSK2 |= _BV(TOIE2);
+  //PORTA |= TXENABLE;
+}
+
+static uint8_t *_ax25_callsign(uint8_t *s, char *callsign, char ssid)
+{
+  char i;
+  for(i = 0; i < 6; i++)
+  {
+    if(*callsign) *(s++) = *(callsign++) << 1;
+    else *(s++) = ' ' << 1;
+  }
+  *(s++) = ('0' + ssid) << 1;
+  return(s);
+}
+
+ISR(TIMER2_OVF_vect)
+{
+  static uint16_t phase  = 0;
+  static uint16_t step   = PHASE_DELTA_1200;
+  static uint16_t sample = 0;
+  static uint8_t rest    = PREAMBLE_BYTES + REST_BYTES;
+  static uint8_t byte;
+  static uint8_t bit     = 7;
+  static int8_t bc       = 0;
+
+  /* Update the PWM output */
+  OCR2A = pgm_read_byte(&_sine_table[(phase >> 7) & 0x1FF]);
+  phase += step;
+
+  if(++sample < SAMPLES_PER_BAUD) return;
+  sample = 0;
+
+  /* Zero-bit insertion */
+  if(bc == 5)
+  {
+    step ^= PHASE_DELTA_XOR;
+    bc = 0;
+    return;
+  }
+
+  /* Load the next byte */
+  if(++bit == 8)
+  {
+    bit = 0;
+
+    if(rest > REST_BYTES || !_txlen)
+    {
+      if(!--rest)
+      {
+        /* Disable radio and interrupt */
+        //PORTA &= ~TXENABLE;
+        TIMSK2 &= ~_BV(TOIE2);
+
+        /* Prepare state for next run */
+        phase = sample = 0;
+        step  = PHASE_DELTA_1200;
+        rest  = PREAMBLE_BYTES + REST_BYTES;
+        bit   = 7;
+        bc    = 0;
+
+        return;
+      }
+
+      /* Rest period, transmit ax.25 header */
+      byte = 0x7E;
+      bc = -1;
+    }
+    else
+    {
+      /* Read the next byte from memory */
+      byte = *(_txbuf++);
+      if(!--_txlen) rest = REST_BYTES + 2;
+      if(bc < 0) bc = 0;
+    }
+  }
+
+  /* Find the next bit */
+  if(byte & 1)
+  {
+    /* 1: Output frequency stays the same */
+    if(bc >= 0) bc++;
+  }
+  else
+  {
+    /* 0: Toggle the output frequency */
+    step ^= PHASE_DELTA_XOR;
+    if(bc >= 0) bc = 0;
+  }
+
+  byte >>= 1;
+}
 
 
 
