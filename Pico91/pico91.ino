@@ -48,7 +48,11 @@ static const uint8_t PROGMEM _sine_table[] = {
 };
 
 RF22 rf22;
+/*
 /* CONFIGURABLE BITS */
+*/
+#define POWERSAVING      // Comment out to turn power saving off
+#define APRS_TX_INTERVAL  1  // APRS TX Interval in Minutes
 #define ASCII 7          // ASCII 7 or 8
 #define STOPBITS 2       // Either 1 or 2
 #define TXDELAY 0        // Delay between sentence TX's
@@ -56,7 +60,7 @@ RF22 rf22;
 #define RADIO_FREQUENCY 434.331
 #define RADIO_POWER  0x04
 /*
-                       0x02  5db (3mW)
+ 0x02  5db (3mW)
  0x03  8db (6mW)
  0x04 11db (12mW)
  0x05 14db (25mW)
@@ -66,14 +70,11 @@ RF22 rf22;
 
 #define RFM22B_PIN 10
 #define RFM22B_SDN A5
-#define STATUS_LED 7            // PAVA ATLAS R7 Boards have an LED on PIN7
+#define STATUS_LED 7            // PAVA/ATLAS R7 Boards have an LED on PIN7
 #define GPS_ENABLE 5
 #define HX1_POWER  6
 #define HX1_ENABLE 4
 #define HX1_TXD    11
-#define APRS_TX_INTERVAL  1  // APRS TX Interval in Minutes
-
-#define POWERSAVING      // Comment out to turn power saving off
 
 #define BAUD_RATE      (1200)
 #define TABLE_SIZE     (512)
@@ -105,7 +106,8 @@ int32_t lat = 0, lon = 0, alt = 0, maxalt = 0, lat_dec = 0, lon_dec =0, battvave
 int psm_status = 0;
 int rfm_temp, aprs_tx_status = 0;
 int32_t tslf=0;
-int errorstatus=0; /* Bit 0 = GPS Error Condition Noted Switch to Max Performance Mode
+int errorstatus=0; /* 
+ Bit 0 = GPS Error Condition Noted Switch to Max Performance Mode
  Bit 1 = GPS Error Condition Noted Cold Boot GPS
  Bit 2 = RFM22B Error Condition Noted, RFM22B Power Cycled
  Bit 3 = Current Dynamic Model 0 = Flight 1 = Pedestrian
@@ -188,7 +190,7 @@ void loop()
     _aprs_tx_timer=millis();
     aprs_tx_status=1;
   }
-  if( (_aprs_tx_timer+(APRS_TX_INTERVAL*60))>=millis()) {
+  if( (_aprs_tx_timer+(APRS_TX_INTERVAL*60000))>=millis()) {
     aprs_tx_status=0;
     // Initiated APRS transmission here
     //  send_APRS();
