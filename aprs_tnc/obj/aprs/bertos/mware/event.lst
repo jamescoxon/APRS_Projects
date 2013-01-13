@@ -2,54 +2,131 @@
    2               	__SREG__ = 0x3f
    3               	__SP_H__ = 0x3e
    4               	__SP_L__ = 0x3d
-   5               	__CCP__  = 0x34
+   5               	__CCP__ = 0x34
    6               	__tmp_reg__ = 0
    7               	__zero_reg__ = 1
-  15               	.Ltext0:
-  16               		.section	.text.event_hook_ignore,"ax",@progbits
-  17               	.global	event_hook_ignore
-  19               	event_hook_ignore:
-  20               	.LFB5:
-  21               	.LSM0:
-  22               	.LVL0:
-  23               	/* prologue: function */
-  24               	/* frame size = 0 */
-  25               	/* epilogue start */
-  26               	.LSM1:
-  27 0000 0895      		ret	 ;  16	return	[length = 1]
-  28               	.LFE5:
-  30               		.section	.text.event_hook_softint,"ax",@progbits
-  31               	.global	event_hook_softint
-  33               	event_hook_softint:
-  34               	.LFB6:
-  35               	.LSM2:
-  36               	.LVL1:
-  37               	/* prologue: function */
-  38               	/* frame size = 0 */
-  39 0000 FC01      		movw r30,r24	 ;  2	*movhi/1	[length = 1]
-  40               	.LSM3:
-  41 0002 2281      		ldd r18,Z+2	 ;  8	*movhi/2	[length = 2]
-  42 0004 3381      		ldd r19,Z+3
-  43 0006 8481      		ldd r24,Z+4	 ;  9	*movhi/2	[length = 2]
-  44 0008 9581      		ldd r25,Z+5
-  45               	.LVL2:
-  46 000a F901      		movw r30,r18	 ;  10	call_insn/2	[length = 2]
-  47 000c 0995      		icall
-  48               	.LVL3:
-  49               	/* epilogue start */
-  50               	.LSM4:
-  51 000e 0895      		ret	 ;  22	return	[length = 1]
-  52               	.LFE6:
-  86               	.Letext0:
+   8               		.global __do_copy_data
+   9               		.global __do_clear_bss
+  10               		.text
+  11               	.Ltext0:
+  12               		.cfi_sections	.debug_frame
+  13               		.section	.text.event_hook_ignore,"ax",@progbits
+  14               	.global	event_hook_ignore
+  16               	event_hook_ignore:
+  17               	.LFB3:
+  18               		.file 1 "bertos/mware/event.c"
+   1:bertos/mware/event.c **** /**
+   2:bertos/mware/event.c ****  * \file
+   3:bertos/mware/event.c ****  * <!--
+   4:bertos/mware/event.c ****  * This file is part of BeRTOS.
+   5:bertos/mware/event.c ****  *
+   6:bertos/mware/event.c ****  * Bertos is free software; you can redistribute it and/or modify
+   7:bertos/mware/event.c ****  * it under the terms of the GNU General Public License as published by
+   8:bertos/mware/event.c ****  * the Free Software Foundation; either version 2 of the License, or
+   9:bertos/mware/event.c ****  * (at your option) any later version.
+  10:bertos/mware/event.c ****  *
+  11:bertos/mware/event.c ****  * This program is distributed in the hope that it will be useful,
+  12:bertos/mware/event.c ****  * but WITHOUT ANY WARRANTY; without even the implied warranty of
+  13:bertos/mware/event.c ****  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  14:bertos/mware/event.c ****  * GNU General Public License for more details.
+  15:bertos/mware/event.c ****  *
+  16:bertos/mware/event.c ****  * You should have received a copy of the GNU General Public License
+  17:bertos/mware/event.c ****  * along with this program; if not, write to the Free Software
+  18:bertos/mware/event.c ****  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+  19:bertos/mware/event.c ****  *
+  20:bertos/mware/event.c ****  * As a special exception, you may use this file as part of a free software
+  21:bertos/mware/event.c ****  * library without restriction.  Specifically, if other files instantiate
+  22:bertos/mware/event.c ****  * templates or use macros or inline functions from this file, or you compile
+  23:bertos/mware/event.c ****  * this file and link it with other files to produce an executable, this
+  24:bertos/mware/event.c ****  * file does not by itself cause the resulting executable to be covered by
+  25:bertos/mware/event.c ****  * the GNU General Public License.  This exception does not however
+  26:bertos/mware/event.c ****  * invalidate any other reasons why the executable file might be covered by
+  27:bertos/mware/event.c ****  * the GNU General Public License.
+  28:bertos/mware/event.c ****  *
+  29:bertos/mware/event.c ****  * Copyright 2005 Develer S.r.l. (http://www.develer.com/)
+  30:bertos/mware/event.c ****  *
+  31:bertos/mware/event.c ****  * -->
+  32:bertos/mware/event.c ****  *
+  33:bertos/mware/event.c ****  * \brief Events handling implementation
+  34:bertos/mware/event.c ****  *
+  35:bertos/mware/event.c ****  * \version $Id: event.c 3270 2010-03-25 14:56:25Z arighi $
+  36:bertos/mware/event.c ****  *
+  37:bertos/mware/event.c ****  * \author Giovanni Bajo <rasky@develer.com>
+  38:bertos/mware/event.c ****  */
+  39:bertos/mware/event.c **** 
+  40:bertos/mware/event.c **** 
+  41:bertos/mware/event.c **** #include "event.h"
+  42:bertos/mware/event.c **** 
+  43:bertos/mware/event.c **** void event_hook_ignore(UNUSED_ARG(Event *, e))
+  44:bertos/mware/event.c **** {
+  19               		.loc 1 44 0
+  20               		.cfi_startproc
+  21               	.LVL0:
+  22               	/* prologue: function */
+  23               	/* frame size = 0 */
+  24               	/* stack size = 0 */
+  25               	.L__stack_usage = 0
+  26               	/* epilogue start */
+  45:bertos/mware/event.c **** }
+  27               		.loc 1 45 0
+  28 0000 0895      		ret	 ;  11	return	[length = 1]
+  29               		.cfi_endproc
+  30               	.LFE3:
+  32               		.section	.text.event_hook_softint,"ax",@progbits
+  33               	.global	event_hook_softint
+  35               	event_hook_softint:
+  36               	.LFB4:
+  46:bertos/mware/event.c **** 
+  47:bertos/mware/event.c **** #if defined(CONFIG_KERN_SIGNALS) && CONFIG_KERN_SIGNALS
+  48:bertos/mware/event.c **** void event_hook_signal(Event *e)
+  49:bertos/mware/event.c **** {
+  50:bertos/mware/event.c **** 	sig_post((e)->Ev.Sig.sig_proc, (e)->Ev.Sig.sig_bit);
+  51:bertos/mware/event.c **** }
+  52:bertos/mware/event.c **** #endif
+  53:bertos/mware/event.c **** 
+  54:bertos/mware/event.c **** void event_hook_softint(Event *e)
+  55:bertos/mware/event.c **** {
+  37               		.loc 1 55 0
+  38               		.cfi_startproc
+  39               	.LVL1:
+  40               	/* prologue: function */
+  41               	/* frame size = 0 */
+  42               	/* stack size = 0 */
+  43               	.L__stack_usage = 0
+  44 0000 DC01      		movw r26,r24	 ;  2	*movhi/1	[length = 1]
+  56:bertos/mware/event.c **** 	e->Ev.Int.func(e->Ev.Int.user_data);
+  45               		.loc 1 56 0
+  46 0002 1296      		adiw r26,2	 ;  8	*movhi/2	[length = 4]
+  47 0004 ED91      		ld r30,X+
+  48 0006 FC91      		ld r31,X
+  49 0008 1397      		sbiw r26,2+1
+  50 000a 1496      		adiw r26,4	 ;  9	*movhi/2	[length = 4]
+  51 000c 8D91      		ld r24,X+
+  52 000e 9C91      		ld r25,X
+  53 0010 1597      		sbiw r26,4+1
+  54               	.LVL2:
+  55 0012 0995      		icall	 ;  10	call_insn/1	[length = 1]
+  56               	.LVL3:
+  57               	/* epilogue start */
+  57:bertos/mware/event.c **** }
+  58               		.loc 1 57 0
+  59 0014 0895      		ret	 ;  17	return	[length = 1]
+  60               		.cfi_endproc
+  61               	.LFE4:
+  63               		.text
+  64               	.Letext0:
+  65               		.file 2 "bertos/mware/event.h"
 DEFINED SYMBOLS
                             *ABS*:00000000 event.c
-C:\DOCUME~1\develer\IMPOST~1\Temp/cc7GSPYn.s:2      *ABS*:0000003f __SREG__
-C:\DOCUME~1\develer\IMPOST~1\Temp/cc7GSPYn.s:3      *ABS*:0000003e __SP_H__
-C:\DOCUME~1\develer\IMPOST~1\Temp/cc7GSPYn.s:4      *ABS*:0000003d __SP_L__
-C:\DOCUME~1\develer\IMPOST~1\Temp/cc7GSPYn.s:5      *ABS*:00000034 __CCP__
-C:\DOCUME~1\develer\IMPOST~1\Temp/cc7GSPYn.s:6      *ABS*:00000000 __tmp_reg__
-C:\DOCUME~1\develer\IMPOST~1\Temp/cc7GSPYn.s:7      *ABS*:00000001 __zero_reg__
-C:\DOCUME~1\develer\IMPOST~1\Temp/cc7GSPYn.s:19     .text.event_hook_ignore:00000000 event_hook_ignore
-C:\DOCUME~1\develer\IMPOST~1\Temp/cc7GSPYn.s:33     .text.event_hook_softint:00000000 event_hook_softint
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccNAGZvi.s:2      *ABS*:0000003f __SREG__
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccNAGZvi.s:3      *ABS*:0000003e __SP_H__
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccNAGZvi.s:4      *ABS*:0000003d __SP_L__
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccNAGZvi.s:5      *ABS*:00000034 __CCP__
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccNAGZvi.s:6      *ABS*:00000000 __tmp_reg__
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccNAGZvi.s:7      *ABS*:00000001 __zero_reg__
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccNAGZvi.s:16     .text.event_hook_ignore:00000000 event_hook_ignore
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccNAGZvi.s:35     .text.event_hook_softint:00000000 event_hook_softint
 
-NO UNDEFINED SYMBOLS
+UNDEFINED SYMBOLS
+__do_copy_data
+__do_clear_bss

@@ -2,761 +2,1654 @@
    2               	__SREG__ = 0x3f
    3               	__SP_H__ = 0x3e
    4               	__SP_L__ = 0x3d
-   5               	__CCP__  = 0x34
+   5               	__CCP__ = 0x34
    6               	__tmp_reg__ = 0
    7               	__zero_reg__ = 1
-  15               	.Ltext0:
-  16               		.section	.text.kfile_genericClose,"ax",@progbits
-  17               	.global	kfile_genericClose
-  19               	kfile_genericClose:
-  20               	.LFB41:
-  21               	.LSM0:
-  22               	.LVL0:
-  23               	/* prologue: function */
-  24               	/* frame size = 0 */
-  25               	.LSM1:
-  26 0000 80E0      		ldi r24,lo8(0)	 ;  10	*movhi/4	[length = 2]
-  27 0002 90E0      		ldi r25,hi8(0)
-  28               	.LVL1:
-  29               	/* epilogue start */
-  30 0004 0895      		ret	 ;  23	return	[length = 1]
-  31               	.LFE41:
-  33               		.section	.text.kfile_generic,"ax",@progbits
-  35               	kfile_generic:
-  36               	.LFB43:
-  37               	.LSM2:
-  38               	.LVL2:
-  39               	/* prologue: function */
-  40               	/* frame size = 0 */
-  41               	.LSM3:
-  42 0000 80E0      		ldi r24,lo8(0)	 ;  10	*movhi/4	[length = 2]
-  43 0002 90E0      		ldi r25,hi8(0)
-  44               	.LVL3:
-  45               	/* epilogue start */
-  46 0004 0895      		ret	 ;  23	return	[length = 1]
-  47               	.LFE43:
-  49               		.section	.text.kfile_genericReopen,"ax",@progbits
-  50               	.global	kfile_genericReopen
-  52               	kfile_genericReopen:
-  53               	.LFB40:
-  54               	.LSM4:
-  55               	.LVL4:
-  56 0000 CF93      		push r28	 ;  67	*pushqi/1	[length = 1]
-  57 0002 DF93      		push r29	 ;  68	*pushqi/1	[length = 1]
-  58               	/* prologue: function */
-  59               	/* frame size = 0 */
-  60 0004 EC01      		movw r28,r24	 ;  2	*movhi/1	[length = 1]
-  61               	.LBB33:
-  62               	.LBB34:
-  63               	.LSM5:
-  64 0006 8A85      		ldd r24,Y+10	 ;  6	*movhi/2	[length = 2]
-  65 0008 9B85      		ldd r25,Y+11
-  66               	.LVL5:
-  67 000a 892B      		or r24,r25	 ;  7	tsthi/1	[length = 1]
-  68 000c 01F4      		brne .L6	 ;  8	branch	[length = 1]
-  69               	.LBE34:
-  70 000e 80E0      		ldi r24,lo8(__c.1435)	 ;  13	*movhi/4	[length = 2]
-  71 0010 90E0      		ldi r25,hi8(__c.1435)
-  72 0012 60E0      		ldi r22,lo8(__c.1437)	 ;  14	*movhi/4	[length = 2]
-  73 0014 70E0      		ldi r23,hi8(__c.1437)
-  74 0016 47E0      		ldi r20,lo8(263)	 ;  15	*movhi/4	[length = 2]
-  75 0018 51E0      		ldi r21,hi8(263)
-  76 001a 0E94 0000 		call __bassert_P	 ;  16	call_value_insn/3	[length = 2]
-  77               	.L6:
-  78               	.LBB35:
-  79               	.LSM6:
-  80 001e EA85      		ldd r30,Y+10	 ;  20	*movhi/2	[length = 2]
-  81 0020 FB85      		ldd r31,Y+11
-  82 0022 CE01      		movw r24,r28	 ;  21	*movhi/1	[length = 1]
-  83 0024 0995      		icall	 ;  22	call_value_insn/1	[length = 1]
-  84               	.LBE35:
-  85               	.LBE33:
-  86               	.LBB36:
-  87               	.LBB37:
-  88               	.LSM7:
-  89 0026 8885      		ldd r24,Y+8	 ;  23	*movhi/2	[length = 2]
-  90 0028 9985      		ldd r25,Y+9
-  91 002a 892B      		or r24,r25	 ;  24	tsthi/1	[length = 1]
-  92 002c 01F4      		brne .L7	 ;  25	branch	[length = 1]
-  93               	.LBE37:
-  94 002e 80E0      		ldi r24,lo8(__c.1421)	 ;  30	*movhi/4	[length = 2]
-  95 0030 90E0      		ldi r25,hi8(__c.1421)
-  96 0032 60E0      		ldi r22,lo8(__c.1423)	 ;  31	*movhi/4	[length = 2]
-  97 0034 70E0      		ldi r23,hi8(__c.1423)
-  98 0036 41E0      		ldi r20,lo8(257)	 ;  32	*movhi/4	[length = 2]
-  99 0038 51E0      		ldi r21,hi8(257)
- 100 003a 0E94 0000 		call __bassert_P	 ;  33	call_value_insn/3	[length = 2]
- 101               	.L7:
- 102               	.LBB38:
- 103               	.LSM8:
- 104 003e E885      		ldd r30,Y+8	 ;  37	*movhi/2	[length = 2]
- 105 0040 F985      		ldd r31,Y+9
- 106 0042 CE01      		movw r24,r28	 ;  38	*movhi/1	[length = 1]
- 107 0044 40E0      		ldi r20,lo8(0)	 ;  39	*movsi/2	[length = 4]
- 108 0046 50E0      		ldi r21,hi8(0)
- 109 0048 60E0      		ldi r22,hlo8(0)
- 110 004a 70E0      		ldi r23,hhi8(0)
- 111 004c 20E0      		ldi r18,lo8(0)	 ;  40	*movhi/4	[length = 2]
- 112 004e 30E0      		ldi r19,hi8(0)
- 113 0050 0995      		icall	 ;  41	call_value_insn/1	[length = 1]
- 114               	.LBE38:
- 115               	.LBE36:
- 116               	.LSM9:
- 117 0052 CE01      		movw r24,r28	 ;  75	*movhi/1	[length = 1]
- 118               	.LVL6:
- 119               	/* epilogue start */
- 120 0054 DF91      		pop r29	 ;  71	popqi	[length = 1]
- 121 0056 CF91      		pop r28	 ;  72	popqi	[length = 1]
- 122 0058 0895      		ret	 ;  73	return_from_epilogue	[length = 1]
- 123               	.LFE40:
- 125               		.section	.text.kfile_genericSeek,"ax",@progbits
- 126               	.global	kfile_genericSeek
- 128               	kfile_genericSeek:
- 129               	.LFB39:
- 130               	.LSM10:
- 131               	.LVL7:
- 132               	/* prologue: function */
- 133               	/* frame size = 0 */
- 134 0000 FC01      		movw r30,r24	 ;  2	*movhi/1	[length = 1]
- 135 0002 DB01      		movw r26,r22	 ;  3	*movsi/1	[length = 2]
- 136 0004 CA01      		movw r24,r20
- 137               	.LVL8:
- 138               	.LSM11:
- 139 0006 2130      		cpi r18,1	 ;  8	cmphi/2	[length = 2]
- 140 0008 3105      		cpc r19,__zero_reg__
- 141 000a 01F0      		breq .L12	 ;  9	branch	[length = 1]
- 142               	.LVL9:
- 143 000c 2130      		cpi r18,1	 ;  10	cmphi/2	[length = 2]
- 144 000e 3105      		cpc r19,__zero_reg__
- 145 0010 00F0      		brlo .L11	 ;  11	branch	[length = 1]
- 146 0012 2230      		cpi r18,2	 ;  12	cmphi/2	[length = 2]
- 147 0014 3105      		cpc r19,__zero_reg__
- 148 0016 01F4      		brne .L17	 ;  13	branch	[length = 1]
- 149               	.LSM12:
- 150 0018 408D      		ldd r20,Z+24	 ;  18	*movsi/3	[length = 4]
- 151 001a 518D      		ldd r21,Z+25
- 152 001c 628D      		ldd r22,Z+26
- 153 001e 738D      		ldd r23,Z+27
- 154               	.LVL10:
- 155 0020 00C0      		rjmp .L14	 ;  90	jump	[length = 1]
- 156               	.LVL11:
- 157               	.L12:
- 158               	.LSM13:
- 159 0022 4489      		ldd r20,Z+20	 ;  23	*movsi/3	[length = 4]
- 160 0024 5589      		ldd r21,Z+21
- 161 0026 6689      		ldd r22,Z+22
- 162 0028 7789      		ldd r23,Z+23
- 163               	.LVL12:
- 164 002a 00C0      		rjmp .L14	 ;  92	jump	[length = 1]
- 165               	.LVL13:
- 166               	.L17:
- 167               	.LSM14:
- 168 002c 80E0      		ldi r24,lo8(__c.1926)	 ;  31	*movhi/4	[length = 2]
- 169 002e 90E0      		ldi r25,hi8(__c.1926)
- 170               	.LVL14:
- 171 0030 60E0      		ldi r22,lo8(__c.1928)	 ;  32	*movhi/4	[length = 2]
- 172 0032 70E0      		ldi r23,hi8(__c.1928)
- 173 0034 42EC      		ldi r20,lo8(194)	 ;  33	*movhi/4	[length = 2]
- 174 0036 50E0      		ldi r21,hi8(194)
- 175               	.LVL15:
- 176 0038 0E94 0000 		call __bassert_P	 ;  34	call_value_insn/3	[length = 2]
- 177               	.LVL16:
- 178 003c 2FEF      		ldi r18,lo8(-1)	 ;  35	*movsi/5	[length = 4]
- 179 003e 3FEF      		ldi r19,hi8(-1)
- 180 0040 4FEF      		ldi r20,hlo8(-1)
- 181 0042 5FEF      		ldi r21,hhi8(-1)
- 182 0044 00C0      		rjmp .L15	 ;  94	jump	[length = 1]
- 183               	.LVL17:
- 184               	.L11:
- 185               	.LSM15:
- 186 0046 40E0      		ldi r20,lo8(0)	 ;  40	*movsi/2	[length = 4]
- 187 0048 50E0      		ldi r21,hi8(0)
- 188 004a 60E0      		ldi r22,hlo8(0)
- 189 004c 70E0      		ldi r23,hhi8(0)
- 190               	.LVL18:
- 191               	.L14:
- 192               	.LSM16:
- 193 004e 9A01      		movw r18,r20	 ;  83	*movsi/1	[length = 2]
- 194 0050 AB01      		movw r20,r22
- 195               	.LVL19:
- 196 0052 280F      		add r18,r24	 ;  43	addsi3/1	[length = 4]
- 197 0054 391F      		adc r19,r25
- 198 0056 4A1F      		adc r20,r26
- 199 0058 5B1F      		adc r21,r27
- 200 005a 248B      		std Z+20,r18	 ;  44	*movsi/4	[length = 4]
- 201 005c 358B      		std Z+21,r19
- 202 005e 468B      		std Z+22,r20
- 203 0060 578B      		std Z+23,r21
- 204               	.L15:
- 205               	.LSM17:
- 206 0062 B901      		movw r22,r18	 ;  89	*movhi/1	[length = 1]
- 207 0064 CA01      		movw r24,r20	 ;  88	*movhi/1	[length = 1]
- 208               	.LVL20:
- 209               	/* epilogue start */
- 210 0066 0895      		ret	 ;  86	return	[length = 1]
- 211               	.LFE39:
- 213               		.section	.text.kfile_getc,"ax",@progbits
- 214               	.global	kfile_getc
- 216               	kfile_getc:
- 217               	.LFB36:
- 218               	.LSM18:
- 219               	.LVL21:
- 220 0000 0F93      		push r16	 ;  68	*pushqi/1	[length = 1]
- 221 0002 1F93      		push r17	 ;  69	*pushqi/1	[length = 1]
- 222 0004 DF93      		push r29	 ;  70	*pushhi/1	[length = 2]
- 223 0006 CF93      		push r28
- 224 0008 0F92      		push __tmp_reg__	 ;  76	*addhi3_sp_R_pc2	[length = 1]
- 225 000a CDB7      		in r28,__SP_L__	 ;  77	*movhi_sp/2	[length = 2]
- 226 000c DEB7      		in r29,__SP_H__
- 227               	/* prologue: function */
- 228               	/* frame size = 1 */
- 229 000e 8C01      		movw r16,r24	 ;  2	*movhi/1	[length = 1]
- 230               	.LBB39:
- 231               	.LBB40:
- 232               	.LSM19:
- 233 0010 DC01      		movw r26,r24	 ;  63	*movhi/1	[length = 1]
- 234 0012 8D91      		ld r24,X+	 ;  6	*movhi/2	[length = 2]
- 235 0014 9C91      		ld r25,X
- 236               	.LVL22:
- 237 0016 892B      		or r24,r25	 ;  7	tsthi/1	[length = 1]
- 238 0018 01F4      		brne .L19	 ;  8	branch	[length = 1]
- 239               	.LBE40:
- 240 001a 80E0      		ldi r24,lo8(__c.1361)	 ;  13	*movhi/4	[length = 2]
- 241 001c 90E0      		ldi r25,hi8(__c.1361)
- 242 001e 60E0      		ldi r22,lo8(__c.1363)	 ;  14	*movhi/4	[length = 2]
- 243 0020 70E0      		ldi r23,hi8(__c.1363)
- 244 0022 49EE      		ldi r20,lo8(233)	 ;  15	*movhi/4	[length = 2]
- 245 0024 50E0      		ldi r21,hi8(233)
- 246 0026 0E94 0000 		call __bassert_P	 ;  16	call_value_insn/3	[length = 2]
- 247               	.L19:
- 248               	.LSM20:
- 249 002a D801      		movw r26,r16	 ;  64	*movhi/1	[length = 1]
- 250 002c ED91      		ld r30,X+	 ;  20	*movhi/2	[length = 2]
- 251 002e FC91      		ld r31,X
- 252 0030 C801      		movw r24,r16	 ;  21	*movhi/1	[length = 1]
- 253 0032 BE01      		movw r22,r28	 ;  65	*movhi/1	[length = 1]
- 254 0034 6F5F      		subi r22,lo8(-(1))	 ;  22	*addhi3/4	[length = 2]
- 255 0036 7F4F      		sbci r23,hi8(-(1))
- 256 0038 41E0      		ldi r20,lo8(1)	 ;  23	*movhi/4	[length = 2]
- 257 003a 50E0      		ldi r21,hi8(1)
- 258 003c 0995      		icall	 ;  24	call_value_insn/1	[length = 1]
- 259               	.LBE39:
- 260               	.LSM21:
- 261 003e 0197      		sbiw r24,1	 ;  26	cmphi/2	[length = 2]
- 262 0040 01F0      		breq .L20	 ;  27	branch	[length = 1]
- 263 0042 2FEF      		ldi r18,lo8(-1)	 ;  29	*movhi/4	[length = 2]
- 264 0044 3FEF      		ldi r19,hi8(-1)
- 265 0046 00C0      		rjmp .L21	 ;  90	jump	[length = 1]
- 266               	.L20:
- 267               	.LSM22:
- 268 0048 8981      		ldd r24,Y+1	 ;  34	*movqi/4	[length = 1]
- 269               	.LVL23:
- 270 004a 282F      		mov r18,r24	 ;  66	*movqi/1	[length = 1]
- 271 004c 30E0      		ldi r19,lo8(0)	 ;  67	*movqi/2	[length = 1]
- 272               	.LVL24:
- 273               	.L21:
- 274               	.LSM23:
- 275 004e C901      		movw r24,r18	 ;  89	*movhi/1	[length = 1]
- 276               	.LVL25:
- 277               	/* epilogue start */
- 278 0050 0F90      		pop __tmp_reg__	 ;  83	*addhi3_sp_R_pc2	[length = 1]
- 279 0052 CF91      		pop r28	 ;  84	pophi	[length = 2]
- 280 0054 DF91      		pop r29
- 281 0056 1F91      		pop r17	 ;  85	popqi	[length = 1]
- 282 0058 0F91      		pop r16	 ;  86	popqi	[length = 1]
- 283               	.LVL26:
- 284 005a 0895      		ret	 ;  87	return_from_epilogue	[length = 1]
- 285               	.LFE36:
- 287               		.section	.text.kfile_resync,"ax",@progbits
- 288               	.global	kfile_resync
- 290               	kfile_resync:
- 291               	.LFB42:
- 292               	.LSM24:
- 293               	.LVL27:
- 294 0000 AF92      		push r10	 ;  61	*pushqi/1	[length = 1]
- 295 0002 BF92      		push r11	 ;  62	*pushqi/1	[length = 1]
- 296 0004 CF92      		push r12	 ;  63	*pushqi/1	[length = 1]
- 297 0006 DF92      		push r13	 ;  64	*pushqi/1	[length = 1]
- 298 0008 EF92      		push r14	 ;  65	*pushqi/1	[length = 1]
- 299 000a FF92      		push r15	 ;  66	*pushqi/1	[length = 1]
- 300 000c 0F93      		push r16	 ;  67	*pushqi/1	[length = 1]
- 301 000e 1F93      		push r17	 ;  68	*pushqi/1	[length = 1]
- 302 0010 CF93      		push r28	 ;  69	*pushqi/1	[length = 1]
- 303 0012 DF93      		push r29	 ;  70	*pushqi/1	[length = 1]
- 304               	/* prologue: function */
- 305               	/* frame size = 0 */
- 306 0014 EC01      		movw r28,r24	 ;  2	*movhi/1	[length = 1]
- 307 0016 5A01      		movw r10,r20	 ;  3	*movsi/1	[length = 2]
- 308 0018 6B01      		movw r12,r22
- 309               	.LBB41:
- 310               	.LBB42:
- 311               	.LBB43:
- 312               	.LSM25:
- 313               	/* #APP */
- 314               	 ;  131 "bertos/drv/timer.h" 1
- 315 001a 8FB7      		in r24,__SREG__
- 316 001c F894      		cli
- 317               	 ;  0 "" 2
- 318               	.LVL28:
- 319               	/* #NOAPP */
- 320 001e E090 0000 		lds r14,_clock	 ;  8	*movsi/3	[length = 8]
- 321 0022 F090 0000 		lds r15,(_clock)+1
- 322 0026 0091 0000 		lds r16,(_clock)+2
- 323 002a 1091 0000 		lds r17,(_clock)+3
- 324               	.LVL29:
- 325               	/* #APP */
- 326               	 ;  131 "bertos/drv/timer.h" 1
- 327 002e 8FBF      		out __SREG__,r24
- 328               	 ;  0 "" 2
- 329               	.LVL30:
- 330               	/* #NOAPP */
- 331               	.L25:
- 332               	.LBE43:
- 333               	.LBE42:
- 334               	.LBE41:
- 335               	.LSM26:
- 336 0030 CE01      		movw r24,r28	 ;  12	*movhi/1	[length = 1]
- 337               	.LVL31:
- 338 0032 0E94 0000 		call kfile_getc	 ;  13	call_value_insn/3	[length = 2]
- 339               	.LVL32:
- 340 0036 8F5F      		subi r24,lo8(-1)	 ;  15	cmphi/3	[length = 3]
- 341 0038 9F4F      		sbci r25,hi8(-1)
- 342 003a 01F0      		breq .L24	 ;  16	branch	[length = 1]
- 343               	.LBB44:
- 344               	.LBB45:
- 345               	.LBB46:
- 346               	.LSM27:
- 347               	/* #APP */
- 348               	 ;  131 "bertos/drv/timer.h" 1
- 349 003c 8FB7      		in r24,__SREG__
- 350 003e F894      		cli
- 351               	 ;  0 "" 2
- 352               	.LVL33:
- 353               	/* #NOAPP */
- 354 0040 E090 0000 		lds r14,_clock	 ;  19	*movsi/3	[length = 8]
- 355 0044 F090 0000 		lds r15,(_clock)+1
- 356 0048 0091 0000 		lds r16,(_clock)+2
- 357 004c 1091 0000 		lds r17,(_clock)+3
- 358               	/* #APP */
- 359               	 ;  131 "bertos/drv/timer.h" 1
- 360 0050 8FBF      		out __SREG__,r24
- 361               	 ;  0 "" 2
- 362               	/* #NOAPP */
- 363               	.L24:
- 364               	.LBE46:
- 365               	.LBE45:
- 366               	.LBE44:
- 367               	.LBB47:
- 368               	.LBB48:
- 369               	.LBB49:
- 370               	/* #APP */
- 371               	 ;  131 "bertos/drv/timer.h" 1
- 372 0052 2FB7      		in r18,__SREG__
- 373 0054 F894      		cli
- 374               	 ;  0 "" 2
- 375               	.LVL34:
- 376               	/* #NOAPP */
- 377 0056 8091 0000 		lds r24,_clock	 ;  24	*movsi/3	[length = 8]
- 378 005a 9091 0000 		lds r25,(_clock)+1
- 379 005e A091 0000 		lds r26,(_clock)+2
- 380 0062 B091 0000 		lds r27,(_clock)+3
- 381               	.LVL35:
- 382               	/* #APP */
- 383               	 ;  131 "bertos/drv/timer.h" 1
- 384 0066 2FBF      		out __SREG__,r18
- 385               	 ;  0 "" 2
- 386               	/* #NOAPP */
- 387               	.LBE49:
- 388               	.LBE48:
- 389               	.LBE47:
- 390               	.LSM28:
- 391 0068 8E19      		sub r24,r14	 ;  27	subsi3/1	[length = 4]
- 392 006a 9F09      		sbc r25,r15
- 393 006c A00B      		sbc r26,r16
- 394 006e B10B      		sbc r27,r17
- 395 0070 A816      		cp r10,r24	 ;  28	cmpsi/1	[length = 4]
- 396 0072 B906      		cpc r11,r25
- 397 0074 CA06      		cpc r12,r26
- 398 0076 DB06      		cpc r13,r27
- 399 0078 04F4      		brge .L25	 ;  29	branch	[length = 1]
- 400               	.LBB50:
- 401               	.LBB51:
- 402               	.LSM29:
- 403 007a 8E85      		ldd r24,Y+14	 ;  31	*movhi/2	[length = 2]
- 404 007c 9F85      		ldd r25,Y+15
- 405               	.LVL36:
- 406 007e 892B      		or r24,r25	 ;  32	tsthi/1	[length = 1]
- 407 0080 01F4      		brne .L26	 ;  33	branch	[length = 1]
- 408               	.LBE51:
- 409 0082 80E0      		ldi r24,lo8(__c.1463)	 ;  38	*movhi/4	[length = 2]
- 410 0084 90E0      		ldi r25,hi8(__c.1463)
- 411 0086 60E0      		ldi r22,lo8(__c.1465)	 ;  39	*movhi/4	[length = 2]
- 412 0088 70E0      		ldi r23,hi8(__c.1465)
- 413 008a 43E1      		ldi r20,lo8(275)	 ;  40	*movhi/4	[length = 2]
- 414 008c 51E0      		ldi r21,hi8(275)
- 415 008e 0E94 0000 		call __bassert_P	 ;  41	call_value_insn/3	[length = 2]
- 416               	.LVL37:
- 417               	.L26:
- 418               	.LBB52:
- 419               	.LSM30:
- 420 0092 EE85      		ldd r30,Y+14	 ;  45	*movhi/2	[length = 2]
- 421 0094 FF85      		ldd r31,Y+15
- 422 0096 CE01      		movw r24,r28	 ;  46	*movhi/1	[length = 1]
- 423 0098 0995      		icall	 ;  47	call_insn/1	[length = 1]
- 424               	.LVL38:
- 425               	/* epilogue start */
- 426               	.LBE52:
- 427               	.LBE50:
- 428               	.LSM31:
- 429 009a DF91      		pop r29	 ;  73	popqi	[length = 1]
- 430 009c CF91      		pop r28	 ;  74	popqi	[length = 1]
- 431               	.LVL39:
- 432 009e 1F91      		pop r17	 ;  75	popqi	[length = 1]
- 433 00a0 0F91      		pop r16	 ;  76	popqi	[length = 1]
- 434 00a2 FF90      		pop r15	 ;  77	popqi	[length = 1]
- 435 00a4 EF90      		pop r14	 ;  78	popqi	[length = 1]
- 436               	.LVL40:
- 437 00a6 DF90      		pop r13	 ;  79	popqi	[length = 1]
- 438 00a8 CF90      		pop r12	 ;  80	popqi	[length = 1]
- 439 00aa BF90      		pop r11	 ;  81	popqi	[length = 1]
- 440 00ac AF90      		pop r10	 ;  82	popqi	[length = 1]
- 441               	.LVL41:
- 442 00ae 0895      		ret	 ;  83	return_from_epilogue	[length = 1]
- 443               	.LFE42:
- 445               		.section	.text.kfile_putc,"ax",@progbits
- 446               	.global	kfile_putc
- 448               	kfile_putc:
- 449               	.LFB35:
- 450               	.LSM32:
- 451               	.LVL42:
- 452 0000 FF92      		push r15	 ;  72	*pushqi/1	[length = 1]
- 453 0002 0F93      		push r16	 ;  73	*pushqi/1	[length = 1]
- 454 0004 1F93      		push r17	 ;  74	*pushqi/1	[length = 1]
- 455 0006 DF93      		push r29	 ;  75	*pushhi/1	[length = 2]
- 456 0008 CF93      		push r28
- 457 000a 0F92      		push __tmp_reg__	 ;  81	*addhi3_sp_R_pc2	[length = 1]
- 458 000c CDB7      		in r28,__SP_L__	 ;  82	*movhi_sp/2	[length = 2]
- 459 000e DEB7      		in r29,__SP_H__
- 460               	/* prologue: function */
- 461               	/* frame size = 1 */
- 462 0010 F82E      		mov r15,r24	 ;  57	*movqi/1	[length = 1]
- 463 0012 8B01      		movw r16,r22	 ;  3	*movhi/1	[length = 1]
- 464               	.LSM33:
- 465 0014 8983      		std Y+1,r24	 ;  8	*movqi/3	[length = 1]
- 466               	.LVL43:
- 467               	.LBB53:
- 468               	.LBB54:
- 469               	.LSM34:
- 470 0016 DB01      		movw r26,r22	 ;  67	*movhi/1	[length = 1]
- 471 0018 1296      		adiw r26,2	 ;  9	*movhi/2	[length = 4]
- 472 001a 8D91      		ld r24,X+
- 473 001c 9C91      		ld r25,X
- 474 001e 1397      		sbiw r26,2+1
- 475               	.LVL44:
- 476 0020 892B      		or r24,r25	 ;  10	tsthi/1	[length = 1]
- 477 0022 01F4      		brne .L30	 ;  11	branch	[length = 1]
- 478               	.LBE54:
- 479 0024 80E0      		ldi r24,lo8(__c.1377)	 ;  16	*movhi/4	[length = 2]
- 480 0026 90E0      		ldi r25,hi8(__c.1377)
- 481 0028 60E0      		ldi r22,lo8(__c.1379)	 ;  17	*movhi/4	[length = 2]
- 482 002a 70E0      		ldi r23,hi8(__c.1379)
- 483               	.LVL45:
- 484 002c 4FEE      		ldi r20,lo8(239)	 ;  18	*movhi/4	[length = 2]
- 485 002e 50E0      		ldi r21,hi8(239)
- 486 0030 0E94 0000 		call __bassert_P	 ;  19	call_value_insn/3	[length = 2]
- 487               	.LVL46:
- 488               	.L30:
- 489               	.LSM35:
- 490 0034 D801      		movw r26,r16	 ;  68	*movhi/1	[length = 1]
- 491 0036 1296      		adiw r26,2	 ;  23	*movhi/2	[length = 4]
- 492 0038 ED91      		ld r30,X+
- 493 003a FC91      		ld r31,X
- 494 003c 1397      		sbiw r26,2+1
- 495 003e C801      		movw r24,r16	 ;  24	*movhi/1	[length = 1]
- 496 0040 BE01      		movw r22,r28	 ;  69	*movhi/1	[length = 1]
- 497 0042 6F5F      		subi r22,lo8(-(1))	 ;  25	*addhi3/4	[length = 2]
- 498 0044 7F4F      		sbci r23,hi8(-(1))
- 499 0046 41E0      		ldi r20,lo8(1)	 ;  26	*movhi/4	[length = 2]
- 500 0048 50E0      		ldi r21,hi8(1)
- 501 004a 0995      		icall	 ;  27	call_value_insn/1	[length = 1]
- 502               	.LBE53:
- 503               	.LSM36:
- 504 004c 0197      		sbiw r24,1	 ;  29	cmphi/2	[length = 2]
- 505 004e 01F0      		breq .L31	 ;  30	branch	[length = 1]
- 506 0050 2FEF      		ldi r18,lo8(-1)	 ;  32	*movhi/4	[length = 2]
- 507 0052 3FEF      		ldi r19,hi8(-1)
- 508 0054 00C0      		rjmp .L32	 ;  96	jump	[length = 1]
- 509               	.L31:
- 510               	.LSM37:
- 511 0056 2F2D      		mov r18,r15	 ;  70	*movqi/1	[length = 1]
- 512 0058 30E0      		ldi r19,lo8(0)	 ;  71	*movqi/2	[length = 1]
- 513               	.L32:
- 514               	.LSM38:
- 515 005a C901      		movw r24,r18	 ;  95	*movhi/1	[length = 1]
- 516               	/* epilogue start */
- 517 005c 0F90      		pop __tmp_reg__	 ;  88	*addhi3_sp_R_pc2	[length = 1]
- 518 005e CF91      		pop r28	 ;  89	pophi	[length = 2]
- 519 0060 DF91      		pop r29
- 520 0062 1F91      		pop r17	 ;  90	popqi	[length = 1]
- 521 0064 0F91      		pop r16	 ;  91	popqi	[length = 1]
- 522               	.LVL47:
- 523 0066 FF90      		pop r15	 ;  92	popqi	[length = 1]
- 524               	.LVL48:
- 525 0068 0895      		ret	 ;  93	return_from_epilogue	[length = 1]
- 526               	.LFE35:
- 528               		.section	.text.kfile_print,"ax",@progbits
- 529               	.global	kfile_print
- 531               	kfile_print:
- 532               	.LFB38:
- 533               	.LSM39:
- 534               	.LVL49:
- 535 0000 0F93      		push r16	 ;  88	*pushqi/1	[length = 1]
- 536 0002 1F93      		push r17	 ;  89	*pushqi/1	[length = 1]
- 537 0004 CF93      		push r28	 ;  90	*pushqi/1	[length = 1]
- 538 0006 DF93      		push r29	 ;  91	*pushqi/1	[length = 1]
- 539               	/* prologue: function */
- 540               	/* frame size = 0 */
- 541 0008 8C01      		movw r16,r24	 ;  30	*movhi/1	[length = 1]
- 542 000a EB01      		movw r28,r22	 ;  31	*movhi/1	[length = 1]
- 543 000c 00C0      		rjmp .L35	 ;  101	jump	[length = 1]
- 544               	.LVL50:
- 545               	.L38:
- 546               	.LSM40:
- 547 000e 9927      		clr r25	 ;  40	extendqihi2/1	[length = 3]
- 548 0010 87FD      		sbrc r24,7
- 549 0012 9095      		com r25
- 550 0014 B801      		movw r22,r16	 ;  41	*movhi/1	[length = 1]
- 551 0016 0E94 0000 		call kfile_putc	 ;  42	call_value_insn/3	[length = 2]
- 552 001a 8F5F      		subi r24,lo8(-1)	 ;  44	cmphi/3	[length = 3]
- 553 001c 9F4F      		sbci r25,hi8(-1)
- 554 001e 01F4      		brne .L36	 ;  45	branch	[length = 1]
- 555 0020 2FEF      		ldi r18,lo8(-1)	 ;  47	*movhi/4	[length = 2]
- 556 0022 3FEF      		ldi r19,hi8(-1)
- 557 0024 00C0      		rjmp .L37	 ;  103	jump	[length = 1]
- 558               	.L36:
- 559 0026 2196      		adiw r28,1	 ;  52	*addhi3/2	[length = 1]
- 560               	.LVL51:
- 561               	.L35:
- 562               	.LSM41:
- 563 0028 8881      		ld r24,Y	 ;  55	*movqi/4	[length = 1]
- 564 002a 8823      		tst r24	 ;  57	tstqi	[length = 1]
- 565 002c 01F4      		brne .L38	 ;  58	branch	[length = 1]
- 566 002e 20E0      		ldi r18,lo8(0)	 ;  60	*movhi/4	[length = 2]
- 567 0030 30E0      		ldi r19,hi8(0)
- 568               	.L37:
- 569               	.LSM42:
- 570 0032 C901      		movw r24,r18	 ;  100	*movhi/1	[length = 1]
- 571               	/* epilogue start */
- 572 0034 DF91      		pop r29	 ;  94	popqi	[length = 1]
- 573 0036 CF91      		pop r28	 ;  95	popqi	[length = 1]
- 574               	.LVL52:
- 575 0038 1F91      		pop r17	 ;  96	popqi	[length = 1]
- 576 003a 0F91      		pop r16	 ;  97	popqi	[length = 1]
- 577               	.LVL53:
- 578 003c 0895      		ret	 ;  98	return_from_epilogue	[length = 1]
- 579               	.LFE38:
- 581               		.section	.text.kfile_init,"ax",@progbits
- 582               	.global	kfile_init
- 584               	kfile_init:
- 585               	.LFB44:
- 586               	.LSM43:
- 587               	.LVL54:
- 588 0000 CF93      		push r28	 ;  47	*pushqi/1	[length = 1]
- 589 0002 DF93      		push r29	 ;  48	*pushqi/1	[length = 1]
- 590               	/* prologue: function */
- 591               	/* frame size = 0 */
- 592 0004 EC01      		movw r28,r24	 ;  2	*movhi/1	[length = 1]
- 593               	.LSM44:
- 594 0006 0097      		sbiw r24,0	 ;  6	tsthi/1	[length = 1]
- 595 0008 01F4      		brne .L41	 ;  7	branch	[length = 1]
- 596 000a 80E0      		ldi r24,lo8(__c.1960)	 ;  12	*movhi/4	[length = 2]
- 597 000c 90E0      		ldi r25,hi8(__c.1960)
- 598               	.LVL55:
- 599 000e 60E0      		ldi r22,lo8(__c.1962)	 ;  13	*movhi/4	[length = 2]
- 600 0010 70E0      		ldi r23,hi8(__c.1962)
- 601 0012 41E1      		ldi r20,lo8(273)	 ;  14	*movhi/4	[length = 2]
- 602 0014 51E0      		ldi r21,hi8(273)
- 603 0016 0E94 0000 		call __bassert_P	 ;  15	call_value_insn/3	[length = 2]
- 604               	.LVL56:
- 605               	.L41:
- 606               	.LSM45:
- 607 001a 8CE1      		ldi r24,lo8(28)	 ;  18	*movqi/2	[length = 1]
- 608 001c FE01      		movw r30,r28	 ;  46	*movhi/1	[length = 1]
- 609 001e 1192      		st Z+,__zero_reg__	 ;  20	*clrmemqi	[length = 3]
- 610 0020 8A95      	        dec r24
- 611 0022 01F4      		brne .-6
- 612               	.LSM46:
- 613 0024 20E0      		ldi r18,lo8(gs(kfile_generic))	 ;  21	*movhi/4	[length = 2]
- 614 0026 30E0      		ldi r19,hi8(gs(kfile_generic))
- 615 0028 3F87      		std Y+15,r19	 ;  22	*movhi/3	[length = 2]
- 616 002a 2E87      		std Y+14,r18
- 617               	.LSM47:
- 618 002c 80E0      		ldi r24,lo8(gs(kfile_genericClose))	 ;  23	*movhi/4	[length = 2]
- 619 002e 90E0      		ldi r25,hi8(gs(kfile_genericClose))
- 620 0030 9F83      		std Y+7,r25	 ;  24	*movhi/3	[length = 2]
- 621 0032 8E83      		std Y+6,r24
- 622               	.LSM48:
- 623 0034 3D87      		std Y+13,r19	 ;  26	*movhi/3	[length = 2]
- 624 0036 2C87      		std Y+12,r18
- 625               	.LSM49:
- 626 0038 3B87      		std Y+11,r19	 ;  28	*movhi/3	[length = 2]
- 627 003a 2A87      		std Y+10,r18
- 628               	.LSM50:
- 629 003c 3983      		std Y+1,r19	 ;  30	*movhi/3	[length = 2]
- 630 003e 2883      		st Y,r18
- 631               	.LSM51:
- 632 0040 80E0      		ldi r24,lo8(gs(kfile_genericReopen))	 ;  31	*movhi/4	[length = 2]
- 633 0042 90E0      		ldi r25,hi8(gs(kfile_genericReopen))
- 634 0044 9D83      		std Y+5,r25	 ;  32	*movhi/3	[length = 2]
- 635 0046 8C83      		std Y+4,r24
- 636               	.LSM52:
- 637 0048 80E0      		ldi r24,lo8(gs(kfile_genericSeek))	 ;  33	*movhi/4	[length = 2]
- 638 004a 90E0      		ldi r25,hi8(gs(kfile_genericSeek))
- 639 004c 9987      		std Y+9,r25	 ;  34	*movhi/3	[length = 2]
- 640 004e 8887      		std Y+8,r24
- 641               	.LSM53:
- 642 0050 3B83      		std Y+3,r19	 ;  36	*movhi/3	[length = 2]
- 643 0052 2A83      		std Y+2,r18
- 644               	/* epilogue start */
- 645               	.LSM54:
- 646 0054 DF91      		pop r29	 ;  51	popqi	[length = 1]
- 647 0056 CF91      		pop r28	 ;  52	popqi	[length = 1]
- 648               	.LVL57:
- 649 0058 0895      		ret	 ;  53	return_from_epilogue	[length = 1]
- 650               	.LFE44:
- 652               		.section	.text.kfile_printf,"ax",@progbits
- 653               	.global	kfile_printf
- 655               	kfile_printf:
- 656               	.LFB37:
- 657               	.LSM55:
- 658               	.LVL58:
- 659 0000 DF93      		push r29	 ;  45	*pushhi/1	[length = 2]
- 660 0002 CF93      		push r28
- 661 0004 CDB7      		in r28,__SP_L__	 ;  46	*movhi_sp/2	[length = 2]
- 662 0006 DEB7      		in r29,__SP_H__
- 663               	/* prologue: function */
- 664               	/* frame size = 0 */
- 665               	.LSM56:
- 666 0008 FE01      		movw r30,r28	 ;  44	*movhi/1	[length = 1]
- 667 000a 3996      		adiw r30,9	 ;  7	*addhi3/2	[length = 1]
- 668               	.LSM57:
- 669 000c 8F81      		ldd r24,Y+7	 ;  11	*movhi/2	[length = 2]
- 670 000e 9885      		ldd r25,Y+8
- 671 0010 60E0      		ldi r22,lo8(gs(kfile_putc))	 ;  12	*movhi/4	[length = 2]
- 672 0012 70E0      		ldi r23,hi8(gs(kfile_putc))
- 673 0014 4D81      		ldd r20,Y+5	 ;  13	*movhi/2	[length = 2]
- 674 0016 5E81      		ldd r21,Y+6
- 675 0018 9F01      		movw r18,r30	 ;  52	*movhi/1	[length = 1]
- 676 001a 0E94 0000 		call _formatted_write	 ;  15	call_value_insn/3	[length = 2]
- 677               	/* epilogue start */
- 678               	.LSM58:
- 679 001e CF91      		pop r28	 ;  49	pophi	[length = 2]
- 680 0020 DF91      		pop r29
- 681 0022 0895      		ret	 ;  50	return_from_epilogue	[length = 1]
- 682               	.LFE37:
- 684               		.section	.progmem.data,"a",@progbits
- 687               	__c.1962:
- 688 0000 6265 7274 		.string	"bertos/kern/kfile.c"
- 688      6F73 2F6B 
- 688      6572 6E2F 
- 688      6B66 696C 
- 688      652E 6300 
- 691               	__c.1960:
- 692 0014 6664 00   		.string	"fd"
- 695               	__c.1465:
- 696 0017 6265 7274 		.string	"bertos/kern/kfile.h"
- 696      6F73 2F6B 
- 696      6572 6E2F 
- 696      6B66 696C 
- 696      652E 6800 
- 699               	__c.1463:
- 700 002b 6664 2D3E 		.string	"fd->clearerr"
- 700      636C 6561 
- 700      7265 7272 
- 700      00
- 703               	__c.1437:
- 704 0038 6265 7274 		.string	"bertos/kern/kfile.h"
- 704      6F73 2F6B 
- 704      6572 6E2F 
- 704      6B66 696C 
- 704      652E 6800 
- 707               	__c.1435:
- 708 004c 6664 2D3E 		.string	"fd->flush"
- 708      666C 7573 
- 708      6800 
- 711               	__c.1423:
- 712 0056 6265 7274 		.string	"bertos/kern/kfile.h"
- 712      6F73 2F6B 
- 712      6572 6E2F 
- 712      6B66 696C 
- 712      652E 6800 
- 715               	__c.1421:
- 716 006a 6664 2D3E 		.string	"fd->seek"
- 716      7365 656B 
- 716      00
- 719               	__c.1928:
- 720 0073 6265 7274 		.string	"bertos/kern/kfile.c"
- 720      6F73 2F6B 
- 720      6572 6E2F 
- 720      6B66 696C 
- 720      652E 6300 
- 723               	__c.1926:
- 724 0087 3000      		.string	"0"
- 727               	__c.1363:
- 728 0089 6265 7274 		.string	"bertos/kern/kfile.h"
- 728      6F73 2F6B 
- 728      6572 6E2F 
- 728      6B66 696C 
- 728      652E 6800 
- 731               	__c.1361:
- 732 009d 6664 2D3E 		.string	"fd->read"
- 732      7265 6164 
- 732      00
- 735               	__c.1379:
- 736 00a6 6265 7274 		.string	"bertos/kern/kfile.h"
- 736      6F73 2F6B 
- 736      6572 6E2F 
- 736      6B66 696C 
- 736      652E 6800 
- 739               	__c.1377:
- 740 00ba 6664 2D3E 		.string	"fd->write"
- 740      7772 6974 
- 740      6500 
- 837               	.Letext0:
+   8               		.global __do_copy_data
+   9               		.global __do_clear_bss
+  10               		.text
+  11               	.Ltext0:
+  12               		.cfi_sections	.debug_frame
+  13               		.section	.text.kfile_genericClose,"ax",@progbits
+  14               	.global	kfile_genericClose
+  16               	kfile_genericClose:
+  17               	.LFB39:
+  18               		.file 1 "bertos/kern/kfile.c"
+   1:bertos/kern/kfile.c **** /**
+   2:bertos/kern/kfile.c ****  * \file
+   3:bertos/kern/kfile.c ****  * <!--
+   4:bertos/kern/kfile.c ****  * This file is part of BeRTOS.
+   5:bertos/kern/kfile.c ****  *
+   6:bertos/kern/kfile.c ****  * Bertos is free software; you can redistribute it and/or modify
+   7:bertos/kern/kfile.c ****  * it under the terms of the GNU General Public License as published by
+   8:bertos/kern/kfile.c ****  * the Free Software Foundation; either version 2 of the License, or
+   9:bertos/kern/kfile.c ****  * (at your option) any later version.
+  10:bertos/kern/kfile.c ****  *
+  11:bertos/kern/kfile.c ****  * This program is distributed in the hope that it will be useful,
+  12:bertos/kern/kfile.c ****  * but WITHOUT ANY WARRANTY; without even the implied warranty of
+  13:bertos/kern/kfile.c ****  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  14:bertos/kern/kfile.c ****  * GNU General Public License for more details.
+  15:bertos/kern/kfile.c ****  *
+  16:bertos/kern/kfile.c ****  * You should have received a copy of the GNU General Public License
+  17:bertos/kern/kfile.c ****  * along with this program; if not, write to the Free Software
+  18:bertos/kern/kfile.c ****  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+  19:bertos/kern/kfile.c ****  *
+  20:bertos/kern/kfile.c ****  * As a special exception, you may use this file as part of a free software
+  21:bertos/kern/kfile.c ****  * library without restriction.  Specifically, if other files instantiate
+  22:bertos/kern/kfile.c ****  * templates or use macros or inline functions from this file, or you compile
+  23:bertos/kern/kfile.c ****  * this file and link it with other files to produce an executable, this
+  24:bertos/kern/kfile.c ****  * file does not by itself cause the resulting executable to be covered by
+  25:bertos/kern/kfile.c ****  * the GNU General Public License.  This exception does not however
+  26:bertos/kern/kfile.c ****  * invalidate any other reasons why the executable file might be covered by
+  27:bertos/kern/kfile.c ****  * the GNU General Public License.
+  28:bertos/kern/kfile.c ****  *
+  29:bertos/kern/kfile.c ****  * Copyright 2007 Develer S.r.l. (http://www.develer.com/)
+  30:bertos/kern/kfile.c ****  * -->
+  31:bertos/kern/kfile.c ****  *
+  32:bertos/kern/kfile.c ****  * \brief Virtual KFile I/O interface.
+  33:bertos/kern/kfile.c ****  *
+  34:bertos/kern/kfile.c ****  * This module implements some generic I/O interfaces for kfile.
+  35:bertos/kern/kfile.c ****  *
+  36:bertos/kern/kfile.c ****  * \version $Id: kfile.c 2975 2009-09-27 13:21:27Z batt $
+  37:bertos/kern/kfile.c ****  * \author Francesco Sacchi <batt@develer.com>
+  38:bertos/kern/kfile.c ****  * \author Daniele Basile <asterix@develer.com>
+  39:bertos/kern/kfile.c ****  */
+  40:bertos/kern/kfile.c **** 
+  41:bertos/kern/kfile.c **** #include "kfile.h"
+  42:bertos/kern/kfile.c **** 
+  43:bertos/kern/kfile.c **** #include "cfg/cfg_kfile.h"
+  44:bertos/kern/kfile.c **** #include <cfg/debug.h>
+  45:bertos/kern/kfile.c **** #include <cfg/log.h>
+  46:bertos/kern/kfile.c **** 
+  47:bertos/kern/kfile.c **** #include <drv/timer.h>
+  48:bertos/kern/kfile.c **** #include <mware/formatwr.h>
+  49:bertos/kern/kfile.c **** 
+  50:bertos/kern/kfile.c **** #include <string.h>
+  51:bertos/kern/kfile.c **** 
+  52:bertos/kern/kfile.c **** /*
+  53:bertos/kern/kfile.c ****  * Sanity check for config parameters required by this module.
+  54:bertos/kern/kfile.c ****  */
+  55:bertos/kern/kfile.c **** #if !defined(CONFIG_KFILE_GETS) || ((CONFIG_KFILE_GETS != 0) && CONFIG_KFILE_GETS != 1)
+  56:bertos/kern/kfile.c **** 	#error CONFIG_KFILE_GETS must be set to either 0 or 1 in appconfig.h
+  57:bertos/kern/kfile.c **** #endif
+  58:bertos/kern/kfile.c **** #if !defined(CONFIG_PRINTF)
+  59:bertos/kern/kfile.c **** 	#error CONFIG_PRINTF missing in appconfig.h
+  60:bertos/kern/kfile.c **** #endif
+  61:bertos/kern/kfile.c **** 
+  62:bertos/kern/kfile.c **** 
+  63:bertos/kern/kfile.c **** /**
+  64:bertos/kern/kfile.c ****  * Generic putc() implementation using \a fd->write.
+  65:bertos/kern/kfile.c ****  */
+  66:bertos/kern/kfile.c **** int kfile_putc(int _c, struct KFile *fd)
+  67:bertos/kern/kfile.c **** {
+  68:bertos/kern/kfile.c **** 	unsigned char c = (unsigned char)_c;
+  69:bertos/kern/kfile.c **** 
+  70:bertos/kern/kfile.c **** 	if (kfile_write(fd, &c, sizeof(c)) == sizeof(c))
+  71:bertos/kern/kfile.c **** 		return (int)((unsigned char)_c);
+  72:bertos/kern/kfile.c **** 	else
+  73:bertos/kern/kfile.c **** 		return EOF;
+  74:bertos/kern/kfile.c **** }
+  75:bertos/kern/kfile.c **** 
+  76:bertos/kern/kfile.c **** /**
+  77:bertos/kern/kfile.c ****  * Generic getc() implementation using \a fd->read.
+  78:bertos/kern/kfile.c ****  */
+  79:bertos/kern/kfile.c **** int kfile_getc(struct KFile *fd)
+  80:bertos/kern/kfile.c **** {
+  81:bertos/kern/kfile.c **** 	unsigned char c;
+  82:bertos/kern/kfile.c **** 
+  83:bertos/kern/kfile.c **** 	if (kfile_read(fd, &c, sizeof(c)) == sizeof(c))
+  84:bertos/kern/kfile.c **** 		return (int)((unsigned char)c);
+  85:bertos/kern/kfile.c **** 	else
+  86:bertos/kern/kfile.c **** 		return EOF;
+  87:bertos/kern/kfile.c **** }
+  88:bertos/kern/kfile.c **** 
+  89:bertos/kern/kfile.c **** #if CONFIG_PRINTF
+  90:bertos/kern/kfile.c **** /**
+  91:bertos/kern/kfile.c ****  * Formatted write.
+  92:bertos/kern/kfile.c ****  */
+  93:bertos/kern/kfile.c **** int kfile_printf(struct KFile *fd, const char *format, ...)
+  94:bertos/kern/kfile.c **** {
+  95:bertos/kern/kfile.c **** 	va_list ap;
+  96:bertos/kern/kfile.c **** 	int len;
+  97:bertos/kern/kfile.c **** 
+  98:bertos/kern/kfile.c **** 	va_start(ap, format);
+  99:bertos/kern/kfile.c **** 	len = _formatted_write(format, (void (*)(char, void *))kfile_putc, fd, ap);
+ 100:bertos/kern/kfile.c **** 	va_end(ap);
+ 101:bertos/kern/kfile.c **** 
+ 102:bertos/kern/kfile.c **** 	return len;
+ 103:bertos/kern/kfile.c **** }
+ 104:bertos/kern/kfile.c **** #endif /* CONFIG_PRINTF */
+ 105:bertos/kern/kfile.c **** 
+ 106:bertos/kern/kfile.c **** /**
+ 107:bertos/kern/kfile.c ****  * Write a string to kfile \a fd.
+ 108:bertos/kern/kfile.c ****  * \return 0 if OK, EOF in case of error.
+ 109:bertos/kern/kfile.c ****  */
+ 110:bertos/kern/kfile.c **** int kfile_print(struct KFile *fd, const char *s)
+ 111:bertos/kern/kfile.c **** {
+ 112:bertos/kern/kfile.c **** 	while (*s)
+ 113:bertos/kern/kfile.c **** 	{
+ 114:bertos/kern/kfile.c **** 		if (kfile_putc(*s++, fd) == EOF)
+ 115:bertos/kern/kfile.c **** 			return EOF;
+ 116:bertos/kern/kfile.c **** 	}
+ 117:bertos/kern/kfile.c **** 	return 0;
+ 118:bertos/kern/kfile.c **** }
+ 119:bertos/kern/kfile.c **** 
+ 120:bertos/kern/kfile.c **** #if CONFIG_KFILE_GETS
+ 121:bertos/kern/kfile.c **** /**
+ 122:bertos/kern/kfile.c ****  * Read a line long at most as size and put it
+ 123:bertos/kern/kfile.c ****  * in buf.
+ 124:bertos/kern/kfile.c ****  * \return number of chars read or EOF in case
+ 125:bertos/kern/kfile.c ****  *         of error.
+ 126:bertos/kern/kfile.c ****  */
+ 127:bertos/kern/kfile.c **** int kfile_gets(struct KFile *fd, char *buf, int size)
+ 128:bertos/kern/kfile.c **** {
+ 129:bertos/kern/kfile.c **** 	return kfile_gets_echo(fd, buf, size, false);
+ 130:bertos/kern/kfile.c **** }
+ 131:bertos/kern/kfile.c **** 
+ 132:bertos/kern/kfile.c **** 
+ 133:bertos/kern/kfile.c **** /**
+ 134:bertos/kern/kfile.c ****  * Read a line long at most as size and put it
+ 135:bertos/kern/kfile.c ****  * in buf, with optional echo.
+ 136:bertos/kern/kfile.c ****  *
+ 137:bertos/kern/kfile.c ****  * \return number of chars read, or EOF in case
+ 138:bertos/kern/kfile.c ****  *         of error.
+ 139:bertos/kern/kfile.c ****  */
+ 140:bertos/kern/kfile.c **** int kfile_gets_echo(struct KFile *fd, char *buf, int size, bool echo)
+ 141:bertos/kern/kfile.c **** {
+ 142:bertos/kern/kfile.c **** 	int i = 0;
+ 143:bertos/kern/kfile.c **** 	int c;
+ 144:bertos/kern/kfile.c **** 
+ 145:bertos/kern/kfile.c **** 	for (;;)
+ 146:bertos/kern/kfile.c **** 	{
+ 147:bertos/kern/kfile.c **** 		if ((c = kfile_getc(fd)) == EOF)
+ 148:bertos/kern/kfile.c **** 		{
+ 149:bertos/kern/kfile.c **** 			buf[i] = '\0';
+ 150:bertos/kern/kfile.c **** 			return -1;
+ 151:bertos/kern/kfile.c **** 		}
+ 152:bertos/kern/kfile.c **** 
+ 153:bertos/kern/kfile.c **** 		/* FIXME */
+ 154:bertos/kern/kfile.c **** 		if (c == '\r' || c == '\n' || i >= size-1)
+ 155:bertos/kern/kfile.c **** 		{
+ 156:bertos/kern/kfile.c **** 			buf[i] = '\0';
+ 157:bertos/kern/kfile.c **** 			if (echo)
+ 158:bertos/kern/kfile.c **** 				kfile_print(fd, "\r\n");
+ 159:bertos/kern/kfile.c **** 			break;
+ 160:bertos/kern/kfile.c **** 		}
+ 161:bertos/kern/kfile.c **** 		buf[i++] = c;
+ 162:bertos/kern/kfile.c **** 		if (echo)
+ 163:bertos/kern/kfile.c **** 			kfile_putc(c, fd);
+ 164:bertos/kern/kfile.c **** 	}
+ 165:bertos/kern/kfile.c **** 
+ 166:bertos/kern/kfile.c **** 	return i;
+ 167:bertos/kern/kfile.c **** }
+ 168:bertos/kern/kfile.c **** #endif /* !CONFIG_KFILE_GETS */
+ 169:bertos/kern/kfile.c **** 
+ 170:bertos/kern/kfile.c **** 
+ 171:bertos/kern/kfile.c **** /**
+ 172:bertos/kern/kfile.c ****  * Move \a fd file seek position of \a offset bytes from \a whence.
+ 173:bertos/kern/kfile.c ****  *
+ 174:bertos/kern/kfile.c ****  * This is a generic implementation of seek function, you can redefine
+ 175:bertos/kern/kfile.c ****  * it in your local module if needed.
+ 176:bertos/kern/kfile.c ****  */
+ 177:bertos/kern/kfile.c **** kfile_off_t kfile_genericSeek(struct KFile *fd, kfile_off_t offset, KSeekMode whence)
+ 178:bertos/kern/kfile.c **** {
+ 179:bertos/kern/kfile.c **** 	kfile_off_t seek_pos;
+ 180:bertos/kern/kfile.c **** 
+ 181:bertos/kern/kfile.c **** 	switch (whence)
+ 182:bertos/kern/kfile.c **** 	{
+ 183:bertos/kern/kfile.c **** 
+ 184:bertos/kern/kfile.c **** 	case KSM_SEEK_SET:
+ 185:bertos/kern/kfile.c **** 		seek_pos = 0;
+ 186:bertos/kern/kfile.c **** 		break;
+ 187:bertos/kern/kfile.c **** 	case KSM_SEEK_END:
+ 188:bertos/kern/kfile.c **** 		seek_pos = fd->size;
+ 189:bertos/kern/kfile.c **** 		break;
+ 190:bertos/kern/kfile.c **** 	case KSM_SEEK_CUR:
+ 191:bertos/kern/kfile.c **** 		seek_pos = fd->seek_pos;
+ 192:bertos/kern/kfile.c **** 		break;
+ 193:bertos/kern/kfile.c **** 	default:
+ 194:bertos/kern/kfile.c **** 		ASSERT(0);
+ 195:bertos/kern/kfile.c **** 		return EOF;
+ 196:bertos/kern/kfile.c **** 		break;
+ 197:bertos/kern/kfile.c **** 	}
+ 198:bertos/kern/kfile.c **** 
+ 199:bertos/kern/kfile.c **** 	#if LOG_LEVEL >= LOG_LVL_INFO
+ 200:bertos/kern/kfile.c **** 	/* Bound check */
+ 201:bertos/kern/kfile.c **** 	if (seek_pos + offset > fd->size)
+ 202:bertos/kern/kfile.c **** 		LOG_INFO("seek outside EOF\n");
+ 203:bertos/kern/kfile.c **** 	#endif
+ 204:bertos/kern/kfile.c **** 
+ 205:bertos/kern/kfile.c **** 	fd->seek_pos = seek_pos + offset;
+ 206:bertos/kern/kfile.c **** 
+ 207:bertos/kern/kfile.c **** 	return fd->seek_pos;
+ 208:bertos/kern/kfile.c **** }
+ 209:bertos/kern/kfile.c **** 
+ 210:bertos/kern/kfile.c **** /**
+ 211:bertos/kern/kfile.c ****  * Reopen file \a fd.
+ 212:bertos/kern/kfile.c ****  * This is a generic implementation that only flush file
+ 213:bertos/kern/kfile.c ****  * and reset seek_pos to 0.
+ 214:bertos/kern/kfile.c ****  */
+ 215:bertos/kern/kfile.c **** struct KFile * kfile_genericReopen(struct KFile *fd)
+ 216:bertos/kern/kfile.c **** {
+ 217:bertos/kern/kfile.c **** 	kfile_flush(fd);
+ 218:bertos/kern/kfile.c **** 	kfile_seek(fd, 0, KSM_SEEK_SET);
+ 219:bertos/kern/kfile.c **** 	return fd;
+ 220:bertos/kern/kfile.c **** }
+ 221:bertos/kern/kfile.c **** 
+ 222:bertos/kern/kfile.c **** /**
+ 223:bertos/kern/kfile.c ****  * Close file \a fd.
+ 224:bertos/kern/kfile.c ****  * This is a generic implementation that only return 0.
+ 225:bertos/kern/kfile.c ****  */
+ 226:bertos/kern/kfile.c **** int kfile_genericClose(UNUSED_ARG(struct KFile *, fd))
+ 227:bertos/kern/kfile.c **** {
+  19               		.loc 1 227 0
+  20               		.cfi_startproc
+  21               	.LVL0:
+  22               	/* prologue: function */
+  23               	/* frame size = 0 */
+  24               	/* stack size = 0 */
+  25               	.L__stack_usage = 0
+ 228:bertos/kern/kfile.c **** 	return 0;
+ 229:bertos/kern/kfile.c **** };
+  26               		.loc 1 229 0
+  27 0000 80E0      		ldi r24,lo8(0)	 ;  10	*movhi/4	[length = 2]
+  28 0002 90E0      		ldi r25,hi8(0)
+  29               	.LVL1:
+  30               	/* epilogue start */
+  31 0004 0895      		ret	 ;  19	return	[length = 1]
+  32               		.cfi_endproc
+  33               	.LFE39:
+  35               		.section	.text.kfile_generic,"ax",@progbits
+  37               	kfile_generic:
+  38               	.LFB41:
+ 230:bertos/kern/kfile.c **** 
+ 231:bertos/kern/kfile.c **** 
+ 232:bertos/kern/kfile.c **** /**
+ 233:bertos/kern/kfile.c ****  * Discard input to resynchronize with remote end.
+ 234:bertos/kern/kfile.c ****  *
+ 235:bertos/kern/kfile.c ****  * Discard incoming data until the kfile_getc stops receiving
+ 236:bertos/kern/kfile.c ****  * characters for at least \a delay milliseconds.
+ 237:bertos/kern/kfile.c ****  *
+ 238:bertos/kern/kfile.c ****  * \note If the timeout occur, we reset the error before to
+ 239:bertos/kern/kfile.c ****  * quit.
+ 240:bertos/kern/kfile.c ****  */
+ 241:bertos/kern/kfile.c **** void kfile_resync(KFile *fd, mtime_t delay)
+ 242:bertos/kern/kfile.c **** {
+ 243:bertos/kern/kfile.c **** 	ticks_t start_time = timer_clock();
+ 244:bertos/kern/kfile.c **** 	for(;;)
+ 245:bertos/kern/kfile.c **** 	{
+ 246:bertos/kern/kfile.c **** 		if(kfile_getc(fd) != EOF)
+ 247:bertos/kern/kfile.c **** 			start_time = timer_clock();
+ 248:bertos/kern/kfile.c **** 
+ 249:bertos/kern/kfile.c **** 		if ((timer_clock() - start_time) > ms_to_ticks(delay))
+ 250:bertos/kern/kfile.c **** 		{
+ 251:bertos/kern/kfile.c **** 			kfile_clearerr(fd);
+ 252:bertos/kern/kfile.c **** 			break;
+ 253:bertos/kern/kfile.c **** 		}
+ 254:bertos/kern/kfile.c **** 
+ 255:bertos/kern/kfile.c **** 	}
+ 256:bertos/kern/kfile.c **** }
+ 257:bertos/kern/kfile.c **** 
+ 258:bertos/kern/kfile.c **** /**
+ 259:bertos/kern/kfile.c ****  * Stub function that does nothing.
+ 260:bertos/kern/kfile.c ****  * This is a generic implementation that only return 0.
+ 261:bertos/kern/kfile.c ****  */
+ 262:bertos/kern/kfile.c **** static int kfile_generic(UNUSED_ARG(struct KFile *, fd))
+ 263:bertos/kern/kfile.c **** {
+  39               		.loc 1 263 0
+  40               		.cfi_startproc
+  41               	.LVL2:
+  42               	/* prologue: function */
+  43               	/* frame size = 0 */
+  44               	/* stack size = 0 */
+  45               	.L__stack_usage = 0
+ 264:bertos/kern/kfile.c **** 	return 0;
+ 265:bertos/kern/kfile.c **** };
+  46               		.loc 1 265 0
+  47 0000 80E0      		ldi r24,lo8(0)	 ;  10	*movhi/4	[length = 2]
+  48 0002 90E0      		ldi r25,hi8(0)
+  49               	.LVL3:
+  50               	/* epilogue start */
+  51 0004 0895      		ret	 ;  19	return	[length = 1]
+  52               		.cfi_endproc
+  53               	.LFE41:
+  55               		.section	.text.kfile_putc,"ax",@progbits
+  56               	.global	kfile_putc
+  58               	kfile_putc:
+  59               	.LFB33:
+  67:bertos/kern/kfile.c **** {
+  60               		.loc 1 67 0
+  61               		.cfi_startproc
+  62               	.LVL4:
+  63 0000 FF92      		push r15	 ;  73	*pushqi/1	[length = 1]
+  64               	.LCFI0:
+  65               		.cfi_def_cfa_offset 3
+  66               		.cfi_offset 15, -2
+  67 0002 0F93      		push r16	 ;  74	*pushqi/1	[length = 1]
+  68               	.LCFI1:
+  69               		.cfi_def_cfa_offset 4
+  70               		.cfi_offset 16, -3
+  71 0004 1F93      		push r17	 ;  75	*pushqi/1	[length = 1]
+  72               	.LCFI2:
+  73               		.cfi_def_cfa_offset 5
+  74               		.cfi_offset 17, -4
+  75 0006 CF93      		push r28	 ;  76	*pushqi/1	[length = 1]
+  76               	.LCFI3:
+  77               		.cfi_def_cfa_offset 6
+  78               		.cfi_offset 28, -5
+  79 0008 DF93      		push r29	 ;  77	*pushqi/1	[length = 1]
+  80               	.LCFI4:
+  81               		.cfi_def_cfa_offset 7
+  82               		.cfi_offset 29, -6
+  83 000a 0F92      		push __tmp_reg__	 ;  81	*addhi3_sp_R_pc2	[length = 1]
+  84               	.LCFI5:
+  85               		.cfi_def_cfa_offset 8
+  86 000c CDB7      		in r28,__SP_L__	 ;  82	*movhi_sp/2	[length = 2]
+  87 000e DEB7      		in r29,__SP_H__
+  88               	.LCFI6:
+  89               		.cfi_def_cfa_register 28
+  90               	/* prologue: function */
+  91               	/* frame size = 1 */
+  92               	/* stack size = 6 */
+  93               	.L__stack_usage = 6
+  94 0010 F82E      		mov r15,r24	 ;  56	*movqi/1	[length = 1]
+  95 0012 8B01      		movw r16,r22	 ;  3	*movhi/1	[length = 1]
+  68:bertos/kern/kfile.c **** 	unsigned char c = (unsigned char)_c;
+  96               		.loc 1 68 0
+  97 0014 8983      		std Y+1,r24	 ;  9	*movqi/3	[length = 1]
+  98               	.LVL5:
+  99               	.LBB35:
+ 100               	.LBB36:
+ 101               		.file 2 "bertos/kern/kfile.h"
+   1:bertos/kern/kfile.h **** /**
+   2:bertos/kern/kfile.h ****  * \file
+   3:bertos/kern/kfile.h ****  * <!--
+   4:bertos/kern/kfile.h ****  * This file is part of BeRTOS.
+   5:bertos/kern/kfile.h ****  *
+   6:bertos/kern/kfile.h ****  * Bertos is free software; you can redistribute it and/or modify
+   7:bertos/kern/kfile.h ****  * it under the terms of the GNU General Public License as published by
+   8:bertos/kern/kfile.h ****  * the Free Software Foundation; either version 2 of the License, or
+   9:bertos/kern/kfile.h ****  * (at your option) any later version.
+  10:bertos/kern/kfile.h ****  *
+  11:bertos/kern/kfile.h ****  * This program is distributed in the hope that it will be useful,
+  12:bertos/kern/kfile.h ****  * but WITHOUT ANY WARRANTY; without even the implied warranty of
+  13:bertos/kern/kfile.h ****  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  14:bertos/kern/kfile.h ****  * GNU General Public License for more details.
+  15:bertos/kern/kfile.h ****  *
+  16:bertos/kern/kfile.h ****  * You should have received a copy of the GNU General Public License
+  17:bertos/kern/kfile.h ****  * along with this program; if not, write to the Free Software
+  18:bertos/kern/kfile.h ****  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+  19:bertos/kern/kfile.h ****  *
+  20:bertos/kern/kfile.h ****  * As a special exception, you may use this file as part of a free software
+  21:bertos/kern/kfile.h ****  * library without restriction.  Specifically, if other files instantiate
+  22:bertos/kern/kfile.h ****  * templates or use macros or inline functions from this file, or you compile
+  23:bertos/kern/kfile.h ****  * this file and link it with other files to produce an executable, this
+  24:bertos/kern/kfile.h ****  * file does not by itself cause the resulting executable to be covered by
+  25:bertos/kern/kfile.h ****  * the GNU General Public License.  This exception does not however
+  26:bertos/kern/kfile.h ****  * invalidate any other reasons why the executable file might be covered by
+  27:bertos/kern/kfile.h ****  * the GNU General Public License.
+  28:bertos/kern/kfile.h ****  *
+  29:bertos/kern/kfile.h ****  * Copyright 2004 Develer S.r.l. (http://www.develer.com/)
+  30:bertos/kern/kfile.h ****  * Copyright 1999, 2000, 2001, 2003 Bernie Innocenti <bernie@codewiz.org>
+  31:bertos/kern/kfile.h ****  *
+  32:bertos/kern/kfile.h ****  * -->
+  33:bertos/kern/kfile.h ****  *
+  34:bertos/kern/kfile.h ****  * \brief Virtual KFile I/O interface.
+  35:bertos/kern/kfile.h ****  *
+  36:bertos/kern/kfile.h ****  * KFile is a simple, generic interface for file I/O.  It uses an
+  37:bertos/kern/kfile.h ****  * object-oriented model to supply a device-neutral interface to
+  38:bertos/kern/kfile.h ****  * communicate with drivers.
+  39:bertos/kern/kfile.h ****  *
+  40:bertos/kern/kfile.h ****  * This module contains only definitions, the instance structure
+  41:bertos/kern/kfile.h ****  * and the common API.
+  42:bertos/kern/kfile.h ****  * Each KFile subclass can override one or more methods of the interface,
+  43:bertos/kern/kfile.h ****  * and can extend the base KFile structure with its own private data.
+  44:bertos/kern/kfile.h ****  * For instance, a serial driver might implement the KFile interface by
+  45:bertos/kern/kfile.h ****  * declaring a context structure like this:
+  46:bertos/kern/kfile.h ****  *
+  47:bertos/kern/kfile.h ****  * \code
+  48:bertos/kern/kfile.h ****  * typedef struct Serial
+  49:bertos/kern/kfile.h ****  * {
+  50:bertos/kern/kfile.h ****  *      // base class instance
+  51:bertos/kern/kfile.h ****  *      KFile fd;
+  52:bertos/kern/kfile.h ****  *
+  53:bertos/kern/kfile.h ****  *      // private instance data
+  54:bertos/kern/kfile.h ****  *      FIFOBuffer txfifo, rxfifo;
+  55:bertos/kern/kfile.h ****  * } Serial;
+  56:bertos/kern/kfile.h ****  * \endcode
+  57:bertos/kern/kfile.h ****  *
+  58:bertos/kern/kfile.h ****  * You should also supply a macro for casting KFile to Serial:
+  59:bertos/kern/kfile.h ****  *
+  60:bertos/kern/kfile.h ****  * \code
+  61:bertos/kern/kfile.h ****  * INLINE Serial * SERIAL_CAST(KFile *fd)
+  62:bertos/kern/kfile.h ****  * {
+  63:bertos/kern/kfile.h ****  *		ASSERT(fd->_type == KFT_SERIAL);
+  64:bertos/kern/kfile.h ****  *		return (Serial *)fd;
+  65:bertos/kern/kfile.h ****  * }
+  66:bertos/kern/kfile.h ****  * \endcode
+  67:bertos/kern/kfile.h ****  *
+  68:bertos/kern/kfile.h ****  * Then you can implement as many interface functions as needed
+  69:bertos/kern/kfile.h ****  * and leave the rest to NULL.
+  70:bertos/kern/kfile.h ****  *
+  71:bertos/kern/kfile.h ****  * Example implementation of the close KFile method for Serial:
+  72:bertos/kern/kfile.h ****  *
+  73:bertos/kern/kfile.h ****  * \code
+  74:bertos/kern/kfile.h ****  * static int ser_kfile_close(struct KFile *fd)
+  75:bertos/kern/kfile.h ****  * {
+  76:bertos/kern/kfile.h ****  *		Serial *fds = SERIAL_CAST(fd);
+  77:bertos/kern/kfile.h ****  *      // [driver specific code here]
+  78:bertos/kern/kfile.h ****  *		return 0;
+  79:bertos/kern/kfile.h ****  * }
+  80:bertos/kern/kfile.h ****  * \endcode
+  81:bertos/kern/kfile.h ****  *
+  82:bertos/kern/kfile.h ****  * The SERIAL_CAST() macro helps ensure that the passed object is
+  83:bertos/kern/kfile.h ****  * really of type Serial.
+  84:bertos/kern/kfile.h ****  *
+  85:bertos/kern/kfile.h ****  * The KFile interface does not supply an open function: this is deliberate,
+  86:bertos/kern/kfile.h ****  * because in embedded systems each device has its own init parameters.
+  87:bertos/kern/kfile.h ****  * For the same reason, specific device settings like, for example,
+  88:bertos/kern/kfile.h ****  * the baudrate, are not part of interface and should be handled by the
+  89:bertos/kern/kfile.h ****  * driver-specific API.
+  90:bertos/kern/kfile.h ****  *
+  91:bertos/kern/kfile.h ****  * \version $Id: kfile.h 2975 2009-09-27 13:21:27Z batt $
+  92:bertos/kern/kfile.h ****  * \author Bernie Innocenti <bernie@codewiz.org>
+  93:bertos/kern/kfile.h ****  * \author Francesco Sacchi <batt@develer.com>
+  94:bertos/kern/kfile.h ****  * \author Daniele Basile <asterix@develer.com>
+  95:bertos/kern/kfile.h ****  *
+  96:bertos/kern/kfile.h ****  * $WIZ$ module_name = "kfile"
+  97:bertos/kern/kfile.h ****  * $WIZ$ module_configuration = "bertos/cfg/cfg_kfile.h"
+  98:bertos/kern/kfile.h ****  * $WIZ$ module_depends = "timer", "formatwr"
+  99:bertos/kern/kfile.h ****  */
+ 100:bertos/kern/kfile.h **** 
+ 101:bertos/kern/kfile.h **** #ifndef KERN_KFILE_H
+ 102:bertos/kern/kfile.h **** #define KERN_KFILE_H
+ 103:bertos/kern/kfile.h **** 
+ 104:bertos/kern/kfile.h **** #include <cfg/compiler.h>
+ 105:bertos/kern/kfile.h **** #include <cfg/debug.h>
+ 106:bertos/kern/kfile.h **** #include <cfg/macros.h>
+ 107:bertos/kern/kfile.h **** 
+ 108:bertos/kern/kfile.h **** /* fwd decl */
+ 109:bertos/kern/kfile.h **** struct KFile;
+ 110:bertos/kern/kfile.h **** 
+ 111:bertos/kern/kfile.h **** typedef int32_t kfile_off_t;     ///< KFile offset type, used by kfile_seek().
+ 112:bertos/kern/kfile.h **** 
+ 113:bertos/kern/kfile.h **** /**
+ 114:bertos/kern/kfile.h ****  * Costants for repositioning read/write file offset.
+ 115:bertos/kern/kfile.h ****  * These are needed because on some embedded platforms
+ 116:bertos/kern/kfile.h ****  * ANSI I/O library may not be present.
+ 117:bertos/kern/kfile.h ****  */
+ 118:bertos/kern/kfile.h **** typedef enum KSeekMode
+ 119:bertos/kern/kfile.h **** {
+ 120:bertos/kern/kfile.h **** 	KSM_SEEK_SET, ///< Seek from file beginning.
+ 121:bertos/kern/kfile.h **** 	KSM_SEEK_CUR, ///< Seek from file current position.
+ 122:bertos/kern/kfile.h **** 	KSM_SEEK_END, ///< Seek from file end.
+ 123:bertos/kern/kfile.h **** } KSeekMode;
+ 124:bertos/kern/kfile.h **** 
+ 125:bertos/kern/kfile.h **** /**
+ 126:bertos/kern/kfile.h ****  * Prototypes for KFile access functions.
+ 127:bertos/kern/kfile.h ****  * I/O file functions must be ANSI compliant.
+ 128:bertos/kern/kfile.h ****  * \note A KFile user can choose which function subset to implement,
+ 129:bertos/kern/kfile.h ****  *       but has to set to NULL unimplemented features.
+ 130:bertos/kern/kfile.h ****  * \{
+ 131:bertos/kern/kfile.h ****  */
+ 132:bertos/kern/kfile.h **** 
+ 133:bertos/kern/kfile.h **** /**
+ 134:bertos/kern/kfile.h ****  * Read from file.
+ 135:bertos/kern/kfile.h ****  * \return the number of bytes read.
+ 136:bertos/kern/kfile.h ****  */
+ 137:bertos/kern/kfile.h **** typedef size_t (*ReadFunc_t) (struct KFile *fd, void *buf, size_t size);
+ 138:bertos/kern/kfile.h **** 
+ 139:bertos/kern/kfile.h **** /**
+ 140:bertos/kern/kfile.h ****  * Write to file.
+ 141:bertos/kern/kfile.h ****  * \return the number of bytes written.
+ 142:bertos/kern/kfile.h ****  */
+ 143:bertos/kern/kfile.h **** typedef size_t (*WriteFunc_t) (struct KFile *fd, const void *buf, size_t size);
+ 144:bertos/kern/kfile.h **** 
+ 145:bertos/kern/kfile.h **** /**
+ 146:bertos/kern/kfile.h ****  * Seek into file (if seekable).
+ 147:bertos/kern/kfile.h ****  * \return the new file offset or EOF on errors.
+ 148:bertos/kern/kfile.h ****  */
+ 149:bertos/kern/kfile.h **** typedef kfile_off_t (*SeekFunc_t) (struct KFile *fd, kfile_off_t offset, KSeekMode whence);
+ 150:bertos/kern/kfile.h **** 
+ 151:bertos/kern/kfile.h **** /**
+ 152:bertos/kern/kfile.h ****  * Close and reopen file \a fd.
+ 153:bertos/kern/kfile.h ****  * The reopening is done with the former file parameters and access modes.
+ 154:bertos/kern/kfile.h ****  */
+ 155:bertos/kern/kfile.h **** typedef struct KFile * (*ReOpenFunc_t) (struct KFile *fd);
+ 156:bertos/kern/kfile.h **** 
+ 157:bertos/kern/kfile.h **** /**
+ 158:bertos/kern/kfile.h ****  * Close file.
+ 159:bertos/kern/kfile.h ****  * \return 0 on success, EOF on errors.
+ 160:bertos/kern/kfile.h ****  */
+ 161:bertos/kern/kfile.h **** typedef int (*CloseFunc_t) (struct KFile *fd);
+ 162:bertos/kern/kfile.h **** 
+ 163:bertos/kern/kfile.h **** /**
+ 164:bertos/kern/kfile.h ****  * Flush file I/O.
+ 165:bertos/kern/kfile.h ****  * \return 0 on success, EOF on errors.
+ 166:bertos/kern/kfile.h ****  */
+ 167:bertos/kern/kfile.h **** typedef int (*FlushFunc_t) (struct KFile *fd);
+ 168:bertos/kern/kfile.h **** 
+ 169:bertos/kern/kfile.h **** /**
+ 170:bertos/kern/kfile.h ****  * Get file error mask.
+ 171:bertos/kern/kfile.h ****  * \return 0 on success or file error code, device specific.
+ 172:bertos/kern/kfile.h ****  */
+ 173:bertos/kern/kfile.h **** typedef int (*ErrorFunc_t) (struct KFile *fd);
+ 174:bertos/kern/kfile.h **** 
+ 175:bertos/kern/kfile.h **** /**
+ 176:bertos/kern/kfile.h ****  * Clear errors.
+ 177:bertos/kern/kfile.h ****  */
+ 178:bertos/kern/kfile.h **** typedef void (*ClearErrFunc_t) (struct KFile *fd);
+ 179:bertos/kern/kfile.h **** /* \} */
+ 180:bertos/kern/kfile.h **** 
+ 181:bertos/kern/kfile.h **** /**
+ 182:bertos/kern/kfile.h ****  * Context data for callback functions which operate on
+ 183:bertos/kern/kfile.h ****  * pseudo files.
+ 184:bertos/kern/kfile.h ****  *
+ 185:bertos/kern/kfile.h ****  * \note Remember to add the corresponding accessor functions
+ 186:bertos/kern/kfile.h ****  *       when extending this interface.
+ 187:bertos/kern/kfile.h ****  */
+ 188:bertos/kern/kfile.h **** typedef struct KFile
+ 189:bertos/kern/kfile.h **** {
+ 190:bertos/kern/kfile.h **** 	ReadFunc_t     read;
+ 191:bertos/kern/kfile.h **** 	WriteFunc_t    write;
+ 192:bertos/kern/kfile.h **** 	ReOpenFunc_t   reopen;
+ 193:bertos/kern/kfile.h **** 	CloseFunc_t    close;
+ 194:bertos/kern/kfile.h **** 	SeekFunc_t     seek;
+ 195:bertos/kern/kfile.h **** 	FlushFunc_t    flush;
+ 196:bertos/kern/kfile.h **** 	ErrorFunc_t    error;
+ 197:bertos/kern/kfile.h **** 	ClearErrFunc_t clearerr;
+ 198:bertos/kern/kfile.h **** 	DB(id_t _type); ///< Used to keep track, at runtime, of the class type.
+ 199:bertos/kern/kfile.h **** 
+ 200:bertos/kern/kfile.h **** 	/* NOTE: these must _NOT_ be size_t on 16bit CPUs! */
+ 201:bertos/kern/kfile.h **** 	kfile_off_t    seek_pos;
+ 202:bertos/kern/kfile.h **** 	kfile_off_t    size;
+ 203:bertos/kern/kfile.h **** } KFile;
+ 204:bertos/kern/kfile.h **** 
+ 205:bertos/kern/kfile.h **** /**
+ 206:bertos/kern/kfile.h ****  * Generic implementation of kfile_seek.
+ 207:bertos/kern/kfile.h ****  */
+ 208:bertos/kern/kfile.h **** kfile_off_t kfile_genericSeek(struct KFile *fd, kfile_off_t offset, KSeekMode whence);
+ 209:bertos/kern/kfile.h **** 
+ 210:bertos/kern/kfile.h **** /**
+ 211:bertos/kern/kfile.h ****  * Generic implementation of kfile_reopen.
+ 212:bertos/kern/kfile.h ****  */
+ 213:bertos/kern/kfile.h **** struct KFile * kfile_genericReopen(struct KFile *fd);
+ 214:bertos/kern/kfile.h **** 
+ 215:bertos/kern/kfile.h **** int kfile_genericClose(struct KFile *fd);
+ 216:bertos/kern/kfile.h **** 
+ 217:bertos/kern/kfile.h **** int kfile_putc(int c, struct KFile *fd); ///< Generic putc implementation using kfile_write.
+ 218:bertos/kern/kfile.h **** int kfile_getc(struct KFile *fd);  ///< Generic getc implementation using kfile_read.
+ 219:bertos/kern/kfile.h **** int kfile_printf(struct KFile *fd, const char *format, ...);
+ 220:bertos/kern/kfile.h **** int kfile_print(struct KFile *fd, const char *s);
+ 221:bertos/kern/kfile.h **** int kfile_gets(struct KFile *fd, char *buf, int size);
+ 222:bertos/kern/kfile.h **** int kfile_gets_echo(struct KFile *fd, char *buf, int size, bool echo);
+ 223:bertos/kern/kfile.h **** void kfile_resync(KFile *fd, mtime_t delay);
+ 224:bertos/kern/kfile.h **** void kfile_init(struct KFile *fd);
+ 225:bertos/kern/kfile.h **** 
+ 226:bertos/kern/kfile.h **** /**
+ 227:bertos/kern/kfile.h ****  * Interface functions for KFile access.
+ 228:bertos/kern/kfile.h ****  * \note Remember to change following functions if KFile interface changes.
+ 229:bertos/kern/kfile.h ****  * \{
+ 230:bertos/kern/kfile.h ****  */
+ 231:bertos/kern/kfile.h **** INLINE size_t kfile_read(struct KFile *fd, void *buf, size_t size)
+ 232:bertos/kern/kfile.h **** {
+ 233:bertos/kern/kfile.h **** 	ASSERT(fd->read);
+ 234:bertos/kern/kfile.h **** 	return fd->read(fd, buf, size);
+ 235:bertos/kern/kfile.h **** }
+ 236:bertos/kern/kfile.h **** 
+ 237:bertos/kern/kfile.h **** INLINE size_t kfile_write(struct KFile *fd, const void *buf, size_t size)
+ 238:bertos/kern/kfile.h **** {
+ 239:bertos/kern/kfile.h **** 	ASSERT(fd->write);
+ 102               		.loc 2 239 0
+ 103 0016 DB01      		movw r26,r22	 ;  68	*movhi/1	[length = 1]
+ 104 0018 1296      		adiw r26,2	 ;  13	*movhi/2	[length = 4]
+ 105 001a 8D91      		ld r24,X+
+ 106 001c 9C91      		ld r25,X
+ 107 001e 1397      		sbiw r26,2+1
+ 108               	.LVL6:
+ 109 0020 0097      		sbiw r24,0	 ;  14	*cmphi/1	[length = 1]
+ 110 0022 01F4      		brne .L4	 ;  15	branch	[length = 1]
+ 111               	.LVL7:
+ 112 0024 80E0      		ldi r24,lo8(__c.1425)	 ;  20	*movhi/4	[length = 2]
+ 113 0026 90E0      		ldi r25,hi8(__c.1425)
+ 114 0028 60E0      		ldi r22,lo8(__c.1427)	 ;  21	*movhi/4	[length = 2]
+ 115 002a 70E0      		ldi r23,hi8(__c.1427)
+ 116 002c 4FEE      		ldi r20,lo8(239)	 ;  22	*movhi/4	[length = 2]
+ 117 002e 50E0      		ldi r21,hi8(239)
+ 118 0030 0E94 0000 		call __bassert_P	 ;  23	call_value_insn/3	[length = 2]
+ 119               	.LVL8:
+ 120               	.L4:
+ 240:bertos/kern/kfile.h **** 	return fd->write(fd, buf, size);
+ 121               		.loc 2 240 0
+ 122 0034 D801      		movw r26,r16	 ;  69	*movhi/1	[length = 1]
+ 123 0036 1296      		adiw r26,2	 ;  27	*movhi/2	[length = 4]
+ 124 0038 ED91      		ld r30,X+
+ 125 003a FC91      		ld r31,X
+ 126 003c 1397      		sbiw r26,2+1
+ 127 003e C801      		movw r24,r16	 ;  28	*movhi/1	[length = 1]
+ 128 0040 BE01      		movw r22,r28	 ;  70	*movhi/1	[length = 1]
+ 129 0042 6F5F      		subi r22,lo8(-(1))	 ;  29	*addhi3/4	[length = 2]
+ 130 0044 7F4F      		sbci r23,hi8(-(1))
+ 131 0046 41E0      		ldi r20,lo8(1)	 ;  30	*movhi/4	[length = 2]
+ 132 0048 50E0      		ldi r21,hi8(1)
+ 133 004a 0995      		icall	 ;  31	call_value_insn/1	[length = 1]
+ 134               	.LBE36:
+ 135               	.LBE35:
+  70:bertos/kern/kfile.c **** 	if (kfile_write(fd, &c, sizeof(c)) == sizeof(c))
+ 136               		.loc 1 70 0
+ 137 004c 8130      		cpi r24,1	 ;  33	*cmphi/4	[length = 2]
+ 138 004e 9105      		cpc r25,__zero_reg__
+ 139 0050 01F4      		brne .L6	 ;  34	branch	[length = 1]
+  71:bertos/kern/kfile.c **** 		return (int)((unsigned char)_c);
+ 140               		.loc 1 71 0
+ 141 0052 8F2D      		mov r24,r15	 ;  71	*movqi/1	[length = 1]
+ 142 0054 90E0      		ldi r25,lo8(0)	 ;  72	*movqi/2	[length = 1]
+ 143 0056 00C0      		rjmp .L5	 ;  95	jump	[length = 1]
+ 144               	.L6:
+  73:bertos/kern/kfile.c **** 		return EOF;
+ 145               		.loc 1 73 0
+ 146 0058 8FEF      		ldi r24,lo8(-1)	 ;  5	*movhi/4	[length = 2]
+ 147 005a 9FEF      		ldi r25,hi8(-1)
+ 148               	.L5:
+ 149               	/* epilogue start */
+  74:bertos/kern/kfile.c **** }
+ 150               		.loc 1 74 0
+ 151 005c 0F90      		pop __tmp_reg__	 ;  87	*addhi3_sp_R_pc2	[length = 1]
+ 152 005e DF91      		pop r29	 ;  88	popqi	[length = 1]
+ 153 0060 CF91      		pop r28	 ;  89	popqi	[length = 1]
+ 154 0062 1F91      		pop r17	 ;  90	popqi	[length = 1]
+ 155 0064 0F91      		pop r16	 ;  91	popqi	[length = 1]
+ 156               	.LVL9:
+ 157 0066 FF90      		pop r15	 ;  92	popqi	[length = 1]
+ 158 0068 0895      		ret	 ;  93	return_from_epilogue	[length = 1]
+ 159               		.cfi_endproc
+ 160               	.LFE33:
+ 162               		.section	.text.kfile_genericReopen,"ax",@progbits
+ 163               	.global	kfile_genericReopen
+ 165               	kfile_genericReopen:
+ 166               	.LFB38:
+ 216:bertos/kern/kfile.c **** {
+ 167               		.loc 1 216 0
+ 168               		.cfi_startproc
+ 169               	.LVL10:
+ 170 0000 CF93      		push r28	 ;  69	*pushqi/1	[length = 1]
+ 171               	.LCFI7:
+ 172               		.cfi_def_cfa_offset 3
+ 173               		.cfi_offset 28, -2
+ 174 0002 DF93      		push r29	 ;  70	*pushqi/1	[length = 1]
+ 175               	.LCFI8:
+ 176               		.cfi_def_cfa_offset 4
+ 177               		.cfi_offset 29, -3
+ 178               	/* prologue: function */
+ 179               	/* frame size = 0 */
+ 180               	/* stack size = 2 */
+ 181               	.L__stack_usage = 2
+ 182 0004 EC01      		movw r28,r24	 ;  2	*movhi/1	[length = 1]
+ 183               	.LVL11:
+ 184               	.LBB37:
+ 185               	.LBB38:
+ 241:bertos/kern/kfile.h **** }
+ 242:bertos/kern/kfile.h **** 
+ 243:bertos/kern/kfile.h **** INLINE KFile * kfile_reopen(struct KFile *fd)
+ 244:bertos/kern/kfile.h **** {
+ 245:bertos/kern/kfile.h **** 	ASSERT(fd->reopen);
+ 246:bertos/kern/kfile.h **** 	return fd->reopen(fd);
+ 247:bertos/kern/kfile.h **** }
+ 248:bertos/kern/kfile.h **** 
+ 249:bertos/kern/kfile.h **** INLINE int kfile_close(struct KFile *fd)
+ 250:bertos/kern/kfile.h **** {
+ 251:bertos/kern/kfile.h **** 	ASSERT(fd->close);
+ 252:bertos/kern/kfile.h **** 	return fd->close(fd);
+ 253:bertos/kern/kfile.h **** }
+ 254:bertos/kern/kfile.h **** 
+ 255:bertos/kern/kfile.h **** INLINE kfile_off_t kfile_seek(struct KFile *fd, kfile_off_t offset, KSeekMode whence)
+ 256:bertos/kern/kfile.h **** {
+ 257:bertos/kern/kfile.h **** 	ASSERT(fd->seek);
+ 258:bertos/kern/kfile.h **** 	return fd->seek(fd, offset, whence);
+ 259:bertos/kern/kfile.h **** }
+ 260:bertos/kern/kfile.h **** 
+ 261:bertos/kern/kfile.h **** INLINE int kfile_flush(struct KFile *fd)
+ 262:bertos/kern/kfile.h **** {
+ 263:bertos/kern/kfile.h **** 	ASSERT(fd->flush);
+ 186               		.loc 2 263 0
+ 187 0006 8A85      		ldd r24,Y+10	 ;  7	*movhi/2	[length = 2]
+ 188 0008 9B85      		ldd r25,Y+11
+ 189               	.LVL12:
+ 190 000a 0097      		sbiw r24,0	 ;  8	*cmphi/1	[length = 1]
+ 191 000c 01F4      		brne .L8	 ;  9	branch	[length = 1]
+ 192 000e 80E0      		ldi r24,lo8(__c.1455)	 ;  14	*movhi/4	[length = 2]
+ 193 0010 90E0      		ldi r25,hi8(__c.1455)
+ 194 0012 60E0      		ldi r22,lo8(__c.1457)	 ;  15	*movhi/4	[length = 2]
+ 195 0014 70E0      		ldi r23,hi8(__c.1457)
+ 196 0016 47E0      		ldi r20,lo8(263)	 ;  16	*movhi/4	[length = 2]
+ 197 0018 51E0      		ldi r21,hi8(263)
+ 198 001a 0E94 0000 		call __bassert_P	 ;  17	call_value_insn/3	[length = 2]
+ 199               	.L8:
+ 264:bertos/kern/kfile.h **** 	return fd->flush(fd);
+ 200               		.loc 2 264 0
+ 201 001e EA85      		ldd r30,Y+10	 ;  21	*movhi/2	[length = 2]
+ 202 0020 FB85      		ldd r31,Y+11
+ 203 0022 CE01      		movw r24,r28	 ;  22	*movhi/1	[length = 1]
+ 204 0024 0995      		icall	 ;  23	call_value_insn/1	[length = 1]
+ 205               	.LVL13:
+ 206               	.LBE38:
+ 207               	.LBE37:
+ 208               	.LBB39:
+ 209               	.LBB40:
+ 257:bertos/kern/kfile.h **** 	ASSERT(fd->seek);
+ 210               		.loc 2 257 0
+ 211 0026 8885      		ldd r24,Y+8	 ;  28	*movhi/2	[length = 2]
+ 212 0028 9985      		ldd r25,Y+9
+ 213 002a 0097      		sbiw r24,0	 ;  29	*cmphi/1	[length = 1]
+ 214 002c 01F4      		brne .L9	 ;  30	branch	[length = 1]
+ 215 002e 80E0      		ldi r24,lo8(__c.1448)	 ;  35	*movhi/4	[length = 2]
+ 216 0030 90E0      		ldi r25,hi8(__c.1448)
+ 217 0032 60E0      		ldi r22,lo8(__c.1450)	 ;  36	*movhi/4	[length = 2]
+ 218 0034 70E0      		ldi r23,hi8(__c.1450)
+ 219 0036 41E0      		ldi r20,lo8(257)	 ;  37	*movhi/4	[length = 2]
+ 220 0038 51E0      		ldi r21,hi8(257)
+ 221 003a 0E94 0000 		call __bassert_P	 ;  38	call_value_insn/3	[length = 2]
+ 222               	.L9:
+ 258:bertos/kern/kfile.h **** 	return fd->seek(fd, offset, whence);
+ 223               		.loc 2 258 0
+ 224 003e E885      		ldd r30,Y+8	 ;  42	*movhi/2	[length = 2]
+ 225 0040 F985      		ldd r31,Y+9
+ 226 0042 CE01      		movw r24,r28	 ;  43	*movhi/1	[length = 1]
+ 227 0044 40E0      		ldi r20,lo8(0)	 ;  44	*movsi/2	[length = 3]
+ 228 0046 50E0      		ldi r21,hi8(0)
+ 229 0048 BA01      		movw r22,r20
+ 230 004a 20E0      		ldi r18,lo8(0)	 ;  45	*movhi/4	[length = 2]
+ 231 004c 30E0      		ldi r19,hi8(0)
+ 232 004e 0995      		icall	 ;  46	call_value_insn/1	[length = 1]
+ 233               	.LBE40:
+ 234               	.LBE39:
+ 220:bertos/kern/kfile.c **** }
+ 235               		.loc 1 220 0
+ 236 0050 CE01      		movw r24,r28	 ;  77	*movhi/1	[length = 1]
+ 237               	/* epilogue start */
+ 238 0052 DF91      		pop r29	 ;  73	popqi	[length = 1]
+ 239 0054 CF91      		pop r28	 ;  74	popqi	[length = 1]
+ 240               	.LVL14:
+ 241 0056 0895      		ret	 ;  75	return_from_epilogue	[length = 1]
+ 242               		.cfi_endproc
+ 243               	.LFE38:
+ 245               		.section	.text.kfile_genericSeek,"ax",@progbits
+ 246               	.global	kfile_genericSeek
+ 248               	kfile_genericSeek:
+ 249               	.LFB37:
+ 178:bertos/kern/kfile.c **** {
+ 250               		.loc 1 178 0
+ 251               		.cfi_startproc
+ 252               	.LVL15:
+ 253 0000 0F93      		push r16	 ;  80	*pushqi/1	[length = 1]
+ 254               	.LCFI9:
+ 255               		.cfi_def_cfa_offset 3
+ 256               		.cfi_offset 16, -2
+ 257 0002 1F93      		push r17	 ;  81	*pushqi/1	[length = 1]
+ 258               	.LCFI10:
+ 259               		.cfi_def_cfa_offset 4
+ 260               		.cfi_offset 17, -3
+ 261               	/* prologue: function */
+ 262               	/* frame size = 0 */
+ 263               	/* stack size = 2 */
+ 264               	.L__stack_usage = 2
+ 265 0004 FC01      		movw r30,r24	 ;  2	*movhi/1	[length = 1]
+ 181:bertos/kern/kfile.c **** 	switch (whence)
+ 266               		.loc 1 181 0
+ 267 0006 2130      		cpi r18,1	 ;  10	*cmphi/4	[length = 2]
+ 268 0008 3105      		cpc r19,__zero_reg__
+ 269 000a 01F0      		breq .L13	 ;  11	branch	[length = 1]
+ 270 000c 2130      		cpi r18,1	 ;  12	*cmphi/4	[length = 2]
+ 271 000e 3105      		cpc r19,__zero_reg__
+ 272 0010 00F0      		brlo .L16	 ;  13	branch	[length = 1]
+ 273 0012 2230      		cpi r18,2	 ;  14	*cmphi/4	[length = 2]
+ 274 0014 3105      		cpc r19,__zero_reg__
+ 275 0016 01F4      		brne .L17	 ;  15	branch	[length = 1]
+ 188:bertos/kern/kfile.c **** 		seek_pos = fd->size;
+ 276               		.loc 1 188 0
+ 277 0018 008D      		ldd r16,Z+24	 ;  20	*movsi/3	[length = 4]
+ 278 001a 118D      		ldd r17,Z+25
+ 279 001c 228D      		ldd r18,Z+26
+ 280 001e 338D      		ldd r19,Z+27
+ 281               	.LVL16:
+ 189:bertos/kern/kfile.c **** 		break;
+ 282               		.loc 1 189 0
+ 283 0020 00C0      		rjmp .L12	 ;  90	jump	[length = 1]
+ 284               	.LVL17:
+ 285               	.L13:
+ 191:bertos/kern/kfile.c **** 		seek_pos = fd->seek_pos;
+ 286               		.loc 1 191 0
+ 287 0022 0489      		ldd r16,Z+20	 ;  26	*movsi/3	[length = 4]
+ 288 0024 1589      		ldd r17,Z+21
+ 289 0026 2689      		ldd r18,Z+22
+ 290 0028 3789      		ldd r19,Z+23
+ 291               	.LVL18:
+ 192:bertos/kern/kfile.c **** 		break;
+ 292               		.loc 1 192 0
+ 293 002a 00C0      		rjmp .L12	 ;  92	jump	[length = 1]
+ 294               	.LVL19:
+ 295               	.L17:
+ 296               	.LBB45:
+ 297               	.LBB46:
+ 194:bertos/kern/kfile.c **** 		ASSERT(0);
+ 298               		.loc 1 194 0
+ 299 002c 80E0      		ldi r24,lo8(__c.1871)	 ;  35	*movhi/4	[length = 2]
+ 300 002e 90E0      		ldi r25,hi8(__c.1871)
+ 301               	.LVL20:
+ 302 0030 60E0      		ldi r22,lo8(__c.1873)	 ;  36	*movhi/4	[length = 2]
+ 303 0032 70E0      		ldi r23,hi8(__c.1873)
+ 304 0034 42EC      		ldi r20,lo8(194)	 ;  37	*movhi/4	[length = 2]
+ 305 0036 50E0      		ldi r21,hi8(194)
+ 306               	.LVL21:
+ 307 0038 0E94 0000 		call __bassert_P	 ;  38	call_value_insn/3	[length = 2]
+ 308               	.LVL22:
+ 309 003c 0FEF      		ldi r16,lo8(-1)	 ;  7	*movsi/5	[length = 3]
+ 310 003e 1FEF      		ldi r17,hi8(-1)
+ 311 0040 9801      		movw r18,r16
+ 312 0042 00C0      		rjmp .L15	 ;  94	jump	[length = 1]
+ 313               	.LVL23:
+ 314               	.L16:
+ 315               	.LBE46:
+ 316               	.LBE45:
+ 185:bertos/kern/kfile.c **** 		seek_pos = 0;
+ 317               		.loc 1 185 0
+ 318 0044 00E0      		ldi r16,lo8(0)	 ;  6	*movsi/2	[length = 3]
+ 319 0046 10E0      		ldi r17,hi8(0)
+ 320 0048 9801      		movw r18,r16
+ 321               	.L12:
+ 322               	.LVL24:
+ 205:bertos/kern/kfile.c **** 	fd->seek_pos = seek_pos + offset;
+ 323               		.loc 1 205 0
+ 324 004a 040F      		add r16,r20	 ;  44	addsi3/1	[length = 4]
+ 325 004c 151F      		adc r17,r21
+ 326 004e 261F      		adc r18,r22
+ 327 0050 371F      		adc r19,r23
+ 328               	.LVL25:
+ 329 0052 048B      		std Z+20,r16	 ;  45	*movsi/4	[length = 4]
+ 330 0054 158B      		std Z+21,r17
+ 331 0056 268B      		std Z+22,r18
+ 332 0058 378B      		std Z+23,r19
+ 333               	.LVL26:
+ 334               	.L15:
+ 208:bertos/kern/kfile.c **** }
+ 335               		.loc 1 208 0
+ 336 005a B801      		movw r22,r16	 ;  88	*movhi/1	[length = 1]
+ 337 005c C901      		movw r24,r18	 ;  89	*movhi/1	[length = 1]
+ 338               	/* epilogue start */
+ 339 005e 1F91      		pop r17	 ;  84	popqi	[length = 1]
+ 340 0060 0F91      		pop r16	 ;  85	popqi	[length = 1]
+ 341 0062 0895      		ret	 ;  86	return_from_epilogue	[length = 1]
+ 342               		.cfi_endproc
+ 343               	.LFE37:
+ 345               		.section	.text.kfile_getc,"ax",@progbits
+ 346               	.global	kfile_getc
+ 348               	kfile_getc:
+ 349               	.LFB34:
+  80:bertos/kern/kfile.c **** {
+ 350               		.loc 1 80 0
+ 351               		.cfi_startproc
+ 352               	.LVL27:
+ 353 0000 0F93      		push r16	 ;  66	*pushqi/1	[length = 1]
+ 354               	.LCFI11:
+ 355               		.cfi_def_cfa_offset 3
+ 356               		.cfi_offset 16, -2
+ 357 0002 1F93      		push r17	 ;  67	*pushqi/1	[length = 1]
+ 358               	.LCFI12:
+ 359               		.cfi_def_cfa_offset 4
+ 360               		.cfi_offset 17, -3
+ 361 0004 CF93      		push r28	 ;  68	*pushqi/1	[length = 1]
+ 362               	.LCFI13:
+ 363               		.cfi_def_cfa_offset 5
+ 364               		.cfi_offset 28, -4
+ 365 0006 DF93      		push r29	 ;  69	*pushqi/1	[length = 1]
+ 366               	.LCFI14:
+ 367               		.cfi_def_cfa_offset 6
+ 368               		.cfi_offset 29, -5
+ 369 0008 0F92      		push __tmp_reg__	 ;  73	*addhi3_sp_R_pc2	[length = 1]
+ 370               	.LCFI15:
+ 371               		.cfi_def_cfa_offset 7
+ 372 000a CDB7      		in r28,__SP_L__	 ;  74	*movhi_sp/2	[length = 2]
+ 373 000c DEB7      		in r29,__SP_H__
+ 374               	.LCFI16:
+ 375               		.cfi_def_cfa_register 28
+ 376               	/* prologue: function */
+ 377               	/* frame size = 1 */
+ 378               	/* stack size = 5 */
+ 379               	.L__stack_usage = 5
+ 380 000e 8C01      		movw r16,r24	 ;  2	*movhi/1	[length = 1]
+ 381               	.LVL28:
+ 382               	.LBB47:
+ 383               	.LBB48:
+ 233:bertos/kern/kfile.h **** 	ASSERT(fd->read);
+ 384               		.loc 2 233 0
+ 385 0010 DC01      		movw r26,r24	 ;  61	*movhi/1	[length = 1]
+ 386 0012 8D91      		ld r24,X+	 ;  10	*movhi/2	[length = 3]
+ 387 0014 9C91      		ld r25,X
+ 388 0016 1197      		sbiw r26,1
+ 389               	.LVL29:
+ 390 0018 0097      		sbiw r24,0	 ;  11	*cmphi/1	[length = 1]
+ 391 001a 01F4      		brne .L19	 ;  12	branch	[length = 1]
+ 392 001c 80E0      		ldi r24,lo8(__c.1416)	 ;  17	*movhi/4	[length = 2]
+ 393 001e 90E0      		ldi r25,hi8(__c.1416)
+ 394 0020 60E0      		ldi r22,lo8(__c.1418)	 ;  18	*movhi/4	[length = 2]
+ 395 0022 70E0      		ldi r23,hi8(__c.1418)
+ 396 0024 49EE      		ldi r20,lo8(233)	 ;  19	*movhi/4	[length = 2]
+ 397 0026 50E0      		ldi r21,hi8(233)
+ 398 0028 0E94 0000 		call __bassert_P	 ;  20	call_value_insn/3	[length = 2]
+ 399               	.LVL30:
+ 400               	.L19:
+ 234:bertos/kern/kfile.h **** 	return fd->read(fd, buf, size);
+ 401               		.loc 2 234 0
+ 402 002c D801      		movw r26,r16	 ;  62	*movhi/1	[length = 1]
+ 403 002e ED91      		ld r30,X+	 ;  24	*movhi/2	[length = 2]
+ 404 0030 FC91      		ld r31,X
+ 405 0032 C801      		movw r24,r16	 ;  25	*movhi/1	[length = 1]
+ 406 0034 BE01      		movw r22,r28	 ;  63	*movhi/1	[length = 1]
+ 407 0036 6F5F      		subi r22,lo8(-(1))	 ;  26	*addhi3/4	[length = 2]
+ 408 0038 7F4F      		sbci r23,hi8(-(1))
+ 409 003a 41E0      		ldi r20,lo8(1)	 ;  27	*movhi/4	[length = 2]
+ 410 003c 50E0      		ldi r21,hi8(1)
+ 411 003e 0995      		icall	 ;  28	call_value_insn/1	[length = 1]
+ 412               	.LBE48:
+ 413               	.LBE47:
+  83:bertos/kern/kfile.c **** 	if (kfile_read(fd, &c, sizeof(c)) == sizeof(c))
+ 414               		.loc 1 83 0
+ 415 0040 8130      		cpi r24,1	 ;  30	*cmphi/4	[length = 2]
+ 416 0042 9105      		cpc r25,__zero_reg__
+ 417 0044 01F4      		brne .L21	 ;  31	branch	[length = 1]
+ 418               	.LVL31:
+  84:bertos/kern/kfile.c **** 		return (int)((unsigned char)c);
+ 419               		.loc 1 84 0
+ 420 0046 8981      		ldd r24,Y+1	 ;  33	*movqi/4	[length = 1]
+ 421 0048 90E0      		ldi r25,lo8(0)	 ;  65	*movqi/2	[length = 1]
+ 422 004a 00C0      		rjmp .L20	 ;  86	jump	[length = 1]
+ 423               	.LVL32:
+ 424               	.L21:
+  86:bertos/kern/kfile.c **** 		return EOF;
+ 425               		.loc 1 86 0
+ 426 004c 8FEF      		ldi r24,lo8(-1)	 ;  4	*movhi/4	[length = 2]
+ 427 004e 9FEF      		ldi r25,hi8(-1)
+ 428               	.LVL33:
+ 429               	.L20:
+ 430               	/* epilogue start */
+  87:bertos/kern/kfile.c **** }
+ 431               		.loc 1 87 0
+ 432 0050 0F90      		pop __tmp_reg__	 ;  79	*addhi3_sp_R_pc2	[length = 1]
+ 433 0052 DF91      		pop r29	 ;  80	popqi	[length = 1]
+ 434 0054 CF91      		pop r28	 ;  81	popqi	[length = 1]
+ 435 0056 1F91      		pop r17	 ;  82	popqi	[length = 1]
+ 436 0058 0F91      		pop r16	 ;  83	popqi	[length = 1]
+ 437               	.LVL34:
+ 438 005a 0895      		ret	 ;  84	return_from_epilogue	[length = 1]
+ 439               		.cfi_endproc
+ 440               	.LFE34:
+ 442               		.section	.text.kfile_printf,"ax",@progbits
+ 443               	.global	kfile_printf
+ 445               	kfile_printf:
+ 446               	.LFB35:
+  94:bertos/kern/kfile.c **** {
+ 447               		.loc 1 94 0
+ 448               		.cfi_startproc
+ 449               	.LVL35:
+ 450 0000 CF93      		push r28	 ;  42	*pushqi/1	[length = 1]
+ 451               	.LCFI17:
+ 452               		.cfi_def_cfa_offset 3
+ 453               		.cfi_offset 28, -2
+ 454 0002 DF93      		push r29	 ;  43	*pushqi/1	[length = 1]
+ 455               	.LCFI18:
+ 456               		.cfi_def_cfa_offset 4
+ 457               		.cfi_offset 29, -3
+ 458 0004 CDB7      		in r28,__SP_L__	 ;  44	*movhi_sp/2	[length = 2]
+ 459 0006 DEB7      		in r29,__SP_H__
+ 460               	.LCFI19:
+ 461               		.cfi_def_cfa_register 28
+ 462               	/* prologue: function */
+ 463               	/* frame size = 0 */
+ 464               	/* stack size = 2 */
+ 465               	.L__stack_usage = 2
+  98:bertos/kern/kfile.c **** 	va_start(ap, format);
+ 466               		.loc 1 98 0
+ 467 0008 9E01      		movw r18,r28	 ;  41	*movhi/1	[length = 1]
+ 468 000a 275F      		subi r18,lo8(-(9))	 ;  7	*addhi3/4	[length = 2]
+ 469 000c 3F4F      		sbci r19,hi8(-(9))
+  99:bertos/kern/kfile.c **** 	len = _formatted_write(format, (void (*)(char, void *))kfile_putc, fd, ap);
+ 470               		.loc 1 99 0
+ 471 000e 8F81      		ldd r24,Y+7	 ;  12	*movhi/2	[length = 2]
+ 472 0010 9885      		ldd r25,Y+8
+ 473 0012 60E0      		ldi r22,lo8(gs(kfile_putc))	 ;  13	*movhi/4	[length = 2]
+ 474 0014 70E0      		ldi r23,hi8(gs(kfile_putc))
+ 475 0016 4D81      		ldd r20,Y+5	 ;  14	*movhi/2	[length = 2]
+ 476 0018 5E81      		ldd r21,Y+6
+ 477 001a 0E94 0000 		call _formatted_write	 ;  16	call_value_insn/3	[length = 2]
+ 478               	.LVL36:
+ 479               	/* epilogue start */
+ 103:bertos/kern/kfile.c **** }
+ 480               		.loc 1 103 0
+ 481 001e DF91      		pop r29	 ;  47	popqi	[length = 1]
+ 482 0020 CF91      		pop r28	 ;  48	popqi	[length = 1]
+ 483 0022 0895      		ret	 ;  49	return_from_epilogue	[length = 1]
+ 484               		.cfi_endproc
+ 485               	.LFE35:
+ 487               		.section	.text.kfile_print,"ax",@progbits
+ 488               	.global	kfile_print
+ 490               	kfile_print:
+ 491               	.LFB36:
+ 111:bertos/kern/kfile.c **** {
+ 492               		.loc 1 111 0
+ 493               		.cfi_startproc
+ 494               	.LVL37:
+ 495 0000 0F93      		push r16	 ;  85	*pushqi/1	[length = 1]
+ 496               	.LCFI20:
+ 497               		.cfi_def_cfa_offset 3
+ 498               		.cfi_offset 16, -2
+ 499 0002 1F93      		push r17	 ;  86	*pushqi/1	[length = 1]
+ 500               	.LCFI21:
+ 501               		.cfi_def_cfa_offset 4
+ 502               		.cfi_offset 17, -3
+ 503 0004 CF93      		push r28	 ;  87	*pushqi/1	[length = 1]
+ 504               	.LCFI22:
+ 505               		.cfi_def_cfa_offset 5
+ 506               		.cfi_offset 28, -4
+ 507 0006 DF93      		push r29	 ;  88	*pushqi/1	[length = 1]
+ 508               	.LCFI23:
+ 509               		.cfi_def_cfa_offset 6
+ 510               		.cfi_offset 29, -5
+ 511               	/* prologue: function */
+ 512               	/* frame size = 0 */
+ 513               	/* stack size = 4 */
+ 514               	.L__stack_usage = 4
+ 515 0008 8C01      		movw r16,r24	 ;  22	*movhi/1	[length = 1]
+ 117:bertos/kern/kfile.c **** 	return 0;
+ 516               		.loc 1 117 0
+ 517 000a EB01      		movw r28,r22	 ;  97	*movhi/1	[length = 1]
+ 112:bertos/kern/kfile.c **** 	while (*s)
+ 518               		.loc 1 112 0
+ 519 000c 00C0      		rjmp .L24	 ;  98	jump	[length = 1]
+ 520               	.LVL38:
+ 521               	.L26:
+ 114:bertos/kern/kfile.c **** 		if (kfile_putc(*s++, fd) == EOF)
+ 522               		.loc 1 114 0
+ 523 000e 9927      		clr r25	 ;  36	extendqihi2/1	[length = 3]
+ 524 0010 87FD      		sbrc r24,7
+ 525 0012 9095      		com r25
+ 526 0014 B801      		movw r22,r16	 ;  37	*movhi/1	[length = 1]
+ 527 0016 0E94 0000 		call kfile_putc	 ;  38	call_value_insn/3	[length = 2]
+ 528 001a 2FEF      		ldi r18,hi8(-1)	 ;  40	*cmphi/5	[length = 3]
+ 529 001c 8F3F      		cpi r24,lo8(-1)
+ 530 001e 9207      		cpc r25,r18
+ 531 0020 01F0      		breq .L27	 ;  41	branch	[length = 1]
+ 532               	.L24:
+ 112:bertos/kern/kfile.c **** 	while (*s)
+ 533               		.loc 1 112 0 discriminator 1
+ 534 0022 8991      		ld r24,Y+	 ;  45	*movqi/4	[length = 1]
+ 535 0024 8823      		tst r24	 ;  48	*cmpqi/1	[length = 1]
+ 536 0026 01F4      		brne .L26	 ;  49	branch	[length = 1]
+ 117:bertos/kern/kfile.c **** 	return 0;
+ 537               		.loc 1 117 0
+ 538 0028 80E0      		ldi r24,lo8(0)	 ;  26	*movhi/4	[length = 2]
+ 539 002a 90E0      		ldi r25,hi8(0)
+ 540 002c 00C0      		rjmp .L25	 ;  100	jump	[length = 1]
+ 541               	.L27:
+ 115:bertos/kern/kfile.c **** 			return EOF;
+ 542               		.loc 1 115 0
+ 543 002e 8FEF      		ldi r24,lo8(-1)	 ;  25	*movhi/4	[length = 2]
+ 544 0030 9FEF      		ldi r25,hi8(-1)
+ 545               	.L25:
+ 546               	/* epilogue start */
+ 118:bertos/kern/kfile.c **** }
+ 547               		.loc 1 118 0
+ 548 0032 DF91      		pop r29	 ;  91	popqi	[length = 1]
+ 549 0034 CF91      		pop r28	 ;  92	popqi	[length = 1]
+ 550 0036 1F91      		pop r17	 ;  93	popqi	[length = 1]
+ 551 0038 0F91      		pop r16	 ;  94	popqi	[length = 1]
+ 552               	.LVL39:
+ 553 003a 0895      		ret	 ;  95	return_from_epilogue	[length = 1]
+ 554               		.cfi_endproc
+ 555               	.LFE36:
+ 557               		.section	.text.kfile_resync,"ax",@progbits
+ 558               	.global	kfile_resync
+ 560               	kfile_resync:
+ 561               	.LFB40:
+ 242:bertos/kern/kfile.c **** {
+ 562               		.loc 1 242 0
+ 563               		.cfi_startproc
+ 564               	.LVL40:
+ 565 0000 8F92      		push r8	 ;  71	*pushqi/1	[length = 1]
+ 566               	.LCFI24:
+ 567               		.cfi_def_cfa_offset 3
+ 568               		.cfi_offset 8, -2
+ 569 0002 9F92      		push r9	 ;  72	*pushqi/1	[length = 1]
+ 570               	.LCFI25:
+ 571               		.cfi_def_cfa_offset 4
+ 572               		.cfi_offset 9, -3
+ 573 0004 AF92      		push r10	 ;  73	*pushqi/1	[length = 1]
+ 574               	.LCFI26:
+ 575               		.cfi_def_cfa_offset 5
+ 576               		.cfi_offset 10, -4
+ 577 0006 BF92      		push r11	 ;  74	*pushqi/1	[length = 1]
+ 578               	.LCFI27:
+ 579               		.cfi_def_cfa_offset 6
+ 580               		.cfi_offset 11, -5
+ 581 0008 CF92      		push r12	 ;  75	*pushqi/1	[length = 1]
+ 582               	.LCFI28:
+ 583               		.cfi_def_cfa_offset 7
+ 584               		.cfi_offset 12, -6
+ 585 000a DF92      		push r13	 ;  76	*pushqi/1	[length = 1]
+ 586               	.LCFI29:
+ 587               		.cfi_def_cfa_offset 8
+ 588               		.cfi_offset 13, -7
+ 589 000c EF92      		push r14	 ;  77	*pushqi/1	[length = 1]
+ 590               	.LCFI30:
+ 591               		.cfi_def_cfa_offset 9
+ 592               		.cfi_offset 14, -8
+ 593 000e FF92      		push r15	 ;  78	*pushqi/1	[length = 1]
+ 594               	.LCFI31:
+ 595               		.cfi_def_cfa_offset 10
+ 596               		.cfi_offset 15, -9
+ 597 0010 CF93      		push r28	 ;  79	*pushqi/1	[length = 1]
+ 598               	.LCFI32:
+ 599               		.cfi_def_cfa_offset 11
+ 600               		.cfi_offset 28, -10
+ 601 0012 DF93      		push r29	 ;  80	*pushqi/1	[length = 1]
+ 602               	.LCFI33:
+ 603               		.cfi_def_cfa_offset 12
+ 604               		.cfi_offset 29, -11
+ 605               	/* prologue: function */
+ 606               	/* frame size = 0 */
+ 607               	/* stack size = 10 */
+ 608               	.L__stack_usage = 10
+ 609 0014 EC01      		movw r28,r24	 ;  2	*movhi/1	[length = 1]
+ 610 0016 4A01      		movw r8,r20	 ;  3	*movsi/1	[length = 2]
+ 611 0018 5B01      		movw r10,r22
+ 612               	.LBB49:
+ 613               	.LBB50:
+ 614               	.LBB51:
+ 615               		.file 3 "bertos/drv/timer.h"
+   1:bertos/drv/timer.h **** /**
+   2:bertos/drv/timer.h ****  * \file
+   3:bertos/drv/timer.h ****  * <!--
+   4:bertos/drv/timer.h ****  * This file is part of BeRTOS.
+   5:bertos/drv/timer.h ****  *
+   6:bertos/drv/timer.h ****  * Bertos is free software; you can redistribute it and/or modify
+   7:bertos/drv/timer.h ****  * it under the terms of the GNU General Public License as published by
+   8:bertos/drv/timer.h ****  * the Free Software Foundation; either version 2 of the License, or
+   9:bertos/drv/timer.h ****  * (at your option) any later version.
+  10:bertos/drv/timer.h ****  *
+  11:bertos/drv/timer.h ****  * This program is distributed in the hope that it will be useful,
+  12:bertos/drv/timer.h ****  * but WITHOUT ANY WARRANTY; without even the implied warranty of
+  13:bertos/drv/timer.h ****  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  14:bertos/drv/timer.h ****  * GNU General Public License for more details.
+  15:bertos/drv/timer.h ****  *
+  16:bertos/drv/timer.h ****  * You should have received a copy of the GNU General Public License
+  17:bertos/drv/timer.h ****  * along with this program; if not, write to the Free Software
+  18:bertos/drv/timer.h ****  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+  19:bertos/drv/timer.h ****  *
+  20:bertos/drv/timer.h ****  * As a special exception, you may use this file as part of a free software
+  21:bertos/drv/timer.h ****  * library without restriction.  Specifically, if other files instantiate
+  22:bertos/drv/timer.h ****  * templates or use macros or inline functions from this file, or you compile
+  23:bertos/drv/timer.h ****  * this file and link it with other files to produce an executable, this
+  24:bertos/drv/timer.h ****  * file does not by itself cause the resulting executable to be covered by
+  25:bertos/drv/timer.h ****  * the GNU General Public License.  This exception does not however
+  26:bertos/drv/timer.h ****  * invalidate any other reasons why the executable file might be covered by
+  27:bertos/drv/timer.h ****  * the GNU General Public License.
+  28:bertos/drv/timer.h ****  *
+  29:bertos/drv/timer.h ****  * Copyright 2003, 2004, 2005 Develer S.r.l. (http://www.develer.com/)
+  30:bertos/drv/timer.h ****  * Copyright 2000, 2008 Bernie Innocenti <bernie@codewiz.org>
+  31:bertos/drv/timer.h ****  * -->
+  32:bertos/drv/timer.h ****  *
+  33:bertos/drv/timer.h ****  * \brief Hardware independent timer driver.
+  34:bertos/drv/timer.h ****  *
+  35:bertos/drv/timer.h ****  * All timer related functions are implemented in this module. You have several options to use time
+  36:bertos/drv/timer.h ****  * \li simple delay: just use timer_delay() if you want to wait for a few milliseconds;
+  37:bertos/drv/timer.h ****  * \li delay with callback: create a timer structure and use timer_setDelay() and timer_setSoftint(
+  38:bertos/drv/timer.h ****  * \li delay with signal: same as above but use timer_setSignal() to set specify which signal to se
+  39:bertos/drv/timer.h ****  * \li simple synchronous timer based scheduler: use synctimer_add() to schedule an event in a user
+  40:bertos/drv/timer.h ****  *
+  41:bertos/drv/timer.h ****  * Whenever a timer expires you need to explicitly arm it again with timer_add(). If you want to ab
+  42:bertos/drv/timer.h ****  * You can use conversion macros when using msecs to specify the delay.
+  43:bertos/drv/timer.h ****  *
+  44:bertos/drv/timer.h ****  * \author Bernie Innocenti <bernie@codewiz.org>
+  45:bertos/drv/timer.h ****  *
+  46:bertos/drv/timer.h ****  * $WIZ$ module_name = "timer"
+  47:bertos/drv/timer.h ****  * $WIZ$ module_configuration = "bertos/cfg/cfg_timer.h"
+  48:bertos/drv/timer.h ****  * $WIZ$ module_depends = "event", "sysirq"
+  49:bertos/drv/timer.h ****  * $WIZ$ module_supports = "not atmega103 and not atmega8"
+  50:bertos/drv/timer.h ****  */
+  51:bertos/drv/timer.h **** 
+  52:bertos/drv/timer.h **** #ifndef DRV_TIMER_H
+  53:bertos/drv/timer.h **** #define DRV_TIMER_H
+  54:bertos/drv/timer.h **** 
+  55:bertos/drv/timer.h **** #include <cfg/os.h>
+  56:bertos/drv/timer.h **** #include <cfg/macros.h>
+  57:bertos/drv/timer.h **** 
+  58:bertos/drv/timer.h **** #include <cpu/attr.h>
+  59:bertos/drv/timer.h **** #include <cpu/irq.h>
+  60:bertos/drv/timer.h **** 
+  61:bertos/drv/timer.h **** 
+  62:bertos/drv/timer.h **** /*
+  63:bertos/drv/timer.h ****  * Include platform-specific binding header if we're hosted.
+  64:bertos/drv/timer.h ****  * Try the CPU specific one for bare-metal environments.
+  65:bertos/drv/timer.h ****  */
+  66:bertos/drv/timer.h **** #if OS_HOSTED
+  67:bertos/drv/timer.h **** 	//#include OS_HEADER(timer)
+  68:bertos/drv/timer.h **** 	#include <emul/timer_posix.h>
+  69:bertos/drv/timer.h **** #else
+  70:bertos/drv/timer.h **** 	#include CPU_HEADER(timer)
+  71:bertos/drv/timer.h **** #endif
+  72:bertos/drv/timer.h **** 
+  73:bertos/drv/timer.h **** STATIC_ASSERT(sizeof(hptime_t) == SIZEOF_HPTIME_T);
+  74:bertos/drv/timer.h **** 
+  75:bertos/drv/timer.h **** #include "cfg/cfg_timer.h"
+  76:bertos/drv/timer.h **** #include <cfg/debug.h>
+  77:bertos/drv/timer.h **** #include <cfg/compiler.h>
+  78:bertos/drv/timer.h **** 
+  79:bertos/drv/timer.h **** #include <struct/list.h>
+  80:bertos/drv/timer.h **** 
+  81:bertos/drv/timer.h **** /*
+  82:bertos/drv/timer.h ****  * Sanity check for config parameters required by this module.
+  83:bertos/drv/timer.h ****  */
+  84:bertos/drv/timer.h **** #if !defined(CONFIG_TIMER_EVENTS) || ((CONFIG_TIMER_EVENTS != 0) && CONFIG_TIMER_EVENTS != 1)
+  85:bertos/drv/timer.h **** 	#error CONFIG_TIMER_EVENTS must be set to either 0 or 1 in cfg_timer.h
+  86:bertos/drv/timer.h **** #endif
+  87:bertos/drv/timer.h **** #if !defined(CONFIG_TIMER_UDELAY) || ((CONFIG_TIMER_UDELAY != 0) && CONFIG_TIMER_EVENTS != 1)
+  88:bertos/drv/timer.h **** 	#error CONFIG_TIMER_UDELAY must be set to either 0 or 1 in cfg_timer.h
+  89:bertos/drv/timer.h **** #endif
+  90:bertos/drv/timer.h **** #if defined(CONFIG_TIMER_DISABLE_UDELAY)
+  91:bertos/drv/timer.h **** 	#error Obosolete config option CONFIG_TIMER_DISABLE_UDELAY.  Use CONFIG_TIMER_UDELAY
+  92:bertos/drv/timer.h **** #endif
+  93:bertos/drv/timer.h **** #if defined(CONFIG_TIMER_DISABLE_EVENTS)
+  94:bertos/drv/timer.h **** 	#error Obosolete config option CONFIG_TIMER_DISABLE_EVENTS.  Use CONFIG_TIMER_EVENTS
+  95:bertos/drv/timer.h **** #endif
+  96:bertos/drv/timer.h **** 
+  97:bertos/drv/timer.h **** extern volatile ticks_t _clock;
+  98:bertos/drv/timer.h **** 
+  99:bertos/drv/timer.h **** /**
+ 100:bertos/drv/timer.h ****  * \brief Return the system tick counter (expressed in ticks)
+ 101:bertos/drv/timer.h ****  *
+ 102:bertos/drv/timer.h ****  * The result is guaranteed to increment monotonically,
+ 103:bertos/drv/timer.h ****  * but client code must be tolerant with respect to overflows.
+ 104:bertos/drv/timer.h ****  *
+ 105:bertos/drv/timer.h ****  * The following code is safe:
+ 106:bertos/drv/timer.h ****  *
+ 107:bertos/drv/timer.h ****  * \code
+ 108:bertos/drv/timer.h ****  *   drop_teabag();
+ 109:bertos/drv/timer.h ****  *   ticks_t tea_start_time = timer_clock();
+ 110:bertos/drv/timer.h ****  *
+ 111:bertos/drv/timer.h ****  *   for (;;)
+ 112:bertos/drv/timer.h ****  *   {
+ 113:bertos/drv/timer.h ****  *       if (timer_clock() - tea_start_time > TEAPOT_DELAY)
+ 114:bertos/drv/timer.h ****  *       {
+ 115:bertos/drv/timer.h ****  *           printf("Your tea, Sir.\n");
+ 116:bertos/drv/timer.h ****  *           break;
+ 117:bertos/drv/timer.h ****  *       }
+ 118:bertos/drv/timer.h ****  *       patience();
+ 119:bertos/drv/timer.h ****  *   }
+ 120:bertos/drv/timer.h ****  * \endcode
+ 121:bertos/drv/timer.h ****  *
+ 122:bertos/drv/timer.h ****  * \note This function must disable interrupts on 8/16bit CPUs because the
+ 123:bertos/drv/timer.h ****  * clock variable is larger than the processor word size and can't
+ 124:bertos/drv/timer.h ****  * be copied atomically.
+ 125:bertos/drv/timer.h ****  * \sa timer_delay()
+ 126:bertos/drv/timer.h ****  */
+ 127:bertos/drv/timer.h **** INLINE ticks_t timer_clock(void)
+ 128:bertos/drv/timer.h **** {
+ 129:bertos/drv/timer.h **** 	ticks_t result;
+ 130:bertos/drv/timer.h **** 
+ 131:bertos/drv/timer.h **** 	ATOMIC(result = _clock);
+ 616               		.loc 3 131 0
+ 617               	/* #APP */
+ 618               	 ;  131 "bertos/drv/timer.h" 1
+ 619 001a 8FB7      		in r24,__SREG__
+ 620 001c F894      		cli
+ 621               	 ;  0 "" 2
+ 622               	.LVL41:
+ 623               	/* #NOAPP */
+ 624 001e C090 0000 		lds r12,_clock	 ;  10	*movsi/3	[length = 8]
+ 625 0022 D090 0000 		lds r13,_clock+1
+ 626 0026 E090 0000 		lds r14,_clock+2
+ 627 002a F090 0000 		lds r15,_clock+3
+ 628               	.LVL42:
+ 629               	/* #APP */
+ 630               	 ;  131 "bertos/drv/timer.h" 1
+ 631 002e 8FBF      		out __SREG__,r24
+ 632               	 ;  0 "" 2
+ 633               	.LVL43:
+ 634               	/* #NOAPP */
+ 635               	.L30:
+ 636               	.LBE51:
+ 637               	.LBE50:
+ 638               	.LBE49:
+ 246:bertos/kern/kfile.c **** 		if(kfile_getc(fd) != EOF)
+ 639               		.loc 1 246 0
+ 640 0030 CE01      		movw r24,r28	 ;  17	*movhi/1	[length = 1]
+ 641 0032 0E94 0000 		call kfile_getc	 ;  18	call_value_insn/3	[length = 2]
+ 642 0036 2FEF      		ldi r18,hi8(-1)	 ;  20	*cmphi/5	[length = 3]
+ 643 0038 8F3F      		cpi r24,lo8(-1)
+ 644 003a 9207      		cpc r25,r18
+ 645 003c 01F0      		breq .L29	 ;  21	branch	[length = 1]
+ 646               	.LBB52:
+ 647               	.LBB53:
+ 648               	.LBB54:
+ 649               		.loc 3 131 0
+ 650               	/* #APP */
+ 651               	 ;  131 "bertos/drv/timer.h" 1
+ 652 003e 8FB7      		in r24,__SREG__
+ 653 0040 F894      		cli
+ 654               	 ;  0 "" 2
+ 655               	.LVL44:
+ 656               	/* #NOAPP */
+ 657 0042 C090 0000 		lds r12,_clock	 ;  26	*movsi/3	[length = 8]
+ 658 0046 D090 0000 		lds r13,_clock+1
+ 659 004a E090 0000 		lds r14,_clock+2
+ 660 004e F090 0000 		lds r15,_clock+3
+ 661               	.LVL45:
+ 662               	/* #APP */
+ 663               	 ;  131 "bertos/drv/timer.h" 1
+ 664 0052 8FBF      		out __SREG__,r24
+ 665               	 ;  0 "" 2
+ 666               	.LVL46:
+ 667               	/* #NOAPP */
+ 668               	.L29:
+ 669               	.LBE54:
+ 670               	.LBE53:
+ 671               	.LBE52:
+ 672               	.LBB55:
+ 673               	.LBB56:
+ 674               	.LBB57:
+ 675               	/* #APP */
+ 676               	 ;  131 "bertos/drv/timer.h" 1
+ 677 0054 2FB7      		in r18,__SREG__
+ 678 0056 F894      		cli
+ 679               	 ;  0 "" 2
+ 680               	.LVL47:
+ 681               	/* #NOAPP */
+ 682 0058 8091 0000 		lds r24,_clock	 ;  36	*movsi/3	[length = 8]
+ 683 005c 9091 0000 		lds r25,_clock+1
+ 684 0060 A091 0000 		lds r26,_clock+2
+ 685 0064 B091 0000 		lds r27,_clock+3
+ 686               	.LVL48:
+ 687               	/* #APP */
+ 688               	 ;  131 "bertos/drv/timer.h" 1
+ 689 0068 2FBF      		out __SREG__,r18
+ 690               	 ;  0 "" 2
+ 691               	.LVL49:
+ 692               	/* #NOAPP */
+ 693               	.LBE57:
+ 694               	.LBE56:
+ 695               	.LBE55:
+ 249:bertos/kern/kfile.c **** 		if ((timer_clock() - start_time) > ms_to_ticks(delay))
+ 696               		.loc 1 249 0
+ 697 006a 8C19      		sub r24,r12	 ;  41	subsi3/1	[length = 4]
+ 698 006c 9D09      		sbc r25,r13
+ 699 006e AE09      		sbc r26,r14
+ 700 0070 BF09      		sbc r27,r15
+ 701 0072 8816      		cp r8,r24	 ;  42	*cmpsi/2	[length = 4]
+ 702 0074 9906      		cpc r9,r25
+ 703 0076 AA06      		cpc r10,r26
+ 704 0078 BB06      		cpc r11,r27
+ 705 007a 04F4      		brge .L30	 ;  43	branch	[length = 1]
+ 706               	.LVL50:
+ 707               	.LBB58:
+ 708               	.LBB59:
+ 265:bertos/kern/kfile.h **** }
+ 266:bertos/kern/kfile.h **** 
+ 267:bertos/kern/kfile.h **** INLINE int kfile_error(struct KFile *fd)
+ 268:bertos/kern/kfile.h **** {
+ 269:bertos/kern/kfile.h **** 	ASSERT(fd->error);
+ 270:bertos/kern/kfile.h **** 	return fd->error(fd);
+ 271:bertos/kern/kfile.h **** }
+ 272:bertos/kern/kfile.h **** 
+ 273:bertos/kern/kfile.h **** INLINE void kfile_clearerr(struct KFile *fd)
+ 274:bertos/kern/kfile.h **** {
+ 275:bertos/kern/kfile.h **** 	ASSERT(fd->clearerr);
+ 709               		.loc 2 275 0
+ 710 007c 8E85      		ldd r24,Y+14	 ;  46	*movhi/2	[length = 2]
+ 711 007e 9F85      		ldd r25,Y+15
+ 712 0080 0097      		sbiw r24,0	 ;  47	*cmphi/1	[length = 1]
+ 713 0082 01F4      		brne .L31	 ;  48	branch	[length = 1]
+ 714 0084 80E0      		ldi r24,lo8(__c.1469)	 ;  53	*movhi/4	[length = 2]
+ 715 0086 90E0      		ldi r25,hi8(__c.1469)
+ 716 0088 60E0      		ldi r22,lo8(__c.1471)	 ;  54	*movhi/4	[length = 2]
+ 717 008a 70E0      		ldi r23,hi8(__c.1471)
+ 718 008c 43E1      		ldi r20,lo8(275)	 ;  55	*movhi/4	[length = 2]
+ 719 008e 51E0      		ldi r21,hi8(275)
+ 720 0090 0E94 0000 		call __bassert_P	 ;  56	call_value_insn/3	[length = 2]
+ 721               	.L31:
+ 276:bertos/kern/kfile.h **** 	fd->clearerr(fd);
+ 722               		.loc 2 276 0
+ 723 0094 EE85      		ldd r30,Y+14	 ;  60	*movhi/2	[length = 2]
+ 724 0096 FF85      		ldd r31,Y+15
+ 725 0098 CE01      		movw r24,r28	 ;  61	*movhi/1	[length = 1]
+ 726 009a 0995      		icall	 ;  62	call_insn/1	[length = 1]
+ 727               	/* epilogue start */
+ 728               	.LBE59:
+ 729               	.LBE58:
+ 256:bertos/kern/kfile.c **** }
+ 730               		.loc 1 256 0
+ 731 009c DF91      		pop r29	 ;  83	popqi	[length = 1]
+ 732 009e CF91      		pop r28	 ;  84	popqi	[length = 1]
+ 733 00a0 FF90      		pop r15	 ;  85	popqi	[length = 1]
+ 734 00a2 EF90      		pop r14	 ;  86	popqi	[length = 1]
+ 735 00a4 DF90      		pop r13	 ;  87	popqi	[length = 1]
+ 736 00a6 CF90      		pop r12	 ;  88	popqi	[length = 1]
+ 737 00a8 BF90      		pop r11	 ;  89	popqi	[length = 1]
+ 738 00aa AF90      		pop r10	 ;  90	popqi	[length = 1]
+ 739 00ac 9F90      		pop r9	 ;  91	popqi	[length = 1]
+ 740 00ae 8F90      		pop r8	 ;  92	popqi	[length = 1]
+ 741 00b0 0895      		ret	 ;  93	return_from_epilogue	[length = 1]
+ 742               		.cfi_endproc
+ 743               	.LFE40:
+ 745               		.section	.text.kfile_init,"ax",@progbits
+ 746               	.global	kfile_init
+ 748               	kfile_init:
+ 749               	.LFB42:
+ 266:bertos/kern/kfile.c **** 
+ 267:bertos/kern/kfile.c **** 
+ 268:bertos/kern/kfile.c **** /**
+ 269:bertos/kern/kfile.c ****  * Base class KFile constructor.
+ 270:bertos/kern/kfile.c ****  */
+ 271:bertos/kern/kfile.c **** void kfile_init(struct KFile *fd)
+ 272:bertos/kern/kfile.c **** {
+ 750               		.loc 1 272 0
+ 751               		.cfi_startproc
+ 752               	.LVL51:
+ 753 0000 CF93      		push r28	 ;  41	*pushqi/1	[length = 1]
+ 754               	.LCFI34:
+ 755               		.cfi_def_cfa_offset 3
+ 756               		.cfi_offset 28, -2
+ 757 0002 DF93      		push r29	 ;  42	*pushqi/1	[length = 1]
+ 758               	.LCFI35:
+ 759               		.cfi_def_cfa_offset 4
+ 760               		.cfi_offset 29, -3
+ 761               	/* prologue: function */
+ 762               	/* frame size = 0 */
+ 763               	/* stack size = 2 */
+ 764               	.L__stack_usage = 2
+ 765 0004 EC01      		movw r28,r24	 ;  2	*movhi/1	[length = 1]
+ 273:bertos/kern/kfile.c **** 	ASSERT(fd);
+ 766               		.loc 1 273 0
+ 767 0006 0097      		sbiw r24,0	 ;  6	*cmphi/1	[length = 1]
+ 768 0008 01F4      		brne .L34	 ;  7	branch	[length = 1]
+ 769               		.loc 1 273 0 is_stmt 0 discriminator 1
+ 770 000a 80E0      		ldi r24,lo8(__c.1894)	 ;  12	*movhi/4	[length = 2]
+ 771 000c 90E0      		ldi r25,hi8(__c.1894)
+ 772               	.LVL52:
+ 773 000e 60E0      		ldi r22,lo8(__c.1896)	 ;  13	*movhi/4	[length = 2]
+ 774 0010 70E0      		ldi r23,hi8(__c.1896)
+ 775 0012 41E1      		ldi r20,lo8(273)	 ;  14	*movhi/4	[length = 2]
+ 776 0014 51E0      		ldi r21,hi8(273)
+ 777 0016 0E94 0000 		call __bassert_P	 ;  15	call_value_insn/3	[length = 2]
+ 778               	.L34:
+ 274:bertos/kern/kfile.c **** 	memset(fd, 0, sizeof(*fd));
+ 779               		.loc 1 274 0 is_stmt 1
+ 780 001a 8CE1      		ldi r24,lo8(28)	 ;  18	*movqi/2	[length = 1]
+ 781 001c FE01      		movw r30,r28	 ;  40	*movhi/1	[length = 1]
+ 782 001e 1192      		st Z+,__zero_reg__	 ;  20	*clrmemqi	[length = 3]
+ 783 0020 8A95      	        dec r24
+ 784 0022 01F4      		brne .-6
+ 275:bertos/kern/kfile.c **** 	fd->clearerr = (ClearErrFunc_t)kfile_generic;
+ 785               		.loc 1 275 0
+ 786 0024 80E0      		ldi r24,lo8(gs(kfile_generic))	 ;  21	*movhi/4	[length = 2]
+ 787 0026 90E0      		ldi r25,hi8(gs(kfile_generic))
+ 788 0028 9F87      		std Y+15,r25	 ;  22	*movhi/3	[length = 2]
+ 789 002a 8E87      		std Y+14,r24
+ 276:bertos/kern/kfile.c **** 	fd->close =  kfile_genericClose;
+ 790               		.loc 1 276 0
+ 791 002c 20E0      		ldi r18,lo8(gs(kfile_genericClose))	 ;  23	*movhi/4	[length = 2]
+ 792 002e 30E0      		ldi r19,hi8(gs(kfile_genericClose))
+ 793 0030 3F83      		std Y+7,r19	 ;  24	*movhi/3	[length = 2]
+ 794 0032 2E83      		std Y+6,r18
+ 277:bertos/kern/kfile.c **** 	fd->error = kfile_generic;
+ 795               		.loc 1 277 0
+ 796 0034 9D87      		std Y+13,r25	 ;  26	*movhi/3	[length = 2]
+ 797 0036 8C87      		std Y+12,r24
+ 278:bertos/kern/kfile.c **** 	fd->flush = kfile_generic;
+ 798               		.loc 1 278 0
+ 799 0038 9B87      		std Y+11,r25	 ;  28	*movhi/3	[length = 2]
+ 800 003a 8A87      		std Y+10,r24
+ 279:bertos/kern/kfile.c **** 	fd->read = (ReadFunc_t)kfile_generic;
+ 801               		.loc 1 279 0
+ 802 003c 9983      		std Y+1,r25	 ;  30	*movhi/3	[length = 2]
+ 803 003e 8883      		st Y,r24
+ 280:bertos/kern/kfile.c **** 	fd->reopen = kfile_genericReopen;
+ 804               		.loc 1 280 0
+ 805 0040 20E0      		ldi r18,lo8(gs(kfile_genericReopen))	 ;  31	*movhi/4	[length = 2]
+ 806 0042 30E0      		ldi r19,hi8(gs(kfile_genericReopen))
+ 807 0044 3D83      		std Y+5,r19	 ;  32	*movhi/3	[length = 2]
+ 808 0046 2C83      		std Y+4,r18
+ 281:bertos/kern/kfile.c **** 	fd->seek = kfile_genericSeek;
+ 809               		.loc 1 281 0
+ 810 0048 20E0      		ldi r18,lo8(gs(kfile_genericSeek))	 ;  33	*movhi/4	[length = 2]
+ 811 004a 30E0      		ldi r19,hi8(gs(kfile_genericSeek))
+ 812 004c 3987      		std Y+9,r19	 ;  34	*movhi/3	[length = 2]
+ 813 004e 2887      		std Y+8,r18
+ 282:bertos/kern/kfile.c **** 	fd->write = (WriteFunc_t)kfile_generic;
+ 814               		.loc 1 282 0
+ 815 0050 9B83      		std Y+3,r25	 ;  35	*movhi/3	[length = 2]
+ 816 0052 8A83      		std Y+2,r24
+ 817               	/* epilogue start */
+ 283:bertos/kern/kfile.c **** }
+ 818               		.loc 1 283 0
+ 819 0054 DF91      		pop r29	 ;  45	popqi	[length = 1]
+ 820 0056 CF91      		pop r28	 ;  46	popqi	[length = 1]
+ 821               	.LVL53:
+ 822 0058 0895      		ret	 ;  47	return_from_epilogue	[length = 1]
+ 823               		.cfi_endproc
+ 824               	.LFE42:
+ 826               		.section	.progmem.data,"a",@progbits
+ 829               	__c.1425:
+ 830 0000 6664 2D3E 		.string	"fd->write"
+ 830      7772 6974 
+ 830      6500 
+ 833               	__c.1427:
+ 834 000a 6265 7274 		.string	"bertos/kern/kfile.h"
+ 834      6F73 2F6B 
+ 834      6572 6E2F 
+ 834      6B66 696C 
+ 834      652E 6800 
+ 837               	__c.1416:
+ 838 001e 6664 2D3E 		.string	"fd->read"
+ 838      7265 6164 
+ 838      00
+ 841               	__c.1418:
+ 842 0027 6265 7274 		.string	"bertos/kern/kfile.h"
+ 842      6F73 2F6B 
+ 842      6572 6E2F 
+ 842      6B66 696C 
+ 842      652E 6800 
+ 845               	__c.1871:
+ 846 003b 3000      		.string	"0"
+ 849               	__c.1873:
+ 850 003d 6265 7274 		.string	"bertos/kern/kfile.c"
+ 850      6F73 2F6B 
+ 850      6572 6E2F 
+ 850      6B66 696C 
+ 850      652E 6300 
+ 853               	__c.1455:
+ 854 0051 6664 2D3E 		.string	"fd->flush"
+ 854      666C 7573 
+ 854      6800 
+ 857               	__c.1457:
+ 858 005b 6265 7274 		.string	"bertos/kern/kfile.h"
+ 858      6F73 2F6B 
+ 858      6572 6E2F 
+ 858      6B66 696C 
+ 858      652E 6800 
+ 861               	__c.1448:
+ 862 006f 6664 2D3E 		.string	"fd->seek"
+ 862      7365 656B 
+ 862      00
+ 865               	__c.1450:
+ 866 0078 6265 7274 		.string	"bertos/kern/kfile.h"
+ 866      6F73 2F6B 
+ 866      6572 6E2F 
+ 866      6B66 696C 
+ 866      652E 6800 
+ 869               	__c.1469:
+ 870 008c 6664 2D3E 		.string	"fd->clearerr"
+ 870      636C 6561 
+ 870      7265 7272 
+ 870      00
+ 873               	__c.1471:
+ 874 0099 6265 7274 		.string	"bertos/kern/kfile.h"
+ 874      6F73 2F6B 
+ 874      6572 6E2F 
+ 874      6B66 696C 
+ 874      652E 6800 
+ 877               	__c.1894:
+ 878 00ad 6664 00   		.string	"fd"
+ 881               	__c.1896:
+ 882 00b0 6265 7274 		.string	"bertos/kern/kfile.c"
+ 882      6F73 2F6B 
+ 882      6572 6E2F 
+ 882      6B66 696C 
+ 882      652E 6300 
+ 883               		.text
+ 884               	.Letext0:
+ 885               		.file 4 "/usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/include/stddef.h"
+ 886               		.file 5 "/usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/include/stdint.h"
+ 887               		.file 6 "bertos/cfg/compiler.h"
+ 888               		.file 7 "bertos/cpu/types.h"
+ 889               		.file 8 "bertos/cfg/macros.h"
+ 890               		.file 9 "bertos/struct/list.h"
+ 891               		.file 10 "bertos/kern/proc.h"
+ 892               		.file 11 "/usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/include/stdarg.h"
 DEFINED SYMBOLS
                             *ABS*:00000000 kfile.c
-C:\DOCUME~1\develer\IMPOST~1\Temp/ccu40t5q.s:2      *ABS*:0000003f __SREG__
-C:\DOCUME~1\develer\IMPOST~1\Temp/ccu40t5q.s:3      *ABS*:0000003e __SP_H__
-C:\DOCUME~1\develer\IMPOST~1\Temp/ccu40t5q.s:4      *ABS*:0000003d __SP_L__
-C:\DOCUME~1\develer\IMPOST~1\Temp/ccu40t5q.s:5      *ABS*:00000034 __CCP__
-C:\DOCUME~1\develer\IMPOST~1\Temp/ccu40t5q.s:6      *ABS*:00000000 __tmp_reg__
-C:\DOCUME~1\develer\IMPOST~1\Temp/ccu40t5q.s:7      *ABS*:00000001 __zero_reg__
-C:\DOCUME~1\develer\IMPOST~1\Temp/ccu40t5q.s:19     .text.kfile_genericClose:00000000 kfile_genericClose
-C:\DOCUME~1\develer\IMPOST~1\Temp/ccu40t5q.s:35     .text.kfile_generic:00000000 kfile_generic
-C:\DOCUME~1\develer\IMPOST~1\Temp/ccu40t5q.s:52     .text.kfile_genericReopen:00000000 kfile_genericReopen
-C:\DOCUME~1\develer\IMPOST~1\Temp/ccu40t5q.s:707    .progmem.data:0000004c __c.1435
-C:\DOCUME~1\develer\IMPOST~1\Temp/ccu40t5q.s:703    .progmem.data:00000038 __c.1437
-C:\DOCUME~1\develer\IMPOST~1\Temp/ccu40t5q.s:715    .progmem.data:0000006a __c.1421
-C:\DOCUME~1\develer\IMPOST~1\Temp/ccu40t5q.s:711    .progmem.data:00000056 __c.1423
-C:\DOCUME~1\develer\IMPOST~1\Temp/ccu40t5q.s:128    .text.kfile_genericSeek:00000000 kfile_genericSeek
-C:\DOCUME~1\develer\IMPOST~1\Temp/ccu40t5q.s:723    .progmem.data:00000087 __c.1926
-C:\DOCUME~1\develer\IMPOST~1\Temp/ccu40t5q.s:719    .progmem.data:00000073 __c.1928
-C:\DOCUME~1\develer\IMPOST~1\Temp/ccu40t5q.s:216    .text.kfile_getc:00000000 kfile_getc
-C:\DOCUME~1\develer\IMPOST~1\Temp/ccu40t5q.s:731    .progmem.data:0000009d __c.1361
-C:\DOCUME~1\develer\IMPOST~1\Temp/ccu40t5q.s:727    .progmem.data:00000089 __c.1363
-C:\DOCUME~1\develer\IMPOST~1\Temp/ccu40t5q.s:290    .text.kfile_resync:00000000 kfile_resync
-C:\DOCUME~1\develer\IMPOST~1\Temp/ccu40t5q.s:699    .progmem.data:0000002b __c.1463
-C:\DOCUME~1\develer\IMPOST~1\Temp/ccu40t5q.s:695    .progmem.data:00000017 __c.1465
-C:\DOCUME~1\develer\IMPOST~1\Temp/ccu40t5q.s:448    .text.kfile_putc:00000000 kfile_putc
-C:\DOCUME~1\develer\IMPOST~1\Temp/ccu40t5q.s:739    .progmem.data:000000ba __c.1377
-C:\DOCUME~1\develer\IMPOST~1\Temp/ccu40t5q.s:735    .progmem.data:000000a6 __c.1379
-C:\DOCUME~1\develer\IMPOST~1\Temp/ccu40t5q.s:531    .text.kfile_print:00000000 kfile_print
-C:\DOCUME~1\develer\IMPOST~1\Temp/ccu40t5q.s:584    .text.kfile_init:00000000 kfile_init
-C:\DOCUME~1\develer\IMPOST~1\Temp/ccu40t5q.s:691    .progmem.data:00000014 __c.1960
-C:\DOCUME~1\develer\IMPOST~1\Temp/ccu40t5q.s:687    .progmem.data:00000000 __c.1962
-C:\DOCUME~1\develer\IMPOST~1\Temp/ccu40t5q.s:655    .text.kfile_printf:00000000 kfile_printf
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccih7bEo.s:2      *ABS*:0000003f __SREG__
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccih7bEo.s:3      *ABS*:0000003e __SP_H__
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccih7bEo.s:4      *ABS*:0000003d __SP_L__
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccih7bEo.s:5      *ABS*:00000034 __CCP__
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccih7bEo.s:6      *ABS*:00000000 __tmp_reg__
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccih7bEo.s:7      *ABS*:00000001 __zero_reg__
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccih7bEo.s:16     .text.kfile_genericClose:00000000 kfile_genericClose
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccih7bEo.s:37     .text.kfile_generic:00000000 kfile_generic
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccih7bEo.s:58     .text.kfile_putc:00000000 kfile_putc
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccih7bEo.s:829    .progmem.data:00000000 __c.1425
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccih7bEo.s:833    .progmem.data:0000000a __c.1427
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccih7bEo.s:165    .text.kfile_genericReopen:00000000 kfile_genericReopen
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccih7bEo.s:853    .progmem.data:00000051 __c.1455
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccih7bEo.s:857    .progmem.data:0000005b __c.1457
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccih7bEo.s:861    .progmem.data:0000006f __c.1448
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccih7bEo.s:865    .progmem.data:00000078 __c.1450
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccih7bEo.s:248    .text.kfile_genericSeek:00000000 kfile_genericSeek
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccih7bEo.s:845    .progmem.data:0000003b __c.1871
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccih7bEo.s:849    .progmem.data:0000003d __c.1873
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccih7bEo.s:348    .text.kfile_getc:00000000 kfile_getc
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccih7bEo.s:837    .progmem.data:0000001e __c.1416
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccih7bEo.s:841    .progmem.data:00000027 __c.1418
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccih7bEo.s:445    .text.kfile_printf:00000000 kfile_printf
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccih7bEo.s:490    .text.kfile_print:00000000 kfile_print
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccih7bEo.s:560    .text.kfile_resync:00000000 kfile_resync
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccih7bEo.s:869    .progmem.data:0000008c __c.1469
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccih7bEo.s:873    .progmem.data:00000099 __c.1471
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccih7bEo.s:748    .text.kfile_init:00000000 kfile_init
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccih7bEo.s:877    .progmem.data:000000ad __c.1894
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccih7bEo.s:881    .progmem.data:000000b0 __c.1896
 
 UNDEFINED SYMBOLS
+__do_copy_data
+__do_clear_bss
 __bassert_P
-_clock
 _formatted_write
+_clock

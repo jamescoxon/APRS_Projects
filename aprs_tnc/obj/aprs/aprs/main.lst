@@ -2,454 +2,850 @@
    2               	__SREG__ = 0x3f
    3               	__SP_H__ = 0x3e
    4               	__SP_L__ = 0x3d
-   5               	__CCP__  = 0x34
+   5               	__CCP__ = 0x34
    6               	__tmp_reg__ = 0
    7               	__zero_reg__ = 1
-  15               	.Ltext0:
-  16               		.data
-  17               	.LC0:
-  18 0000 3E54 6573 		.string	">Test BeRTOS APRS http://www.bertos.org"
-  18      7420 4265 
-  18      5254 4F53 
-  18      2041 5052 
-  18      5320 6874 
-  19               		.section	.text.main,"ax",@progbits
-  20               	.global	main
-  22               	main:
-  23               	.LFB50:
-  24               	.LSM0:
-  25 0000 CF92      		push r12	 ;  99	*pushqi/1	[length = 1]
-  26 0002 DF92      		push r13	 ;  100	*pushqi/1	[length = 1]
-  27 0004 EF92      		push r14	 ;  101	*pushqi/1	[length = 1]
-  28 0006 FF92      		push r15	 ;  102	*pushqi/1	[length = 1]
-  29 0008 0F93      		push r16	 ;  103	*pushqi/1	[length = 1]
-  30 000a 1F93      		push r17	 ;  104	*pushqi/1	[length = 1]
-  31               	/* prologue: function */
-  32               	/* frame size = 0 */
-  33               	.LBB15:
-  34               	.LBB16:
-  35               	.LSM1:
-  36               	/* #APP */
-  37               	 ;  82 "aprs/main.c" 1
-  38 000c 7894      		sei
-  39               	 ;  0 "" 2
-  40               	.LSM2:
-  41               	/* #NOAPP */
-  42 000e 0E94 0000 		call kdbg_init	 ;  7	call_insn/3	[length = 2]
-  43               	.LSM3:
-  44 0012 0E94 0000 		call timer_init	 ;  9	call_insn/3	[length = 2]
-  45               	.LSM4:
-  46 0016 80E0      		ldi r24,lo8(afsk)	 ;  12	*movhi/4	[length = 2]
-  47 0018 90E0      		ldi r25,hi8(afsk)
-  48 001a 60E0      		ldi r22,lo8(0)	 ;  13	*movhi/4	[length = 2]
-  49 001c 70E0      		ldi r23,hi8(0)
-  50 001e 40E0      		ldi r20,lo8(0)	 ;  14	*movhi/4	[length = 2]
-  51 0020 50E0      		ldi r21,hi8(0)
-  52 0022 0E94 0000 		call afsk_init	 ;  15	call_insn/3	[length = 2]
-  53               	.LSM5:
-  54 0026 80E0      		ldi r24,lo8(ax25)	 ;  20	*movhi/4	[length = 2]
-  55 0028 90E0      		ldi r25,hi8(ax25)
-  56 002a 60E0      		ldi r22,lo8(afsk)	 ;  21	*movhi/4	[length = 2]
-  57 002c 70E0      		ldi r23,hi8(afsk)
-  58 002e 40E0      		ldi r20,lo8(gs(message_callback))	 ;  22	*movhi/4	[length = 2]
-  59 0030 50E0      		ldi r21,hi8(gs(message_callback))
-  60 0032 0E94 0000 		call ax25_init	 ;  23	call_insn/3	[length = 2]
-  61               	.LSM6:
-  62 0036 80E0      		ldi r24,lo8(ser)	 ;  26	*movhi/4	[length = 2]
-  63 0038 90E0      		ldi r25,hi8(ser)
-  64 003a 60E0      		ldi r22,lo8(0)	 ;  27	*movhi/4	[length = 2]
-  65 003c 70E0      		ldi r23,hi8(0)
-  66 003e 0E94 0000 		call ser_init	 ;  28	call_insn/3	[length = 2]
-  67               	.LSM7:
-  68 0042 80E0      		ldi r24,lo8(ser)	 ;  31	*movhi/4	[length = 2]
-  69 0044 90E0      		ldi r25,hi8(ser)
-  70 0046 40E0      		ldi r20,lo8(115200)	 ;  32	*movsi/5	[length = 4]
-  71 0048 52EC      		ldi r21,hi8(115200)
-  72 004a 61E0      		ldi r22,hlo8(115200)
-  73 004c 70E0      		ldi r23,hhi8(115200)
-  74 004e 0E94 0000 		call ser_setbaudrate	 ;  33	call_insn/3	[length = 2]
-  75               	.LBE16:
-  76               	.LBE15:
-  77               	.LBB17:
-  78               	.LBB18:
-  79               	.LBB19:
-  80               	.LSM8:
-  81               	/* #APP */
-  82               	 ;  131 "bertos/drv/timer.h" 1
-  83 0052 8FB7      		in r24,__SREG__
-  84 0054 F894      		cli
-  85               	 ;  0 "" 2
-  86               	.LVL0:
-  87               	/* #NOAPP */
-  88 0056 C090 0000 		lds r12,_clock	 ;  35	*movsi/3	[length = 8]
-  89 005a D090 0000 		lds r13,(_clock)+1
-  90 005e E090 0000 		lds r14,(_clock)+2
-  91 0062 F090 0000 		lds r15,(_clock)+3
-  92               	.LVL1:
-  93               	/* #APP */
-  94               	 ;  131 "bertos/drv/timer.h" 1
-  95 0066 8FBF      		out __SREG__,r24
-  96               	 ;  0 "" 2
-  97               	.LVL2:
-  98               	/* #NOAPP */
-  99               	.L6:
- 100               	.LBE19:
- 101               	.LBE18:
- 102               	.LBE17:
- 103               	.LSM9:
- 104 0068 80E0      		ldi r24,lo8(ax25)	 ;  89	*movhi/4	[length = 2]
- 105 006a 90E0      		ldi r25,hi8(ax25)
- 106               	.LVL3:
- 107 006c 0E94 0000 		call ax25_poll	 ;  41	call_insn/3	[length = 2]
- 108               	.LBB20:
- 109               	.LBB21:
- 110               	.LBB22:
- 111               	.LSM10:
- 112               	/* #APP */
- 113               	 ;  131 "bertos/drv/timer.h" 1
- 114 0070 2FB7      		in r18,__SREG__
- 115 0072 F894      		cli
- 116               	 ;  0 "" 2
- 117               	.LVL4:
- 118               	/* #NOAPP */
- 119 0074 8091 0000 		lds r24,_clock	 ;  43	*movsi/3	[length = 8]
- 120 0078 9091 0000 		lds r25,(_clock)+1
- 121 007c A091 0000 		lds r26,(_clock)+2
- 122 0080 B091 0000 		lds r27,(_clock)+3
- 123               	.LVL5:
- 124               	/* #APP */
- 125               	 ;  131 "bertos/drv/timer.h" 1
- 126 0084 2FBF      		out __SREG__,r18
- 127               	 ;  0 "" 2
- 128               	/* #NOAPP */
- 129               	.LBE22:
- 130               	.LBE21:
- 131               	.LBE20:
- 132               	.LSM11:
- 133 0086 8C19      		sub r24,r12	 ;  46	subsi3/1	[length = 4]
- 134 0088 9D09      		sbc r25,r13
- 135 008a AE09      		sbc r26,r14
- 136 008c BF09      		sbc r27,r15
- 137 008e 8959      		subi r24,lo8(15001)	 ;  47	cmpsi/3	[length = 7]
- 138 0090 9A43      		sbci r25,hi8(15001)
- 139 0092 A040      		sbci r26,hlo8(15001)
- 140 0094 B040      		sbci r27,hhi8(15001)
- 141               	.LVL6:
- 142 0096 04F0      		brlt .L6	 ;  48	branch	[length = 1]
- 143               	.LBB23:
- 144               	.LBB24:
- 145               	.LBB25:
- 146               	.LSM12:
- 147               	/* #APP */
- 148               	 ;  131 "bertos/drv/timer.h" 1
- 149 0098 8FB7      		in r24,__SREG__
- 150 009a F894      		cli
- 151               	 ;  0 "" 2
- 152               	.LVL7:
- 153               	/* #NOAPP */
- 154 009c C090 0000 		lds r12,_clock	 ;  51	*movsi/3	[length = 8]
- 155 00a0 D090 0000 		lds r13,(_clock)+1
- 156 00a4 E090 0000 		lds r14,(_clock)+2
- 157 00a8 F090 0000 		lds r15,(_clock)+3
- 158               	/* #APP */
- 159               	 ;  131 "bertos/drv/timer.h" 1
- 160 00ac 8FBF      		out __SREG__,r24
- 161               	 ;  0 "" 2
- 162               	/* #NOAPP */
- 163               	.LBE25:
- 164               	.LBE24:
- 165               	.LBE23:
- 166               	.LSM13:
- 167 00ae 80E0      		ldi r24,lo8(ax25)	 ;  90	*movhi/4	[length = 2]
- 168 00b0 90E0      		ldi r25,hi8(ax25)
- 169               	.LVL8:
- 170 00b2 60E0      		ldi r22,lo8(path)	 ;  91	*movhi/4	[length = 2]
- 171 00b4 70E0      		ldi r23,hi8(path)
- 172 00b6 44E0      		ldi r20,lo8(4)	 ;  59	*movhi/4	[length = 2]
- 173 00b8 50E0      		ldi r21,hi8(4)
- 174 00ba 20E0      		ldi r18,lo8(.LC0)	 ;  92	*movhi/4	[length = 2]
- 175 00bc 30E0      		ldi r19,hi8(.LC0)
- 176 00be 08E2      		ldi r16,lo8(40)	 ;  61	*movhi/4	[length = 2]
- 177 00c0 10E0      		ldi r17,hi8(40)
- 178 00c2 0E94 0000 		call ax25_sendVia	 ;  62	call_insn/3	[length = 2]
- 179 00c6 00C0      		rjmp .L6	 ;  106	jump	[length = 1]
- 180               	.LFE50:
- 182               		.data
- 183               	.LC1:
- 184 0028 0A0A 5352 		.string	"\n\nSRC[%.6s-%d], DST[%.6s-%d]\r\n"
- 184      435B 252E 
- 184      3673 2D25 
- 184      645D 2C20 
- 184      4453 545B 
- 185               	.LC2:
- 186 0047 7669 613A 		.string	"via: [%.6s-%d]\r\n"
- 186      205B 252E 
- 186      3673 2D25 
- 186      645D 0D0A 
- 186      00
- 187               	.LC3:
- 188 0058 4441 5441 		.string	"DATA: %.*s\r\n"
- 188      3A20 252E 
- 188      2A73 0D0A 
- 188      00
- 189               		.section	.text.message_callback,"ax",@progbits
- 191               	message_callback:
- 192               	.LFB48:
- 193               	.LSM14:
- 194               	.LVL9:
- 195 0000 8F92      		push r8	 ;  164	*pushqi/1	[length = 1]
- 196 0002 9F92      		push r9	 ;  165	*pushqi/1	[length = 1]
- 197 0004 AF92      		push r10	 ;  166	*pushqi/1	[length = 1]
- 198 0006 BF92      		push r11	 ;  167	*pushqi/1	[length = 1]
- 199 0008 CF92      		push r12	 ;  168	*pushqi/1	[length = 1]
- 200 000a DF92      		push r13	 ;  169	*pushqi/1	[length = 1]
- 201 000c EF92      		push r14	 ;  170	*pushqi/1	[length = 1]
- 202 000e FF92      		push r15	 ;  171	*pushqi/1	[length = 1]
- 203 0010 0F93      		push r16	 ;  172	*pushqi/1	[length = 1]
- 204 0012 1F93      		push r17	 ;  173	*pushqi/1	[length = 1]
- 205 0014 CF93      		push r28	 ;  174	*pushqi/1	[length = 1]
- 206 0016 DF93      		push r29	 ;  175	*pushqi/1	[length = 1]
- 207               	/* prologue: function */
- 208               	/* frame size = 0 */
- 209 0018 EC01      		movw r28,r24	 ;  33	*movhi/1	[length = 1]
- 210               	.LSM15:
- 211 001a 8DB7      		in r24,__SP_L__	 ;  139	*movhi_sp/2	[length = 2]
- 212 001c 9EB7      		in r25,__SP_H__
- 213               	.LVL10:
- 214 001e 0C97      		sbiw r24,12	 ;  37	*addhi3/3	[length = 1]
- 215 0020 0FB6      		in __tmp_reg__,__SREG__	 ;  140	*movhi_sp/1	[length = 5]
- 216 0022 F894      		cli
- 217 0024 9EBF      		out __SP_H__,r25
- 218 0026 0FBE      		out __SREG__,__tmp_reg__
- 219 0028 8DBF      		out __SP_L__,r24
- 220 002a EDB7      		in r30,__SP_L__	 ;  141	*movhi_sp/2	[length = 2]
- 221 002c FEB7      		in r31,__SP_H__
- 222 002e 3196      		adiw r30,1	 ;  108	*addhi3/2	[length = 1]
- 223 0030 00E0      		ldi r16,lo8(ser)	 ;  39	*movhi/4	[length = 2]
- 224 0032 10E0      		ldi r17,hi8(ser)
- 225 0034 ADB7      		in r26,__SP_L__	 ;  142	*movhi_sp/2	[length = 2]
- 226 0036 BEB7      		in r27,__SP_H__
- 227 0038 1296      		adiw r26,1+1	 ;  40	*movhi/3	[length = 4]
- 228 003a 1C93      		st X,r17
- 229 003c 0E93      		st -X,r16
- 230 003e 1197      		sbiw r26,1
- 231 0040 80E0      		ldi r24,lo8(.LC1)	 ;  41	*movhi/4	[length = 2]
- 232 0042 90E0      		ldi r25,hi8(.LC1)
- 233 0044 9383      		std Z+3,r25	 ;  42	*movhi/3	[length = 2]
- 234 0046 8283      		std Z+2,r24
- 235 0048 D583      		std Z+5,r29	 ;  43	*movhi/3	[length = 2]
- 236 004a C483      		std Z+4,r28
- 237 004c 8E81      		ldd r24,Y+6	 ;  44	*movqi/4	[length = 1]
- 238 004e 8683      		std Z+6,r24	 ;  113	*movqi/3	[length = 1]
- 239 0050 1782      		std Z+7,__zero_reg__	 ;  114	*movqi/3	[length = 1]
- 240 0052 2796      		adiw r28,7	 ;  47	*addhi3/2	[length = 1]
- 241 0054 D187      		std Z+9,r29	 ;  48	*movhi/3	[length = 2]
- 242 0056 C087      		std Z+8,r28
- 243 0058 2797      		sbiw r28,7	 ;  131	*addhi3/3	[length = 1]
- 244 005a 8D85      		ldd r24,Y+13	 ;  49	*movqi/4	[length = 1]
- 245 005c 8287      		std Z+10,r24	 ;  117	*movqi/3	[length = 1]
- 246 005e 1386      		std Z+11,__zero_reg__	 ;  118	*movqi/3	[length = 1]
- 247 0060 0E94 0000 		call kfile_printf	 ;  52	call_value_insn/3	[length = 2]
- 248 0064 6E01      		movw r12,r28	 ;  53	*movhi/1	[length = 1]
- 249 0066 EE24      		clr r14	 ;  54	*movhi/5	[length = 2]
- 250 0068 FF24      		clr r15
- 251               	.LVL11:
- 252 006a EDB7      		in r30,__SP_L__	 ;  143	*movhi_sp/2	[length = 2]
- 253 006c FEB7      		in r31,__SP_H__
- 254 006e 3C96      		adiw r30,12	 ;  55	*addhi3/2	[length = 1]
- 255 0070 0FB6      		in __tmp_reg__,__SREG__	 ;  144	*movhi_sp/1	[length = 5]
- 256 0072 F894      		cli
- 257 0074 FEBF      		out __SP_H__,r31
- 258 0076 0FBE      		out __SREG__,__tmp_reg__
- 259 0078 EDBF      		out __SP_L__,r30
- 260               	.LBB26:
- 261               	.LSM16:
- 262 007a 36E4      		ldi r19,lo8(70)	 ;  194	*reload_inhi	[length = 3]
- 263 007c A32E      		mov r10,r19
- 264 007e B12C      		mov r11,__zero_reg__
- 265 0080 AC0E      		add r10,r28	 ;  81	*addhi3/1	[length = 2]
- 266 0082 BD1E      		adc r11,r29
- 267 0084 4801      		movw r8,r16	 ;  193	*movhi/1	[length = 1]
- 268               	.LSM17:
- 269 0086 00E0      		ldi r16,lo8(.LC2)	 ;  63	*movhi/4	[length = 2]
- 270 0088 10E0      		ldi r17,hi8(.LC2)
- 271 008a 00C0      		rjmp .L8	 ;  195	jump	[length = 1]
- 272               	.L9:
- 273 008c 8DB7      		in r24,__SP_L__	 ;  146	*movhi_sp/2	[length = 2]
- 274 008e 9EB7      		in r25,__SP_H__
- 275 0090 0897      		sbiw r24,8	 ;  59	*addhi3/3	[length = 1]
- 276 0092 0FB6      		in __tmp_reg__,__SREG__	 ;  147	*movhi_sp/1	[length = 5]
- 277 0094 F894      		cli
- 278 0096 9EBF      		out __SP_H__,r25
- 279 0098 0FBE      		out __SREG__,__tmp_reg__
- 280 009a 8DBF      		out __SP_L__,r24
- 281 009c EDB7      		in r30,__SP_L__	 ;  148	*movhi_sp/2	[length = 2]
- 282 009e FEB7      		in r31,__SP_H__
- 283 00a0 3196      		adiw r30,1	 ;  109	*addhi3/2	[length = 1]
- 284 00a2 ADB7      		in r26,__SP_L__	 ;  149	*movhi_sp/2	[length = 2]
- 285 00a4 BEB7      		in r27,__SP_H__
- 286 00a6 1196      		adiw r26,1	 ;  135	*movqi/3	[length = 3]
- 287 00a8 8C92      		st X,r8
- 288 00aa 1197      		sbiw r26,1
- 289 00ac 1296      		adiw r26,2	 ;  136	*movqi/3	[length = 2]
- 290 00ae 9C92      		st X,r9
- 291 00b0 1383      		std Z+3,r17	 ;  64	*movhi/3	[length = 2]
- 292 00b2 0283      		std Z+2,r16
- 293 00b4 C701      		movw r24,r14	 ;  150	*movhi/1	[length = 1]
- 294 00b6 23E0      		ldi r18,3	 ;  192	*ashlhi3_const/5	[length = 5]
- 295 00b8 880F      	1:	lsl r24
- 296 00ba 991F      		rol r25
- 297 00bc 2A95      		dec r18
- 298 00be 01F4      		brne 1b
- 299 00c0 8E19      		sub r24,r14	 ;  67	subhi3/1	[length = 2]
- 300 00c2 9F09      		sbc r25,r15
- 301 00c4 0E96      		adiw r24,14	 ;  68	*addhi3/2	[length = 1]
- 302 00c6 8C0F      		add r24,r28	 ;  69	*addhi3/1	[length = 2]
- 303 00c8 9D1F      		adc r25,r29
- 304 00ca 9583      		std Z+5,r25	 ;  70	*movhi/3	[length = 2]
- 305 00cc 8483      		std Z+4,r24
- 306 00ce D601      		movw r26,r12	 ;  151	*movhi/1	[length = 1]
- 307 00d0 1D96      		adiw r26,13	 ;  71	*movqi/4	[length = 2]
- 308 00d2 8C91      		ld r24,X
- 309 00d4 8683      		std Z+6,r24	 ;  121	*movqi/3	[length = 1]
- 310 00d6 1782      		std Z+7,__zero_reg__	 ;  122	*movqi/3	[length = 1]
- 311 00d8 0E94 0000 		call kfile_printf	 ;  74	call_value_insn/3	[length = 2]
- 312               	.LSM18:
- 313 00dc 0894      		sec	 ;  75	*addhi3/5	[length = 3]
- 314 00de E11C      		adc r14,__zero_reg__
- 315 00e0 F11C      		adc r15,__zero_reg__
- 316 00e2 EDB7      		in r30,__SP_L__	 ;  152	*movhi_sp/2	[length = 2]
- 317 00e4 FEB7      		in r31,__SP_H__
- 318 00e6 3896      		adiw r30,8	 ;  76	*addhi3/2	[length = 1]
- 319 00e8 0FB6      		in __tmp_reg__,__SREG__	 ;  153	*movhi_sp/1	[length = 5]
- 320 00ea F894      		cli
- 321 00ec FEBF      		out __SP_H__,r31
- 322 00ee 0FBE      		out __SREG__,__tmp_reg__
- 323 00f0 EDBF      		out __SP_L__,r30
- 324               	.L8:
- 325 00f2 87E0      		ldi r24,lo8(7)	 ;  154	*movhi/4	[length = 2]
- 326 00f4 90E0      		ldi r25,hi8(7)
- 327 00f6 C80E      		add r12,r24	 ;  79	*addhi3/1	[length = 2]
- 328 00f8 D91E      		adc r13,r25
- 329 00fa D501      		movw r26,r10	 ;  155	*movhi/1	[length = 1]
- 330 00fc 8C91      		ld r24,X	 ;  82	*movqi/4	[length = 1]
- 331 00fe 90E0      		ldi r25,lo8(0)	 ;  163	*movqi/2	[length = 1]
- 332 0100 E816      		cp r14,r24	 ;  84	cmphi/1	[length = 2]
- 333 0102 F906      		cpc r15,r25
- 334 0104 04F0      		brlt .L9	 ;  85	branch	[length = 1]
- 335               	.LBE26:
- 336               	.LSM19:
- 337 0106 EDB7      		in r30,__SP_L__	 ;  156	*movhi_sp/2	[length = 2]
- 338 0108 FEB7      		in r31,__SP_H__
- 339 010a 3897      		sbiw r30,8	 ;  87	*addhi3/3	[length = 1]
- 340 010c 0FB6      		in __tmp_reg__,__SREG__	 ;  157	*movhi_sp/1	[length = 5]
- 341 010e F894      		cli
- 342 0110 FEBF      		out __SP_H__,r31
- 343 0112 0FBE      		out __SREG__,__tmp_reg__
- 344 0114 EDBF      		out __SP_L__,r30
- 345 0116 3196      		adiw r30,1	 ;  110	*addhi3/2	[length = 1]
- 346 0118 80E0      		ldi r24,lo8(ser)	 ;  137	*movhi/4	[length = 2]
- 347 011a 90E0      		ldi r25,hi8(ser)
- 348 011c ADB7      		in r26,__SP_L__	 ;  159	*movhi_sp/2	[length = 2]
- 349 011e BEB7      		in r27,__SP_H__
- 350 0120 1296      		adiw r26,1+1	 ;  90	*movhi/3	[length = 4]
- 351 0122 9C93      		st X,r25
- 352 0124 8E93      		st -X,r24
- 353 0126 1197      		sbiw r26,1
- 354 0128 80E0      		ldi r24,lo8(.LC3)	 ;  91	*movhi/4	[length = 2]
- 355 012a 90E0      		ldi r25,hi8(.LC3)
- 356 012c 9383      		std Z+3,r25	 ;  92	*movhi/3	[length = 2]
- 357 012e 8283      		std Z+2,r24
- 358 0130 C45B      		subi r28,lo8(-(76))	 ;  93	*addhi3/4	[length = 2]
- 359 0132 DF4F      		sbci r29,hi8(-(76))
- 360 0134 8881      		ld r24,Y	 ;  94	*movhi/2	[length = 2]
- 361 0136 9981      		ldd r25,Y+1
- 362 0138 9583      		std Z+5,r25	 ;  95	*movhi/3	[length = 2]
- 363 013a 8483      		std Z+4,r24
- 364 013c DE01      		movw r26,r28	 ;  96	*movhi/1	[length = 1]
- 365 013e 9E91      		ld r25,-X	 ;  97	*movhi/2	[length = 2]
- 366 0140 8E91      		ld r24,-X
- 367 0142 9783      		std Z+7,r25	 ;  98	*movhi/3	[length = 2]
- 368 0144 8683      		std Z+6,r24
- 369 0146 0E94 0000 		call kfile_printf	 ;  99	call_value_insn/3	[length = 2]
- 370 014a EDB7      		in r30,__SP_L__	 ;  160	*movhi_sp/2	[length = 2]
- 371 014c FEB7      		in r31,__SP_H__
- 372 014e 3896      		adiw r30,8	 ;  100	*addhi3/2	[length = 1]
- 373 0150 0FB6      		in __tmp_reg__,__SREG__	 ;  161	*movhi_sp/1	[length = 5]
- 374 0152 F894      		cli
- 375 0154 FEBF      		out __SP_H__,r31
- 376 0156 0FBE      		out __SREG__,__tmp_reg__
- 377 0158 EDBF      		out __SP_L__,r30
- 378               	/* epilogue start */
- 379               	.LSM20:
- 380 015a DF91      		pop r29	 ;  178	popqi	[length = 1]
- 381 015c CF91      		pop r28	 ;  179	popqi	[length = 1]
- 382               	.LVL12:
- 383 015e 1F91      		pop r17	 ;  180	popqi	[length = 1]
- 384 0160 0F91      		pop r16	 ;  181	popqi	[length = 1]
- 385 0162 FF90      		pop r15	 ;  182	popqi	[length = 1]
- 386 0164 EF90      		pop r14	 ;  183	popqi	[length = 1]
- 387               	.LVL13:
- 388 0166 DF90      		pop r13	 ;  184	popqi	[length = 1]
- 389 0168 CF90      		pop r12	 ;  185	popqi	[length = 1]
- 390 016a BF90      		pop r11	 ;  186	popqi	[length = 1]
- 391 016c AF90      		pop r10	 ;  187	popqi	[length = 1]
- 392 016e 9F90      		pop r9	 ;  188	popqi	[length = 1]
- 393 0170 8F90      		pop r8	 ;  189	popqi	[length = 1]
- 394 0172 0895      		ret	 ;  190	return_from_epilogue	[length = 1]
- 395               	.LFE48:
- 397               		.section	.data.path,"aw",@progbits
- 400               	path:
- 401 0000 6170 7A62 		.ascii	"apzbrt"
- 401      7274 
- 402 0006 00        		.byte	0
- 403 0007 6E6F 6361 		.ascii	"nocall"
- 403      6C6C 
- 404 000d 00        		.byte	0
- 405 000e 7769 6465 		.string	"wide1"
- 405      3100 
- 406 0014 01        		.byte	1
- 407 0015 7769 6465 		.string	"wide2"
- 407      3200 
- 408 001b 02        		.byte	2
- 409               		.section	.bss.afsk,"aw",@nobits
- 412               	afsk:
- 413 0000 0000 0000 		.skip 220,0
- 413      0000 0000 
- 413      0000 0000 
- 413      0000 0000 
- 413      0000 0000 
- 414               		.section	.bss.ax25,"aw",@nobits
- 417               	ax25:
- 418 0000 0000 0000 		.skip 342,0
- 418      0000 0000 
- 418      0000 0000 
- 418      0000 0000 
- 418      0000 0000 
- 419               		.section	.bss.ser,"aw",@nobits
- 422               	ser:
- 423 0000 0000 0000 		.skip 50,0
- 423      0000 0000 
- 423      0000 0000 
- 423      0000 0000 
- 423      0000 0000 
- 456               	.Letext0:
+   8               		.global __do_copy_data
+   9               		.global __do_clear_bss
+  10               		.text
+  11               	.Ltext0:
+  12               		.cfi_sections	.debug_frame
+  13               		.data
+  14               	.LC0:
+  15 0000 0A0A 5352 		.string	"\n\nSRC[%.6s-%d], DST[%.6s-%d]\r\n"
+  15      435B 252E 
+  15      3673 2D25 
+  15      645D 2C20 
+  15      4453 545B 
+  16               	.LC1:
+  17 001f 7669 613A 		.string	"via: [%.6s-%d]\r\n"
+  17      205B 252E 
+  17      3673 2D25 
+  17      645D 0D0A 
+  17      00
+  18               	.LC2:
+  19 0030 4441 5441 		.string	"DATA: %.*s\r\n"
+  19      3A20 252E 
+  19      2A73 0D0A 
+  19      00
+  20               		.section	.text.message_callback,"ax",@progbits
+  22               	message_callback:
+  23               	.LFB46:
+  24               		.file 1 "aprs/main.c"
+   1:aprs/main.c   **** /**
+   2:aprs/main.c   ****  * \file
+   3:aprs/main.c   ****  * <!--
+   4:aprs/main.c   ****  * This file is part of BeRTOS.
+   5:aprs/main.c   ****  *
+   6:aprs/main.c   ****  * Bertos is free software; you can redistribute it and/or modify
+   7:aprs/main.c   ****  * it under the terms of the GNU General Public License as published by
+   8:aprs/main.c   ****  * the Free Software Foundation; either version 2 of the License, or
+   9:aprs/main.c   ****  * (at your option) any later version.
+  10:aprs/main.c   ****  *
+  11:aprs/main.c   ****  * This program is distributed in the hope that it will be useful,
+  12:aprs/main.c   ****  * but WITHOUT ANY WARRANTY; without even the implied warranty of
+  13:aprs/main.c   ****  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  14:aprs/main.c   ****  * GNU General Public License for more details.
+  15:aprs/main.c   ****  *
+  16:aprs/main.c   ****  * You should have received a copy of the GNU General Public License
+  17:aprs/main.c   ****  * along with this program; if not, write to the Free Software
+  18:aprs/main.c   ****  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+  19:aprs/main.c   ****  *
+  20:aprs/main.c   ****  * As a special exception, you may use this file as part of a free software
+  21:aprs/main.c   ****  * library without restriction.  Specifically, if other files instantiate
+  22:aprs/main.c   ****  * templates or use macros or inline functions from this file, or you compile
+  23:aprs/main.c   ****  * this file and link it with other files to produce an executable, this
+  24:aprs/main.c   ****  * file does not by itself cause the resulting executable to be covered by
+  25:aprs/main.c   ****  * the GNU General Public License.  This exception does not however
+  26:aprs/main.c   ****  * invalidate any other reasons why the executable file might be covered by
+  27:aprs/main.c   ****  * the GNU General Public License.
+  28:aprs/main.c   ****  *
+  29:aprs/main.c   ****  * Copyright 2010 Develer S.r.l. (http://www.develer.com/)
+  30:aprs/main.c   ****  *
+  31:aprs/main.c   ****  * -->
+  32:aprs/main.c   ****  *
+  33:aprs/main.c   ****  * \author Francesco Sacchi <batt@develer.com>
+  34:aprs/main.c   ****  * \author Luca Ottaviano <lottaviano@develer.com>
+  35:aprs/main.c   ****  * \author Daniele Basile <asterix@develer.com>
+  36:aprs/main.c   ****  *
+  37:aprs/main.c   ****  * \brief Arduino APRS radio demo.
+  38:aprs/main.c   ****  *
+  39:aprs/main.c   ****  * This example shows how to read and decode APRS radio packets.
+  40:aprs/main.c   ****  * It uses the following modules:
+  41:aprs/main.c   ****  * afsk
+  42:aprs/main.c   ****  * ax25
+  43:aprs/main.c   ****  * ser
+  44:aprs/main.c   ****  *
+  45:aprs/main.c   ****  * You will see how to use a serial port to output messages, init the afsk demodulator and
+  46:aprs/main.c   ****  * how to parse input messages using ax25 module.
+  47:aprs/main.c   ****  */
+  48:aprs/main.c   **** 
+  49:aprs/main.c   **** #include <cpu/irq.h>
+  50:aprs/main.c   **** #include <cfg/debug.h>
+  51:aprs/main.c   **** 
+  52:aprs/main.c   **** #include <net/afsk.h>
+  53:aprs/main.c   **** #include <net/ax25.h>
+  54:aprs/main.c   **** 
+  55:aprs/main.c   **** #include <drv/ser.h>
+  56:aprs/main.c   **** #include <drv/timer.h>
+  57:aprs/main.c   **** 
+  58:aprs/main.c   **** #include <stdio.h>
+  59:aprs/main.c   **** #include <string.h>
+  60:aprs/main.c   **** 
+  61:aprs/main.c   **** static Afsk afsk;
+  62:aprs/main.c   **** static AX25Ctx ax25;
+  63:aprs/main.c   **** static Serial ser;
+  64:aprs/main.c   **** 
+  65:aprs/main.c   **** #define ADC_CH 0
+  66:aprs/main.c   **** 
+  67:aprs/main.c   **** /*
+  68:aprs/main.c   ****  * Print on console the message that we have received.
+  69:aprs/main.c   ****  */
+  70:aprs/main.c   **** static void message_callback(struct AX25Msg *msg)
+  71:aprs/main.c   **** {
+  25               		.loc 1 71 0
+  26               		.cfi_startproc
+  27               	.LVL0:
+  28 0000 6F92      		push r6	 ;  160	*pushqi/1	[length = 1]
+  29               	.LCFI0:
+  30               		.cfi_def_cfa_offset 3
+  31               		.cfi_offset 6, -2
+  32 0002 7F92      		push r7	 ;  161	*pushqi/1	[length = 1]
+  33               	.LCFI1:
+  34               		.cfi_def_cfa_offset 4
+  35               		.cfi_offset 7, -3
+  36 0004 8F92      		push r8	 ;  162	*pushqi/1	[length = 1]
+  37               	.LCFI2:
+  38               		.cfi_def_cfa_offset 5
+  39               		.cfi_offset 8, -4
+  40 0006 9F92      		push r9	 ;  163	*pushqi/1	[length = 1]
+  41               	.LCFI3:
+  42               		.cfi_def_cfa_offset 6
+  43               		.cfi_offset 9, -5
+  44 0008 BF92      		push r11	 ;  164	*pushqi/1	[length = 1]
+  45               	.LCFI4:
+  46               		.cfi_def_cfa_offset 7
+  47               		.cfi_offset 11, -6
+  48 000a CF92      		push r12	 ;  165	*pushqi/1	[length = 1]
+  49               	.LCFI5:
+  50               		.cfi_def_cfa_offset 8
+  51               		.cfi_offset 12, -7
+  52 000c DF92      		push r13	 ;  166	*pushqi/1	[length = 1]
+  53               	.LCFI6:
+  54               		.cfi_def_cfa_offset 9
+  55               		.cfi_offset 13, -8
+  56 000e EF92      		push r14	 ;  167	*pushqi/1	[length = 1]
+  57               	.LCFI7:
+  58               		.cfi_def_cfa_offset 10
+  59               		.cfi_offset 14, -9
+  60 0010 FF92      		push r15	 ;  168	*pushqi/1	[length = 1]
+  61               	.LCFI8:
+  62               		.cfi_def_cfa_offset 11
+  63               		.cfi_offset 15, -10
+  64 0012 0F93      		push r16	 ;  169	*pushqi/1	[length = 1]
+  65               	.LCFI9:
+  66               		.cfi_def_cfa_offset 12
+  67               		.cfi_offset 16, -11
+  68 0014 1F93      		push r17	 ;  170	*pushqi/1	[length = 1]
+  69               	.LCFI10:
+  70               		.cfi_def_cfa_offset 13
+  71               		.cfi_offset 17, -12
+  72 0016 CF93      		push r28	 ;  171	*pushqi/1	[length = 1]
+  73               	.LCFI11:
+  74               		.cfi_def_cfa_offset 14
+  75               		.cfi_offset 28, -13
+  76 0018 DF93      		push r29	 ;  172	*pushqi/1	[length = 1]
+  77               	.LCFI12:
+  78               		.cfi_def_cfa_offset 15
+  79               		.cfi_offset 29, -14
+  80               	/* prologue: function */
+  81               	/* frame size = 0 */
+  82               	/* stack size = 13 */
+  83               	.L__stack_usage = 13
+  84 001a 8C01      		movw r16,r24	 ;  26	*movhi/1	[length = 1]
+  72:aprs/main.c   **** 	kfile_printf(&ser.fd, "\n\nSRC[%.6s-%d], DST[%.6s-%d]\r\n", msg->src.call, msg->src.ssid, msg->dst
+  85               		.loc 1 72 0
+  86 001c 8DB7      		in r24,__SP_L__	 ;  131	*movhi_sp/2	[length = 2]
+  87 001e 9EB7      		in r25,__SP_H__
+  88               	.LVL1:
+  89 0020 0C97      		sbiw r24,12	 ;  31	*addhi3/3	[length = 1]
+  90 0022 0FB6      		in __tmp_reg__,__SREG__	 ;  132	*movhi_sp/1	[length = 5]
+  91 0024 F894      		cli
+  92 0026 9EBF      		out __SP_H__,r25
+  93 0028 0FBE      		out __SREG__,__tmp_reg__
+  94 002a 8DBF      		out __SP_L__,r24
+  95 002c EDB7      		in r30,__SP_L__	 ;  133	*movhi_sp/2	[length = 2]
+  96 002e FEB7      		in r31,__SP_H__
+  97 0030 3196      		adiw r30,1	 ;  100	*addhi3/2	[length = 1]
+  98 0032 30E0      		ldi r19,lo8(ser)	 ;  191	*reload_inhi	[length = 4]
+  99 0034 C32E      		mov r12,r19
+ 100 0036 30E0      		ldi r19,hi8(ser)
+ 101 0038 D32E      		mov r13,r19
+ 102 003a ADB7      		in r26,__SP_L__	 ;  134	*movhi_sp/2	[length = 2]
+ 103 003c BEB7      		in r27,__SP_H__
+ 104 003e 1296      		adiw r26,1+1	 ;  34	*movhi/3	[length = 4]
+ 105 0040 DC92      		st X,r13
+ 106 0042 CE92      		st -X,r12
+ 107 0044 1197      		sbiw r26,1
+ 108 0046 80E0      		ldi r24,lo8(.LC0)	 ;  35	*movhi/4	[length = 2]
+ 109 0048 90E0      		ldi r25,hi8(.LC0)
+ 110 004a 9383      		std Z+3,r25	 ;  36	*movhi/3	[length = 2]
+ 111 004c 8283      		std Z+2,r24
+ 112 004e 1583      		std Z+5,r17	 ;  37	*movhi/3	[length = 2]
+ 113 0050 0483      		std Z+4,r16
+ 114 0052 D801      		movw r26,r16	 ;  135	*movhi/1	[length = 1]
+ 115 0054 1696      		adiw r26,6	 ;  38	*movqi/4	[length = 3]
+ 116 0056 8C91      		ld r24,X
+ 117 0058 1697      		sbiw r26,6
+ 118 005a 8683      		std Z+6,r24	 ;  105	*movqi/3	[length = 1]
+ 119 005c 1782      		std Z+7,__zero_reg__	 ;  106	*movqi/3	[length = 1]
+ 120 005e C801      		movw r24,r16	 ;  136	*movhi/1	[length = 1]
+ 121 0060 0796      		adiw r24,7	 ;  41	*addhi3/2	[length = 1]
+ 122 0062 9187      		std Z+9,r25	 ;  42	*movhi/3	[length = 2]
+ 123 0064 8087      		std Z+8,r24
+ 124 0066 1D96      		adiw r26,13	 ;  43	*movqi/4	[length = 2]
+ 125 0068 8C91      		ld r24,X
+ 126 006a 8287      		std Z+10,r24	 ;  109	*movqi/3	[length = 1]
+ 127 006c 1386      		std Z+11,__zero_reg__	 ;  110	*movqi/3	[length = 1]
+ 128 006e 0E94 0000 		call kfile_printf	 ;  46	call_value_insn/3	[length = 2]
+ 129               	.LVL2:
+ 130 0072 7801      		movw r14,r16	 ;  48	*movhi/1	[length = 1]
+ 131               	.LBB15:
+  73:aprs/main.c   **** 
+  74:aprs/main.c   **** 	for (int i = 0; i < msg->rpt_cnt; i++)
+ 132               		.loc 1 74 0
+ 133 0074 EDB7      		in r30,__SP_L__	 ;  137	*movhi_sp/2	[length = 2]
+ 134 0076 FEB7      		in r31,__SP_H__
+ 135 0078 3C96      		adiw r30,12	 ;  49	*addhi3/2	[length = 1]
+ 136 007a 0FB6      		in __tmp_reg__,__SREG__	 ;  138	*movhi_sp/1	[length = 5]
+ 137 007c F894      		cli
+ 138 007e FEBF      		out __SP_H__,r31
+ 139 0080 0FBE      		out __SREG__,__tmp_reg__
+ 140 0082 EDBF      		out __SP_L__,r30
+ 141 0084 C0E0      		ldi r28,lo8(0)	 ;  28	*movhi/4	[length = 2]
+ 142 0086 D0E0      		ldi r29,hi8(0)
+ 143 0088 46E4      		ldi r20,lo8(70)	 ;  192	*reload_inhi	[length = 3]
+ 144 008a 642E      		mov r6,r20
+ 145 008c 712C      		mov r7,__zero_reg__
+ 146 008e 600E      		add r6,r16	 ;  78	*addhi3/1	[length = 2]
+ 147 0090 711E      		adc r7,r17
+ 148 0092 BC2C      		mov r11,r12	 ;  125	*movqi/1	[length = 1]
+ 149 0094 CD2C      		mov r12,r13	 ;  126	*movqi/1	[length = 1]
+  75:aprs/main.c   **** 		kfile_printf(&ser.fd, "via: [%.6s-%d]\r\n", msg->rpt_lst[i].call, msg->rpt_lst[i].ssid);
+ 150               		.loc 1 75 0
+ 151 0096 50E0      		ldi r21,lo8(.LC1)	 ;  193	*reload_inhi	[length = 4]
+ 152 0098 852E      		mov r8,r21
+ 153 009a 50E0      		ldi r21,hi8(.LC1)
+ 154 009c 952E      		mov r9,r21
+  74:aprs/main.c   **** 	for (int i = 0; i < msg->rpt_cnt; i++)
+ 155               		.loc 1 74 0
+ 156 009e 00C0      		rjmp .L2	 ;  194	jump	[length = 1]
+ 157               	.LVL3:
+ 158               	.L3:
+ 159               		.loc 1 75 0 discriminator 2
+ 160 00a0 8DB7      		in r24,__SP_L__	 ;  140	*movhi_sp/2	[length = 2]
+ 161 00a2 9EB7      		in r25,__SP_H__
+ 162 00a4 0897      		sbiw r24,8	 ;  53	*addhi3/3	[length = 1]
+ 163 00a6 0FB6      		in __tmp_reg__,__SREG__	 ;  141	*movhi_sp/1	[length = 5]
+ 164 00a8 F894      		cli
+ 165 00aa 9EBF      		out __SP_H__,r25
+ 166 00ac 0FBE      		out __SREG__,__tmp_reg__
+ 167 00ae 8DBF      		out __SP_L__,r24
+ 168 00b0 EDB7      		in r30,__SP_L__	 ;  142	*movhi_sp/2	[length = 2]
+ 169 00b2 FEB7      		in r31,__SP_H__
+ 170 00b4 3196      		adiw r30,1	 ;  101	*addhi3/2	[length = 1]
+ 171 00b6 ADB7      		in r26,__SP_L__	 ;  143	*movhi_sp/2	[length = 2]
+ 172 00b8 BEB7      		in r27,__SP_H__
+ 173 00ba 1196      		adiw r26,1	 ;  127	*movqi/3	[length = 3]
+ 174 00bc BC92      		st X,r11
+ 175 00be 1197      		sbiw r26,1
+ 176 00c0 1296      		adiw r26,2	 ;  128	*movqi/3	[length = 2]
+ 177 00c2 CC92      		st X,r12
+ 178 00c4 9382      		std Z+3,r9	 ;  58	*movhi/3	[length = 2]
+ 179 00c6 8282      		std Z+2,r8
+ 180 00c8 CE01      		movw r24,r28	 ;  144	*movhi/1	[length = 1]
+ 181 00ca 23E0      		ldi r18,3	 ;  190	*ashlhi3_const/5	[length = 5]
+ 182 00cc 880F      	1:	lsl r24
+ 183 00ce 991F      		rol r25
+ 184 00d0 2A95      		dec r18
+ 185 00d2 01F4      		brne 1b
+ 186 00d4 8C1B      		sub r24,r28	 ;  62	subhi3/1	[length = 2]
+ 187 00d6 9D0B      		sbc r25,r29
+ 188 00d8 0E96      		adiw r24,14	 ;  63	*addhi3/2	[length = 1]
+ 189 00da 800F      		add r24,r16	 ;  64	*addhi3/1	[length = 2]
+ 190 00dc 911F      		adc r25,r17
+ 191 00de 9583      		std Z+5,r25	 ;  65	*movhi/3	[length = 2]
+ 192 00e0 8483      		std Z+4,r24
+ 193 00e2 D701      		movw r26,r14	 ;  145	*movhi/1	[length = 1]
+ 194 00e4 1D96      		adiw r26,13	 ;  66	*movqi/4	[length = 2]
+ 195 00e6 8C91      		ld r24,X
+ 196 00e8 8683      		std Z+6,r24	 ;  113	*movqi/3	[length = 1]
+ 197 00ea 1782      		std Z+7,__zero_reg__	 ;  114	*movqi/3	[length = 1]
+ 198 00ec 0E94 0000 		call kfile_printf	 ;  69	call_value_insn/3	[length = 2]
+  74:aprs/main.c   **** 	for (int i = 0; i < msg->rpt_cnt; i++)
+ 199               		.loc 1 74 0 discriminator 2
+ 200 00f0 2196      		adiw r28,1	 ;  70	*addhi3/2	[length = 1]
+ 201               	.LVL4:
+ 202 00f2 EDB7      		in r30,__SP_L__	 ;  146	*movhi_sp/2	[length = 2]
+ 203 00f4 FEB7      		in r31,__SP_H__
+ 204 00f6 3896      		adiw r30,8	 ;  72	*addhi3/2	[length = 1]
+ 205 00f8 0FB6      		in __tmp_reg__,__SREG__	 ;  147	*movhi_sp/1	[length = 5]
+ 206 00fa F894      		cli
+ 207 00fc FEBF      		out __SP_H__,r31
+ 208 00fe 0FBE      		out __SREG__,__tmp_reg__
+ 209 0100 EDBF      		out __SP_L__,r30
+ 210               	.LVL5:
+ 211               	.L2:
+  74:aprs/main.c   **** 	for (int i = 0; i < msg->rpt_cnt; i++)
+ 212               		.loc 1 74 0 is_stmt 0 discriminator 1
+ 213 0102 87E0      		ldi r24,lo8(7)	 ;  148	*movhi/4	[length = 2]
+ 214 0104 90E0      		ldi r25,hi8(7)
+ 215 0106 E80E      		add r14,r24	 ;  76	*addhi3/1	[length = 2]
+ 216 0108 F91E      		adc r15,r25
+ 217 010a D301      		movw r26,r6	 ;  149	*movhi/1	[length = 1]
+ 218 010c 8C91      		ld r24,X	 ;  79	*movqi/4	[length = 1]
+ 219 010e 90E0      		ldi r25,lo8(0)	 ;  159	*movqi/2	[length = 1]
+ 220 0110 C817      		cp r28,r24	 ;  81	*cmphi/3	[length = 2]
+ 221 0112 D907      		cpc r29,r25
+ 222 0114 04F0      		brlt .L3	 ;  82	branch	[length = 1]
+ 223               	.LBE15:
+  76:aprs/main.c   **** 
+  77:aprs/main.c   **** 	kfile_printf(&ser.fd, "DATA: %.*s\r\n", msg->len, msg->info);
+ 224               		.loc 1 77 0 is_stmt 1
+ 225 0116 EDB7      		in r30,__SP_L__	 ;  150	*movhi_sp/2	[length = 2]
+ 226 0118 FEB7      		in r31,__SP_H__
+ 227 011a 3897      		sbiw r30,8	 ;  84	*addhi3/3	[length = 1]
+ 228 011c 0FB6      		in __tmp_reg__,__SREG__	 ;  151	*movhi_sp/1	[length = 5]
+ 229 011e F894      		cli
+ 230 0120 FEBF      		out __SP_H__,r31
+ 231 0122 0FBE      		out __SREG__,__tmp_reg__
+ 232 0124 EDBF      		out __SP_L__,r30
+ 233 0126 3196      		adiw r30,1	 ;  102	*addhi3/2	[length = 1]
+ 234 0128 80E0      		ldi r24,lo8(ser)	 ;  129	*movhi/4	[length = 2]
+ 235 012a 90E0      		ldi r25,hi8(ser)
+ 236 012c ADB7      		in r26,__SP_L__	 ;  153	*movhi_sp/2	[length = 2]
+ 237 012e BEB7      		in r27,__SP_H__
+ 238 0130 1296      		adiw r26,1+1	 ;  87	*movhi/3	[length = 4]
+ 239 0132 9C93      		st X,r25
+ 240 0134 8E93      		st -X,r24
+ 241 0136 1197      		sbiw r26,1
+ 242 0138 80E0      		ldi r24,lo8(.LC2)	 ;  88	*movhi/4	[length = 2]
+ 243 013a 90E0      		ldi r25,hi8(.LC2)
+ 244 013c 9383      		std Z+3,r25	 ;  89	*movhi/3	[length = 2]
+ 245 013e 8283      		std Z+2,r24
+ 246 0140 D801      		movw r26,r16	 ;  154	*movhi/1	[length = 1]
+ 247 0142 A45B      		subi r26,lo8(-(76))	 ;  90	*addhi3/4	[length = 2]
+ 248 0144 BF4F      		sbci r27,hi8(-(76))
+ 249 0146 8D91      		ld r24,X+	 ;  91	*movhi/2	[length = 2]
+ 250 0148 9C91      		ld r25,X
+ 251 014a 9583      		std Z+5,r25	 ;  92	*movhi/3	[length = 2]
+ 252 014c 8483      		std Z+4,r24
+ 253 014e D801      		movw r26,r16	 ;  155	*movhi/1	[length = 1]
+ 254 0150 A65B      		subi r26,lo8(-(74))	 ;  93	*addhi3/4	[length = 2]
+ 255 0152 BF4F      		sbci r27,hi8(-(74))
+ 256 0154 8D91      		ld r24,X+	 ;  94	*movhi/2	[length = 2]
+ 257 0156 9C91      		ld r25,X
+ 258 0158 9783      		std Z+7,r25	 ;  95	*movhi/3	[length = 2]
+ 259 015a 8683      		std Z+6,r24
+ 260 015c 0E94 0000 		call kfile_printf	 ;  96	call_value_insn/3	[length = 2]
+ 261 0160 EDB7      		in r30,__SP_L__	 ;  156	*movhi_sp/2	[length = 2]
+ 262 0162 FEB7      		in r31,__SP_H__
+ 263 0164 3896      		adiw r30,8	 ;  97	*addhi3/2	[length = 1]
+ 264 0166 0FB6      		in __tmp_reg__,__SREG__	 ;  157	*movhi_sp/1	[length = 5]
+ 265 0168 F894      		cli
+ 266 016a FEBF      		out __SP_H__,r31
+ 267 016c 0FBE      		out __SREG__,__tmp_reg__
+ 268 016e EDBF      		out __SP_L__,r30
+ 269               	/* epilogue start */
+  78:aprs/main.c   **** }
+ 270               		.loc 1 78 0
+ 271 0170 DF91      		pop r29	 ;  175	popqi	[length = 1]
+ 272 0172 CF91      		pop r28	 ;  176	popqi	[length = 1]
+ 273               	.LVL6:
+ 274 0174 1F91      		pop r17	 ;  177	popqi	[length = 1]
+ 275 0176 0F91      		pop r16	 ;  178	popqi	[length = 1]
+ 276               	.LVL7:
+ 277 0178 FF90      		pop r15	 ;  179	popqi	[length = 1]
+ 278 017a EF90      		pop r14	 ;  180	popqi	[length = 1]
+ 279 017c DF90      		pop r13	 ;  181	popqi	[length = 1]
+ 280 017e CF90      		pop r12	 ;  182	popqi	[length = 1]
+ 281 0180 BF90      		pop r11	 ;  183	popqi	[length = 1]
+ 282 0182 9F90      		pop r9	 ;  184	popqi	[length = 1]
+ 283 0184 8F90      		pop r8	 ;  185	popqi	[length = 1]
+ 284 0186 7F90      		pop r7	 ;  186	popqi	[length = 1]
+ 285 0188 6F90      		pop r6	 ;  187	popqi	[length = 1]
+ 286 018a 0895      		ret	 ;  188	return_from_epilogue	[length = 1]
+ 287               		.cfi_endproc
+ 288               	.LFE46:
+ 290               		.data
+ 291               	.LC3:
+ 292 003d 424F 4F54 		.string	"BOOTED\n"
+ 292      4544 0A00 
+ 293               	.LC4:
+ 294 0045 544E 4320 		.string	"TNC %d\n"
+ 294      2564 0A00 
+ 295               		.section	.text.startup.main,"ax",@progbits
+ 296               	.global	main
+ 298               	main:
+ 299               	.LFB48:
+  79:aprs/main.c   **** 
+  80:aprs/main.c   **** static void init(void)
+  81:aprs/main.c   **** {
+  82:aprs/main.c   **** 	IRQ_ENABLE;
+  83:aprs/main.c   **** 	kdbg_init();
+  84:aprs/main.c   **** 	timer_init();
+  85:aprs/main.c   **** 
+  86:aprs/main.c   **** 	/*
+  87:aprs/main.c   **** 	 * Init afsk demodulator. We need to implement the macros defined in hw_afsk.h, which
+  88:aprs/main.c   **** 	 * is the hardware abstraction layer.
+  89:aprs/main.c   **** 	 * We do not need transmission for now, so we set transmission DAC channel to 0.
+  90:aprs/main.c   **** 	 */
+  91:aprs/main.c   **** 	afsk_init(&afsk, ADC_CH, 0);
+  92:aprs/main.c   **** 	/*
+  93:aprs/main.c   **** 	 * Here we initialize AX25 context, the channel (KFile) we are going to read messages
+  94:aprs/main.c   **** 	 * from and the callback that will be called on incoming messages.
+  95:aprs/main.c   **** 	 */
+  96:aprs/main.c   **** 	ax25_init(&ax25, &afsk.fd, message_callback);
+  97:aprs/main.c   **** 
+  98:aprs/main.c   **** 	/* Initialize serial port, we are going to use it to show APRS messages*/
+  99:aprs/main.c   **** 	ser_init(&ser, SER_UART0);
+ 100:aprs/main.c   **** 	ser_setbaudrate(&ser, 9600);
+ 101:aprs/main.c   ****     kfile_printf(&ser.fd, "BOOTED\n");
+ 102:aprs/main.c   **** }
+ 103:aprs/main.c   **** 
+ 104:aprs/main.c   **** static AX25Call path[] = AX25_PATH(AX25_CALL("apzbrt", 0), AX25_CALL("nocall", 0), AX25_CALL("wide1
+ 105:aprs/main.c   **** 
+ 106:aprs/main.c   **** #define APRS_MSG    ">Test BeRTOS APRS http://www.bertos.org"
+ 107:aprs/main.c   **** 
+ 108:aprs/main.c   **** int count = 0;
+ 109:aprs/main.c   **** 
+ 110:aprs/main.c   **** int main(void)
+ 111:aprs/main.c   **** {
+ 300               		.loc 1 111 0
+ 301               		.cfi_startproc
+ 302               	/* prologue: function */
+ 303               	/* frame size = 0 */
+ 304               	/* stack size = 0 */
+ 305               	.L__stack_usage = 0
+ 306               	.LBB16:
+ 307               	.LBB17:
+  82:aprs/main.c   **** 	IRQ_ENABLE;
+ 308               		.loc 1 82 0
+ 309               	/* #APP */
+ 310               	 ;  82 "aprs/main.c" 1
+ 311 0000 7894      		sei
+ 312               	 ;  0 "" 2
+  83:aprs/main.c   **** 	kdbg_init();
+ 313               		.loc 1 83 0
+ 314               	/* #NOAPP */
+ 315 0002 0E94 0000 		call kdbg_init	 ;  7	call_insn/3	[length = 2]
+  84:aprs/main.c   **** 	timer_init();
+ 316               		.loc 1 84 0
+ 317 0006 0E94 0000 		call timer_init	 ;  9	call_insn/3	[length = 2]
+  91:aprs/main.c   **** 	afsk_init(&afsk, ADC_CH, 0);
+ 318               		.loc 1 91 0
+ 319 000a 80E0      		ldi r24,lo8(afsk)	 ;  12	*movhi/4	[length = 2]
+ 320 000c 90E0      		ldi r25,hi8(afsk)
+ 321 000e 60E0      		ldi r22,lo8(0)	 ;  13	*movhi/4	[length = 2]
+ 322 0010 70E0      		ldi r23,hi8(0)
+ 323 0012 40E0      		ldi r20,lo8(0)	 ;  14	*movhi/4	[length = 2]
+ 324 0014 50E0      		ldi r21,hi8(0)
+ 325 0016 0E94 0000 		call afsk_init	 ;  15	call_insn/3	[length = 2]
+  96:aprs/main.c   **** 	ax25_init(&ax25, &afsk.fd, message_callback);
+ 326               		.loc 1 96 0
+ 327 001a 80E0      		ldi r24,lo8(ax25)	 ;  20	*movhi/4	[length = 2]
+ 328 001c 90E0      		ldi r25,hi8(ax25)
+ 329 001e 60E0      		ldi r22,lo8(afsk)	 ;  21	*movhi/4	[length = 2]
+ 330 0020 70E0      		ldi r23,hi8(afsk)
+ 331 0022 40E0      		ldi r20,lo8(gs(message_callback))	 ;  22	*movhi/4	[length = 2]
+ 332 0024 50E0      		ldi r21,hi8(gs(message_callback))
+ 333 0026 0E94 0000 		call ax25_init	 ;  23	call_insn/3	[length = 2]
+  99:aprs/main.c   **** 	ser_init(&ser, SER_UART0);
+ 334               		.loc 1 99 0
+ 335 002a C0E0      		ldi r28,lo8(ser)	 ;  25	*movhi/4	[length = 2]
+ 336 002c D0E0      		ldi r29,hi8(ser)
+ 337 002e CE01      		movw r24,r28	 ;  26	*movhi/1	[length = 1]
+ 338 0030 60E0      		ldi r22,lo8(0)	 ;  27	*movhi/4	[length = 2]
+ 339 0032 70E0      		ldi r23,hi8(0)
+ 340 0034 0E94 0000 		call ser_init	 ;  28	call_insn/3	[length = 2]
+ 100:aprs/main.c   **** 	ser_setbaudrate(&ser, 9600);
+ 341               		.loc 1 100 0
+ 342 0038 CE01      		movw r24,r28	 ;  31	*movhi/1	[length = 1]
+ 343 003a 40E8      		ldi r20,lo8(9600)	 ;  32	*movsi/5	[length = 4]
+ 344 003c 55E2      		ldi r21,hi8(9600)
+ 345 003e 60E0      		ldi r22,hlo8(9600)
+ 346 0040 70E0      		ldi r23,hhi8(9600)
+ 347 0042 0E94 0000 		call ser_setbaudrate	 ;  33	call_insn/3	[length = 2]
+ 101:aprs/main.c   ****     kfile_printf(&ser.fd, "BOOTED\n");
+ 348               		.loc 1 101 0
+ 349 0046 00D0      		rcall .	 ;  34	*addhi3_sp_R_pc2	[length = 2]
+ 350 0048 00D0      		rcall .
+ 351               	.LCFI13:
+ 352               		.cfi_def_cfa_offset 6
+ 353 004a ADB7      		in r26,__SP_L__	 ;  119	*movhi_sp/2	[length = 2]
+ 354 004c BEB7      		in r27,__SP_H__
+ 355 004e 1296      		adiw r26,1+1	 ;  37	*movhi/3	[length = 4]
+ 356 0050 DC93      		st X,r29
+ 357 0052 CE93      		st -X,r28
+ 358 0054 1197      		sbiw r26,1
+ 359 0056 80E0      		ldi r24,lo8(.LC3)	 ;  38	*movhi/4	[length = 2]
+ 360 0058 90E0      		ldi r25,hi8(.LC3)
+ 361 005a 1496      		adiw r26,3+1	 ;  39	*movhi/3	[length = 4]
+ 362 005c 9C93      		st X,r25
+ 363 005e 8E93      		st -X,r24
+ 364 0060 1397      		sbiw r26,3
+ 365               		.cfi_escape 0x2e,0x4
+ 366 0062 0E94 0000 		call kfile_printf	 ;  40	call_value_insn/3	[length = 2]
+ 367               	.LBE17:
+ 368               	.LBE16:
+ 369               	.LBB18:
+ 370               	.LBB19:
+ 371               	.LBB20:
+ 372               		.file 2 "bertos/drv/timer.h"
+   1:bertos/drv/timer.h **** /**
+   2:bertos/drv/timer.h ****  * \file
+   3:bertos/drv/timer.h ****  * <!--
+   4:bertos/drv/timer.h ****  * This file is part of BeRTOS.
+   5:bertos/drv/timer.h ****  *
+   6:bertos/drv/timer.h ****  * Bertos is free software; you can redistribute it and/or modify
+   7:bertos/drv/timer.h ****  * it under the terms of the GNU General Public License as published by
+   8:bertos/drv/timer.h ****  * the Free Software Foundation; either version 2 of the License, or
+   9:bertos/drv/timer.h ****  * (at your option) any later version.
+  10:bertos/drv/timer.h ****  *
+  11:bertos/drv/timer.h ****  * This program is distributed in the hope that it will be useful,
+  12:bertos/drv/timer.h ****  * but WITHOUT ANY WARRANTY; without even the implied warranty of
+  13:bertos/drv/timer.h ****  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  14:bertos/drv/timer.h ****  * GNU General Public License for more details.
+  15:bertos/drv/timer.h ****  *
+  16:bertos/drv/timer.h ****  * You should have received a copy of the GNU General Public License
+  17:bertos/drv/timer.h ****  * along with this program; if not, write to the Free Software
+  18:bertos/drv/timer.h ****  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+  19:bertos/drv/timer.h ****  *
+  20:bertos/drv/timer.h ****  * As a special exception, you may use this file as part of a free software
+  21:bertos/drv/timer.h ****  * library without restriction.  Specifically, if other files instantiate
+  22:bertos/drv/timer.h ****  * templates or use macros or inline functions from this file, or you compile
+  23:bertos/drv/timer.h ****  * this file and link it with other files to produce an executable, this
+  24:bertos/drv/timer.h ****  * file does not by itself cause the resulting executable to be covered by
+  25:bertos/drv/timer.h ****  * the GNU General Public License.  This exception does not however
+  26:bertos/drv/timer.h ****  * invalidate any other reasons why the executable file might be covered by
+  27:bertos/drv/timer.h ****  * the GNU General Public License.
+  28:bertos/drv/timer.h ****  *
+  29:bertos/drv/timer.h ****  * Copyright 2003, 2004, 2005 Develer S.r.l. (http://www.develer.com/)
+  30:bertos/drv/timer.h ****  * Copyright 2000, 2008 Bernie Innocenti <bernie@codewiz.org>
+  31:bertos/drv/timer.h ****  * -->
+  32:bertos/drv/timer.h ****  *
+  33:bertos/drv/timer.h ****  * \brief Hardware independent timer driver.
+  34:bertos/drv/timer.h ****  *
+  35:bertos/drv/timer.h ****  * All timer related functions are implemented in this module. You have several options to use time
+  36:bertos/drv/timer.h ****  * \li simple delay: just use timer_delay() if you want to wait for a few milliseconds;
+  37:bertos/drv/timer.h ****  * \li delay with callback: create a timer structure and use timer_setDelay() and timer_setSoftint(
+  38:bertos/drv/timer.h ****  * \li delay with signal: same as above but use timer_setSignal() to set specify which signal to se
+  39:bertos/drv/timer.h ****  * \li simple synchronous timer based scheduler: use synctimer_add() to schedule an event in a user
+  40:bertos/drv/timer.h ****  *
+  41:bertos/drv/timer.h ****  * Whenever a timer expires you need to explicitly arm it again with timer_add(). If you want to ab
+  42:bertos/drv/timer.h ****  * You can use conversion macros when using msecs to specify the delay.
+  43:bertos/drv/timer.h ****  *
+  44:bertos/drv/timer.h ****  * \author Bernie Innocenti <bernie@codewiz.org>
+  45:bertos/drv/timer.h ****  *
+  46:bertos/drv/timer.h ****  * $WIZ$ module_name = "timer"
+  47:bertos/drv/timer.h ****  * $WIZ$ module_configuration = "bertos/cfg/cfg_timer.h"
+  48:bertos/drv/timer.h ****  * $WIZ$ module_depends = "event", "sysirq"
+  49:bertos/drv/timer.h ****  * $WIZ$ module_supports = "not atmega103 and not atmega8"
+  50:bertos/drv/timer.h ****  */
+  51:bertos/drv/timer.h **** 
+  52:bertos/drv/timer.h **** #ifndef DRV_TIMER_H
+  53:bertos/drv/timer.h **** #define DRV_TIMER_H
+  54:bertos/drv/timer.h **** 
+  55:bertos/drv/timer.h **** #include <cfg/os.h>
+  56:bertos/drv/timer.h **** #include <cfg/macros.h>
+  57:bertos/drv/timer.h **** 
+  58:bertos/drv/timer.h **** #include <cpu/attr.h>
+  59:bertos/drv/timer.h **** #include <cpu/irq.h>
+  60:bertos/drv/timer.h **** 
+  61:bertos/drv/timer.h **** 
+  62:bertos/drv/timer.h **** /*
+  63:bertos/drv/timer.h ****  * Include platform-specific binding header if we're hosted.
+  64:bertos/drv/timer.h ****  * Try the CPU specific one for bare-metal environments.
+  65:bertos/drv/timer.h ****  */
+  66:bertos/drv/timer.h **** #if OS_HOSTED
+  67:bertos/drv/timer.h **** 	//#include OS_HEADER(timer)
+  68:bertos/drv/timer.h **** 	#include <emul/timer_posix.h>
+  69:bertos/drv/timer.h **** #else
+  70:bertos/drv/timer.h **** 	#include CPU_HEADER(timer)
+  71:bertos/drv/timer.h **** #endif
+  72:bertos/drv/timer.h **** 
+  73:bertos/drv/timer.h **** STATIC_ASSERT(sizeof(hptime_t) == SIZEOF_HPTIME_T);
+  74:bertos/drv/timer.h **** 
+  75:bertos/drv/timer.h **** #include "cfg/cfg_timer.h"
+  76:bertos/drv/timer.h **** #include <cfg/debug.h>
+  77:bertos/drv/timer.h **** #include <cfg/compiler.h>
+  78:bertos/drv/timer.h **** 
+  79:bertos/drv/timer.h **** #include <struct/list.h>
+  80:bertos/drv/timer.h **** 
+  81:bertos/drv/timer.h **** /*
+  82:bertos/drv/timer.h ****  * Sanity check for config parameters required by this module.
+  83:bertos/drv/timer.h ****  */
+  84:bertos/drv/timer.h **** #if !defined(CONFIG_TIMER_EVENTS) || ((CONFIG_TIMER_EVENTS != 0) && CONFIG_TIMER_EVENTS != 1)
+  85:bertos/drv/timer.h **** 	#error CONFIG_TIMER_EVENTS must be set to either 0 or 1 in cfg_timer.h
+  86:bertos/drv/timer.h **** #endif
+  87:bertos/drv/timer.h **** #if !defined(CONFIG_TIMER_UDELAY) || ((CONFIG_TIMER_UDELAY != 0) && CONFIG_TIMER_EVENTS != 1)
+  88:bertos/drv/timer.h **** 	#error CONFIG_TIMER_UDELAY must be set to either 0 or 1 in cfg_timer.h
+  89:bertos/drv/timer.h **** #endif
+  90:bertos/drv/timer.h **** #if defined(CONFIG_TIMER_DISABLE_UDELAY)
+  91:bertos/drv/timer.h **** 	#error Obosolete config option CONFIG_TIMER_DISABLE_UDELAY.  Use CONFIG_TIMER_UDELAY
+  92:bertos/drv/timer.h **** #endif
+  93:bertos/drv/timer.h **** #if defined(CONFIG_TIMER_DISABLE_EVENTS)
+  94:bertos/drv/timer.h **** 	#error Obosolete config option CONFIG_TIMER_DISABLE_EVENTS.  Use CONFIG_TIMER_EVENTS
+  95:bertos/drv/timer.h **** #endif
+  96:bertos/drv/timer.h **** 
+  97:bertos/drv/timer.h **** extern volatile ticks_t _clock;
+  98:bertos/drv/timer.h **** 
+  99:bertos/drv/timer.h **** /**
+ 100:bertos/drv/timer.h ****  * \brief Return the system tick counter (expressed in ticks)
+ 101:bertos/drv/timer.h ****  *
+ 102:bertos/drv/timer.h ****  * The result is guaranteed to increment monotonically,
+ 103:bertos/drv/timer.h ****  * but client code must be tolerant with respect to overflows.
+ 104:bertos/drv/timer.h ****  *
+ 105:bertos/drv/timer.h ****  * The following code is safe:
+ 106:bertos/drv/timer.h ****  *
+ 107:bertos/drv/timer.h ****  * \code
+ 108:bertos/drv/timer.h ****  *   drop_teabag();
+ 109:bertos/drv/timer.h ****  *   ticks_t tea_start_time = timer_clock();
+ 110:bertos/drv/timer.h ****  *
+ 111:bertos/drv/timer.h ****  *   for (;;)
+ 112:bertos/drv/timer.h ****  *   {
+ 113:bertos/drv/timer.h ****  *       if (timer_clock() - tea_start_time > TEAPOT_DELAY)
+ 114:bertos/drv/timer.h ****  *       {
+ 115:bertos/drv/timer.h ****  *           printf("Your tea, Sir.\n");
+ 116:bertos/drv/timer.h ****  *           break;
+ 117:bertos/drv/timer.h ****  *       }
+ 118:bertos/drv/timer.h ****  *       patience();
+ 119:bertos/drv/timer.h ****  *   }
+ 120:bertos/drv/timer.h ****  * \endcode
+ 121:bertos/drv/timer.h ****  *
+ 122:bertos/drv/timer.h ****  * \note This function must disable interrupts on 8/16bit CPUs because the
+ 123:bertos/drv/timer.h ****  * clock variable is larger than the processor word size and can't
+ 124:bertos/drv/timer.h ****  * be copied atomically.
+ 125:bertos/drv/timer.h ****  * \sa timer_delay()
+ 126:bertos/drv/timer.h ****  */
+ 127:bertos/drv/timer.h **** INLINE ticks_t timer_clock(void)
+ 128:bertos/drv/timer.h **** {
+ 129:bertos/drv/timer.h **** 	ticks_t result;
+ 130:bertos/drv/timer.h **** 
+ 131:bertos/drv/timer.h **** 	ATOMIC(result = _clock);
+ 373               		.loc 2 131 0
+ 374               	/* #APP */
+ 375               	 ;  131 "bertos/drv/timer.h" 1
+ 376 0066 8FB7      		in r24,__SREG__
+ 377 0068 F894      		cli
+ 378               	 ;  0 "" 2
+ 379               	/* #NOAPP */
+ 380 006a C090 0000 		lds r12,_clock	 ;  44	*movsi/3	[length = 8]
+ 381 006e D090 0000 		lds r13,_clock+1
+ 382 0072 E090 0000 		lds r14,_clock+2
+ 383 0076 F090 0000 		lds r15,_clock+3
+ 384               	/* #APP */
+ 385               	 ;  131 "bertos/drv/timer.h" 1
+ 386 007a 8FBF      		out __SREG__,r24
+ 387               	 ;  0 "" 2
+ 388               	/* #NOAPP */
+ 389 007c 0F90      		pop __tmp_reg__	 ;  48	*addhi3_sp_R_pc2	[length = 4]
+ 390 007e 0F90      		pop __tmp_reg__
+ 391 0080 0F90      		pop __tmp_reg__
+ 392 0082 0F90      		pop __tmp_reg__
+ 393               	.LCFI14:
+ 394               		.cfi_def_cfa_offset 2
+ 395               	.LBE20:
+ 396               	.LBE19:
+ 397               	.LBE18:
+ 112:aprs/main.c   **** 	init();
+ 113:aprs/main.c   **** 	ticks_t start = timer_clock();
+ 114:aprs/main.c   **** 
+ 115:aprs/main.c   **** 	while (1)
+ 116:aprs/main.c   **** 	{
+ 117:aprs/main.c   **** 		/*
+ 118:aprs/main.c   **** 		 * This function will look for new messages from the AFSK channel.
+ 119:aprs/main.c   **** 		 * It will call the message_callback() function when a new message is received.
+ 120:aprs/main.c   **** 		 * If there's nothing to do, this function will call cpu_relax()
+ 121:aprs/main.c   **** 		 */
+ 122:aprs/main.c   **** 		ax25_poll(&ax25);
+ 123:aprs/main.c   **** 
+ 124:aprs/main.c   **** 
+ 125:aprs/main.c   **** 		/* Send out message every 60sec */
+ 126:aprs/main.c   **** 		if (timer_clock() - start > ms_to_ticks(60000L))
+ 127:aprs/main.c   **** 		{
+ 128:aprs/main.c   **** 			start = timer_clock();
+ 129:aprs/main.c   **** 			kfile_printf(&ser.fd, "TNC %d\n", count);
+ 398               		.loc 1 129 0
+ 399 0084 00E0      		ldi r16,lo8(.LC4)	 ;  79	*movhi/4	[length = 2]
+ 400 0086 10E0      		ldi r17,hi8(.LC4)
+ 401               	.L9:
+ 122:aprs/main.c   **** 		ax25_poll(&ax25);
+ 402               		.loc 1 122 0
+ 403 0088 80E0      		ldi r24,lo8(ax25)	 ;  110	*movhi/4	[length = 2]
+ 404 008a 90E0      		ldi r25,hi8(ax25)
+ 405               		.cfi_escape 0x2e,0
+ 406 008c 0E94 0000 		call ax25_poll	 ;  55	call_insn/3	[length = 2]
+ 407               	.LBB21:
+ 408               	.LBB22:
+ 409               	.LBB23:
+ 410               		.loc 2 131 0
+ 411               	/* #APP */
+ 412               	 ;  131 "bertos/drv/timer.h" 1
+ 413 0090 2FB7      		in r18,__SREG__
+ 414 0092 F894      		cli
+ 415               	 ;  0 "" 2
+ 416               	/* #NOAPP */
+ 417 0094 8091 0000 		lds r24,_clock	 ;  59	*movsi/3	[length = 8]
+ 418 0098 9091 0000 		lds r25,_clock+1
+ 419 009c A091 0000 		lds r26,_clock+2
+ 420 00a0 B091 0000 		lds r27,_clock+3
+ 421               	/* #APP */
+ 422               	 ;  131 "bertos/drv/timer.h" 1
+ 423 00a4 2FBF      		out __SREG__,r18
+ 424               	 ;  0 "" 2
+ 425               	/* #NOAPP */
+ 426               	.LBE23:
+ 427               	.LBE22:
+ 428               	.LBE21:
+ 126:aprs/main.c   **** 		if (timer_clock() - start > ms_to_ticks(60000L))
+ 429               		.loc 1 126 0
+ 430 00a6 8C19      		sub r24,r12	 ;  64	subsi3/1	[length = 4]
+ 431 00a8 9D09      		sbc r25,r13
+ 432 00aa AE09      		sbc r26,r14
+ 433 00ac BF09      		sbc r27,r15
+ 434 00ae 8136      		cpi r24,lo8(60001)	 ;  65	*cmpsi/4	[length = 7]
+ 435 00b0 EAEE      		ldi r30,hi8(60001)
+ 436 00b2 9E07      		cpc r25,r30
+ 437 00b4 E0E0      		ldi r30,hlo8(60001)
+ 438 00b6 AE07      		cpc r26,r30
+ 439 00b8 E0E0      		ldi r30,hhi8(60001)
+ 440 00ba BE07      		cpc r27,r30
+ 441 00bc 04F0      		brlt .L9	 ;  66	branch	[length = 1]
+ 442               	.LBB24:
+ 443               	.LBB25:
+ 444               	.LBB26:
+ 445               		.loc 2 131 0
+ 446               	/* #APP */
+ 447               	 ;  131 "bertos/drv/timer.h" 1
+ 448 00be 8FB7      		in r24,__SREG__
+ 449 00c0 F894      		cli
+ 450               	 ;  0 "" 2
+ 451               	/* #NOAPP */
+ 452 00c2 C090 0000 		lds r12,_clock	 ;  71	*movsi/3	[length = 8]
+ 453 00c6 D090 0000 		lds r13,_clock+1
+ 454 00ca E090 0000 		lds r14,_clock+2
+ 455 00ce F090 0000 		lds r15,_clock+3
+ 456               	/* #APP */
+ 457               	 ;  131 "bertos/drv/timer.h" 1
+ 458 00d2 8FBF      		out __SREG__,r24
+ 459               	 ;  0 "" 2
+ 460               	/* #NOAPP */
+ 461               	.LBE26:
+ 462               	.LBE25:
+ 463               	.LBE24:
+ 464               		.loc 1 129 0
+ 465 00d4 00D0      		rcall .	 ;  75	*addhi3_sp_R_pc2	[length = 3]
+ 466 00d6 00D0      		rcall .
+ 467 00d8 00D0      		rcall .
+ 468               	.LCFI15:
+ 469               		.cfi_def_cfa_offset 8
+ 470 00da EDB7      		in r30,__SP_L__	 ;  120	*movhi_sp/2	[length = 2]
+ 471 00dc FEB7      		in r31,__SP_H__
+ 472 00de 3196      		adiw r30,1	 ;  106	*addhi3/2	[length = 1]
+ 473 00e0 ADB7      		in r26,__SP_L__	 ;  121	*movhi_sp/2	[length = 2]
+ 474 00e2 BEB7      		in r27,__SP_H__
+ 475 00e4 1296      		adiw r26,1+1	 ;  78	*movhi/3	[length = 4]
+ 476 00e6 DC93      		st X,r29
+ 477 00e8 CE93      		st -X,r28
+ 478 00ea 1197      		sbiw r26,1
+ 479 00ec 1383      		std Z+3,r17	 ;  80	*movhi/3	[length = 2]
+ 480 00ee 0283      		std Z+2,r16
+ 481 00f0 8091 0000 		lds r24,count	 ;  81	*movhi/2	[length = 4]
+ 482 00f4 9091 0000 		lds r25,count+1
+ 483 00f8 9583      		std Z+5,r25	 ;  82	*movhi/3	[length = 2]
+ 484 00fa 8483      		std Z+4,r24
+ 485               		.cfi_escape 0x2e,0x6
+ 486 00fc 0E94 0000 		call kfile_printf	 ;  83	call_value_insn/3	[length = 2]
+ 130:aprs/main.c   ****             count++;
+ 487               		.loc 1 130 0
+ 488 0100 8091 0000 		lds r24,count	 ;  84	*movhi/2	[length = 4]
+ 489 0104 9091 0000 		lds r25,count+1
+ 490 0108 0196      		adiw r24,1	 ;  85	*addhi3/2	[length = 1]
+ 491 010a 9093 0000 		sts count+1,r25	 ;  86	*movhi/3	[length = 4]
+ 492 010e 8093 0000 		sts count,r24
+ 493 0112 EDB7      		in r30,__SP_L__	 ;  122	*movhi_sp/2	[length = 2]
+ 494 0114 FEB7      		in r31,__SP_H__
+ 495 0116 3696      		adiw r30,6	 ;  88	*addhi3/2	[length = 1]
+ 496 0118 0FB6      		in __tmp_reg__,__SREG__	 ;  123	*movhi_sp/1	[length = 5]
+ 497 011a F894      		cli
+ 498 011c FEBF      		out __SP_H__,r31
+ 499 011e 0FBE      		out __SREG__,__tmp_reg__
+ 500 0120 EDBF      		out __SP_L__,r30
+ 501               	.LCFI16:
+ 502               		.cfi_def_cfa_offset 2
+ 503 0122 00C0      		rjmp .L9	 ;  125	jump	[length = 1]
+ 504               		.cfi_endproc
+ 505               	.LFE48:
+ 507               	.global	count
+ 508               		.section	.bss.count,"aw",@nobits
+ 511               	count:
+ 512 0000 0000      		.skip 2,0
+ 513               		.section	.bss.afsk,"aw",@nobits
+ 516               	afsk:
+ 517 0000 0000 0000 		.skip 220,0
+ 517      0000 0000 
+ 517      0000 0000 
+ 517      0000 0000 
+ 517      0000 0000 
+ 518               		.section	.bss.ax25,"aw",@nobits
+ 521               	ax25:
+ 522 0000 0000 0000 		.skip 342,0
+ 522      0000 0000 
+ 522      0000 0000 
+ 522      0000 0000 
+ 522      0000 0000 
+ 523               		.section	.bss.ser,"aw",@nobits
+ 526               	ser:
+ 527 0000 0000 0000 		.skip 50,0
+ 527      0000 0000 
+ 527      0000 0000 
+ 527      0000 0000 
+ 527      0000 0000 
+ 528               		.text
+ 529               	.Letext0:
+ 530               		.file 3 "/usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/include/stddef.h"
+ 531               		.file 4 "/usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/include/stdint.h"
+ 532               		.file 5 "bertos/cfg/compiler.h"
+ 533               		.file 6 "bertos/cpu/types.h"
+ 534               		.file 7 "bertos/struct/list.h"
+ 535               		.file 8 "bertos/kern/proc.h"
+ 536               		.file 9 "bertos/cfg/macros.h"
+ 537               		.file 10 "bertos/kern/kfile.h"
+ 538               		.file 11 "bertos/struct/fifobuf.h"
+ 539               		.file 12 "bertos/net/afsk.h"
+ 540               		.file 13 "bertos/net/ax25.h"
+ 541               		.file 14 "bertos/cpu/avr/drv/ser_avr.h"
+ 542               		.file 15 "bertos/drv/ser.h"
 DEFINED SYMBOLS
                             *ABS*:00000000 main.c
-C:\DOCUME~1\develer\IMPOST~1\Temp/cc38H5Mb.s:2      *ABS*:0000003f __SREG__
-C:\DOCUME~1\develer\IMPOST~1\Temp/cc38H5Mb.s:3      *ABS*:0000003e __SP_H__
-C:\DOCUME~1\develer\IMPOST~1\Temp/cc38H5Mb.s:4      *ABS*:0000003d __SP_L__
-C:\DOCUME~1\develer\IMPOST~1\Temp/cc38H5Mb.s:5      *ABS*:00000034 __CCP__
-C:\DOCUME~1\develer\IMPOST~1\Temp/cc38H5Mb.s:6      *ABS*:00000000 __tmp_reg__
-C:\DOCUME~1\develer\IMPOST~1\Temp/cc38H5Mb.s:7      *ABS*:00000001 __zero_reg__
-C:\DOCUME~1\develer\IMPOST~1\Temp/cc38H5Mb.s:22     .text.main:00000000 main
-C:\DOCUME~1\develer\IMPOST~1\Temp/cc38H5Mb.s:412    .bss.afsk:00000000 afsk
-C:\DOCUME~1\develer\IMPOST~1\Temp/cc38H5Mb.s:417    .bss.ax25:00000000 ax25
-C:\DOCUME~1\develer\IMPOST~1\Temp/cc38H5Mb.s:191    .text.message_callback:00000000 message_callback
-C:\DOCUME~1\develer\IMPOST~1\Temp/cc38H5Mb.s:422    .bss.ser:00000000 ser
-C:\DOCUME~1\develer\IMPOST~1\Temp/cc38H5Mb.s:400    .data.path:00000000 path
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccii0RhF.s:2      *ABS*:0000003f __SREG__
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccii0RhF.s:3      *ABS*:0000003e __SP_H__
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccii0RhF.s:4      *ABS*:0000003d __SP_L__
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccii0RhF.s:5      *ABS*:00000034 __CCP__
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccii0RhF.s:6      *ABS*:00000000 __tmp_reg__
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccii0RhF.s:7      *ABS*:00000001 __zero_reg__
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccii0RhF.s:22     .text.message_callback:00000000 message_callback
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccii0RhF.s:526    .bss.ser:00000000 ser
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccii0RhF.s:298    .text.startup.main:00000000 main
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccii0RhF.s:516    .bss.afsk:00000000 afsk
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccii0RhF.s:521    .bss.ax25:00000000 ax25
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccii0RhF.s:511    .bss.count:00000000 count
 
 UNDEFINED SYMBOLS
+__do_copy_data
+__do_clear_bss
+kfile_printf
 kdbg_init
 timer_init
 afsk_init
@@ -458,7 +854,3 @@ ser_init
 ser_setbaudrate
 _clock
 ax25_poll
-ax25_sendVia
-kfile_printf
-__do_copy_data
-__do_clear_bss

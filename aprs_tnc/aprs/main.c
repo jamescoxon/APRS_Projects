@@ -97,12 +97,15 @@ static void init(void)
 
 	/* Initialize serial port, we are going to use it to show APRS messages*/
 	ser_init(&ser, SER_UART0);
-	ser_setbaudrate(&ser, 115200L);
+	ser_setbaudrate(&ser, 9600);
+    kfile_printf(&ser.fd, "BOOTED\n");
 }
 
 static AX25Call path[] = AX25_PATH(AX25_CALL("apzbrt", 0), AX25_CALL("nocall", 0), AX25_CALL("wide1", 1), AX25_CALL("wide2", 2));
 
 #define APRS_MSG    ">Test BeRTOS APRS http://www.bertos.org"
+
+int count = 0;
 
 int main(void)
 {
@@ -119,11 +122,12 @@ int main(void)
 		ax25_poll(&ax25);
 
 
-		/* Send out message every 15sec */
-		if (timer_clock() - start > ms_to_ticks(15000L))
+		/* Send out message every 60sec */
+		if (timer_clock() - start > ms_to_ticks(60000L))
 		{
 			start = timer_clock();
-			ax25_sendVia(&ax25, path, countof(path), APRS_MSG, sizeof(APRS_MSG));
+			kfile_printf(&ser.fd, "TNC %d\n", count);
+            count++;
 		}
 	}
 	return 0;

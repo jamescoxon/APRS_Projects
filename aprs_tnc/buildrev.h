@@ -1,2 +1,2 @@
-#define VERS_BUILD 5
-#define VERS_HOST  "Jamess-MacBook-Air.local"
+#define VERS_BUILD 15
+#define VERS_HOST  "james-air.home"

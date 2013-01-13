@@ -2,959 +2,2248 @@
    2               	__SREG__ = 0x3f
    3               	__SP_H__ = 0x3e
    4               	__SP_L__ = 0x3d
-   5               	__CCP__  = 0x34
+   5               	__CCP__ = 0x34
    6               	__tmp_reg__ = 0
    7               	__zero_reg__ = 1
-  15               	.Ltext0:
-  16               		.section	.text.uart0_init,"ax",@progbits
-  18               	uart0_init:
-  19               	.LFB46:
-  20               	.LSM0:
-  21               	.LVL0:
-  22               	/* prologue: function */
-  23               	/* frame size = 0 */
-  24               	.LSM1:
-  25 0000 88E9      		ldi r24,lo8(-104)	 ;  8	*movqi/2	[length = 1]
-  26               	.LVL1:
-  27 0002 8093 C100 		sts 193,r24	 ;  9	*movqi/3	[length = 2]
-  28               	/* epilogue start */
-  29               	.LSM2:
-  30 0006 0895      		ret	 ;  20	return	[length = 1]
-  31               	.LFE46:
-  33               		.section	.text.uart0_cleanup,"ax",@progbits
-  35               	uart0_cleanup:
-  36               	.LFB47:
-  37               	.LSM3:
-  38               	.LVL2:
-  39               	/* prologue: function */
-  40               	/* frame size = 0 */
-  41               	.LSM4:
-  42 0000 1092 C100 		sts 193,__zero_reg__	 ;  7	*movqi/3	[length = 2]
-  43               	/* epilogue start */
-  44               	.LSM5:
-  45 0004 0895      		ret	 ;  18	return	[length = 1]
-  46               	.LFE47:
-  48               		.section	.text.uart0_enabletxirq,"ax",@progbits
-  50               	uart0_enabletxirq:
-  51               	.LFB48:
-  52               	.LSM6:
-  53               	.LVL3:
-  54               	/* prologue: function */
-  55               	/* frame size = 0 */
-  56               	.LSM7:
-  57 0000 FC01      		movw r30,r24	 ;  36	*movhi/1	[length = 1]
-  58               	.LVL4:
-  59               	.LSM8:
-  60 0002 8285      		ldd r24,Z+10	 ;  7	*movqi/4	[length = 1]
-  61               	.LVL5:
-  62 0004 8823      		tst r24	 ;  8	tstqi	[length = 1]
-  63 0006 01F4      		brne .L7	 ;  9	branch	[length = 1]
-  64               	.LSM9:
-  65 0008 81E0      		ldi r24,lo8(1)	 ;  11	*movqi/2	[length = 1]
-  66 000a 8287      		std Z+10,r24	 ;  12	*movqi/3	[length = 1]
-  67               	.LSM10:
-  68 000c 88EB      		ldi r24,lo8(-72)	 ;  14	*movqi/2	[length = 1]
-  69 000e 8093 C100 		sts 193,r24	 ;  15	*movqi/3	[length = 2]
-  70               	.L7:
-  71 0012 0895      		ret	 ;  35	return	[length = 1]
-  72               	.LFE48:
-  74               		.section	.text.uart0_setbaudrate,"ax",@progbits
-  76               	uart0_setbaudrate:
-  77               	.LFB49:
-  78               	.LSM11:
-  79               	.LVL6:
-  80               	/* prologue: function */
-  81               	/* frame size = 0 */
-  82 0000 9A01      		movw r18,r20	 ;  3	*movsi/1	[length = 2]
-  83 0002 AB01      		movw r20,r22
-  84               	.LSM12:
-  85 0004 CA01      		movw r24,r20	 ;  32	*movsi/1	[length = 2]
-  86 0006 B901      		movw r22,r18
-  87 0008 9695      		lsr r25	 ;  37	*lshrsi3_const/2	[length = 4]
-  88 000a 8795      		ror r24
-  89 000c 7795      		ror r23
-  90 000e 6795      		ror r22
-  91 0010 605C      		subi r22,lo8(-(1000000))	 ;  8	addsi3/4	[length = 4]
-  92 0012 7D4B      		sbci r23,hi8(-(1000000))
-  93 0014 804F      		sbci r24,hlo8(-(1000000))
-  94 0016 9F4F      		sbci r25,hhi8(-(1000000))
-  95 0018 0E94 0000 		call __udivmodsi4	 ;  11	*udivmodsi4_call	[length = 2]
-  96 001c 2150      		subi r18,lo8(-(-1))	 ;  14	*addhi3/4	[length = 2]
-  97 001e 3040      		sbci r19,hi8(-(-1))
-  98               	.LVL7:
-  99               	.LSM13:
- 100 0020 3093 C500 		sts 197,r19	 ;  18	*movqi/3	[length = 2]
- 101               	.LVL8:
- 102               	.LSM14:
- 103 0024 2093 C400 		sts 196,r18	 ;  21	*movqi/3	[length = 2]
- 104               	/* epilogue start */
- 105               	.LSM15:
- 106 0028 0895      		ret	 ;  35	return	[length = 1]
- 107               	.LFE49:
- 109               		.section	.text.uart0_setparity,"ax",@progbits
- 111               	uart0_setparity:
- 112               	.LFB50:
- 113               	.LSM16:
+   8               		.global __do_copy_data
+   9               		.global __do_clear_bss
+  10               		.text
+  11               	.Ltext0:
+  12               		.cfi_sections	.debug_frame
+  13               		.section	.text.uart0_init,"ax",@progbits
+  15               	uart0_init:
+  16               	.LFB44:
+  17               		.file 1 "bertos/cpu/avr/drv/ser_avr.c"
+   1:bertos/cpu/avr/drv/ser_avr.c **** /**
+   2:bertos/cpu/avr/drv/ser_avr.c ****  * \file
+   3:bertos/cpu/avr/drv/ser_avr.c ****  * <!--
+   4:bertos/cpu/avr/drv/ser_avr.c ****  * This file is part of BeRTOS.
+   5:bertos/cpu/avr/drv/ser_avr.c ****  *
+   6:bertos/cpu/avr/drv/ser_avr.c ****  * Bertos is free software; you can redistribute it and/or modify
+   7:bertos/cpu/avr/drv/ser_avr.c ****  * it under the terms of the GNU General Public License as published by
+   8:bertos/cpu/avr/drv/ser_avr.c ****  * the Free Software Foundation; either version 2 of the License, or
+   9:bertos/cpu/avr/drv/ser_avr.c ****  * (at your option) any later version.
+  10:bertos/cpu/avr/drv/ser_avr.c ****  *
+  11:bertos/cpu/avr/drv/ser_avr.c ****  * This program is distributed in the hope that it will be useful,
+  12:bertos/cpu/avr/drv/ser_avr.c ****  * but WITHOUT ANY WARRANTY; without even the implied warranty of
+  13:bertos/cpu/avr/drv/ser_avr.c ****  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  14:bertos/cpu/avr/drv/ser_avr.c ****  * GNU General Public License for more details.
+  15:bertos/cpu/avr/drv/ser_avr.c ****  *
+  16:bertos/cpu/avr/drv/ser_avr.c ****  * You should have received a copy of the GNU General Public License
+  17:bertos/cpu/avr/drv/ser_avr.c ****  * along with this program; if not, write to the Free Software
+  18:bertos/cpu/avr/drv/ser_avr.c ****  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+  19:bertos/cpu/avr/drv/ser_avr.c ****  *
+  20:bertos/cpu/avr/drv/ser_avr.c ****  * As a special exception, you may use this file as part of a free software
+  21:bertos/cpu/avr/drv/ser_avr.c ****  * library without restriction.  Specifically, if other files instantiate
+  22:bertos/cpu/avr/drv/ser_avr.c ****  * templates or use macros or inline functions from this file, or you compile
+  23:bertos/cpu/avr/drv/ser_avr.c ****  * this file and link it with other files to produce an executable, this
+  24:bertos/cpu/avr/drv/ser_avr.c ****  * file does not by itself cause the resulting executable to be covered by
+  25:bertos/cpu/avr/drv/ser_avr.c ****  * the GNU General Public License.  This exception does not however
+  26:bertos/cpu/avr/drv/ser_avr.c ****  * invalidate any other reasons why the executable file might be covered by
+  27:bertos/cpu/avr/drv/ser_avr.c ****  * the GNU General Public License.
+  28:bertos/cpu/avr/drv/ser_avr.c ****  *
+  29:bertos/cpu/avr/drv/ser_avr.c ****  * Copyright 2003, 2004, 2010 Develer S.r.l. (http://www.develer.com/)
+  30:bertos/cpu/avr/drv/ser_avr.c ****  * Copyright 2000 Bernie Innocenti <bernie@codewiz.org>
+  31:bertos/cpu/avr/drv/ser_avr.c ****  *
+  32:bertos/cpu/avr/drv/ser_avr.c ****  * -->
+  33:bertos/cpu/avr/drv/ser_avr.c ****  *
+  34:bertos/cpu/avr/drv/ser_avr.c ****  * \brief AVR UART and SPI I/O driver (Implementation)
+  35:bertos/cpu/avr/drv/ser_avr.c ****  *
+  36:bertos/cpu/avr/drv/ser_avr.c ****  * \version $Id: ser_avr.c 3691 2010-05-13 16:28:50Z asterix $
+  37:bertos/cpu/avr/drv/ser_avr.c ****  *
+  38:bertos/cpu/avr/drv/ser_avr.c ****  * \author Bernie Innocenti <bernie@codewiz.org>
+  39:bertos/cpu/avr/drv/ser_avr.c ****  * \author Stefano Fedrigo <aleph@develer.com>
+  40:bertos/cpu/avr/drv/ser_avr.c ****  * \author Luca Ottaviano <lottaviano@develer.com>
+  41:bertos/cpu/avr/drv/ser_avr.c ****  */
+  42:bertos/cpu/avr/drv/ser_avr.c **** 
+  43:bertos/cpu/avr/drv/ser_avr.c **** #include "hw/hw_ser.h"  /* Required for bus macros overrides */
+  44:bertos/cpu/avr/drv/ser_avr.c **** #include <hw/hw_cpufreq.h>  /* CPU_FREQ */
+  45:bertos/cpu/avr/drv/ser_avr.c **** 
+  46:bertos/cpu/avr/drv/ser_avr.c **** #include "cfg/cfg_ser.h"
+  47:bertos/cpu/avr/drv/ser_avr.c **** 
+  48:bertos/cpu/avr/drv/ser_avr.c **** #include <cfg/macros.h> /* DIV_ROUND */
+  49:bertos/cpu/avr/drv/ser_avr.c **** #include <cfg/debug.h>
+  50:bertos/cpu/avr/drv/ser_avr.c **** #include <cfg/cfg_arch.h> // ARCH_NIGHTTEST
+  51:bertos/cpu/avr/drv/ser_avr.c **** 
+  52:bertos/cpu/avr/drv/ser_avr.c **** #include <drv/ser.h>
+  53:bertos/cpu/avr/drv/ser_avr.c **** #include <drv/ser_p.h>
+  54:bertos/cpu/avr/drv/ser_avr.c **** #include <drv/timer.h>
+  55:bertos/cpu/avr/drv/ser_avr.c **** 
+  56:bertos/cpu/avr/drv/ser_avr.c **** #include <struct/fifobuf.h>
+  57:bertos/cpu/avr/drv/ser_avr.c **** 
+  58:bertos/cpu/avr/drv/ser_avr.c **** #include <avr/io.h>
+  59:bertos/cpu/avr/drv/ser_avr.c **** 
+  60:bertos/cpu/avr/drv/ser_avr.c **** #if defined(__AVR_LIBC_VERSION__) && (__AVR_LIBC_VERSION__ >= 10400UL)
+  61:bertos/cpu/avr/drv/ser_avr.c **** 	#include <avr/interrupt.h>
+  62:bertos/cpu/avr/drv/ser_avr.c **** #else
+  63:bertos/cpu/avr/drv/ser_avr.c **** 	#include <avr/signal.h>
+  64:bertos/cpu/avr/drv/ser_avr.c **** #endif
+  65:bertos/cpu/avr/drv/ser_avr.c **** 
+  66:bertos/cpu/avr/drv/ser_avr.c **** 
+  67:bertos/cpu/avr/drv/ser_avr.c **** #if !CONFIG_SER_HWHANDSHAKE
+  68:bertos/cpu/avr/drv/ser_avr.c **** 	/**
+  69:bertos/cpu/avr/drv/ser_avr.c **** 	 * \name Hardware handshake (RTS/CTS).
+  70:bertos/cpu/avr/drv/ser_avr.c **** 	 * \{
+  71:bertos/cpu/avr/drv/ser_avr.c **** 	 */
+  72:bertos/cpu/avr/drv/ser_avr.c **** 	#define RTS_ON      do {} while (0)
+  73:bertos/cpu/avr/drv/ser_avr.c **** 	#define RTS_OFF     do {} while (0)
+  74:bertos/cpu/avr/drv/ser_avr.c **** 	#define IS_CTS_ON   true
+  75:bertos/cpu/avr/drv/ser_avr.c **** 	#define EIMSKF_CTS  0 /**< Dummy value, must be overridden */
+  76:bertos/cpu/avr/drv/ser_avr.c **** 	/*\}*/
+  77:bertos/cpu/avr/drv/ser_avr.c **** #endif
+  78:bertos/cpu/avr/drv/ser_avr.c **** 
+  79:bertos/cpu/avr/drv/ser_avr.c **** #if CPU_AVR_ATMEGA1281
+  80:bertos/cpu/avr/drv/ser_avr.c **** 	#define BIT_RXCIE0 RXCIE0
+  81:bertos/cpu/avr/drv/ser_avr.c **** 	#define BIT_RXEN0  RXEN0
+  82:bertos/cpu/avr/drv/ser_avr.c **** 	#define BIT_TXEN0  TXEN0
+  83:bertos/cpu/avr/drv/ser_avr.c **** 	#define BIT_UDRIE0 UDRIE0
+  84:bertos/cpu/avr/drv/ser_avr.c **** 
+  85:bertos/cpu/avr/drv/ser_avr.c **** 	#define BIT_RXCIE1 RXCIE1
+  86:bertos/cpu/avr/drv/ser_avr.c **** 	#define BIT_RXEN1  RXEN1
+  87:bertos/cpu/avr/drv/ser_avr.c **** 	#define BIT_TXEN1  TXEN1
+  88:bertos/cpu/avr/drv/ser_avr.c **** 	#define BIT_UDRIE1 UDRIE1
+  89:bertos/cpu/avr/drv/ser_avr.c **** #elif CPU_AVR_ATMEGA168 || CPU_AVR_ATMEGA328P
+  90:bertos/cpu/avr/drv/ser_avr.c **** 	#define BIT_RXCIE0 RXCIE0
+  91:bertos/cpu/avr/drv/ser_avr.c **** 	#define BIT_RXEN0  RXEN0
+  92:bertos/cpu/avr/drv/ser_avr.c **** 	#define BIT_TXEN0  TXEN0
+  93:bertos/cpu/avr/drv/ser_avr.c **** 	#define BIT_UDRIE0 UDRIE0
+  94:bertos/cpu/avr/drv/ser_avr.c **** 
+  95:bertos/cpu/avr/drv/ser_avr.c **** 	#define BIT_RXCIE1 RXCIE0
+  96:bertos/cpu/avr/drv/ser_avr.c **** 	#define BIT_RXEN1  RXEN0
+  97:bertos/cpu/avr/drv/ser_avr.c **** 	#define BIT_TXEN1  TXEN0
+  98:bertos/cpu/avr/drv/ser_avr.c **** 	#define BIT_UDRIE1 UDRIE0
+  99:bertos/cpu/avr/drv/ser_avr.c **** #else
+ 100:bertos/cpu/avr/drv/ser_avr.c **** 	#define BIT_RXCIE0 RXCIE
+ 101:bertos/cpu/avr/drv/ser_avr.c **** 	#define BIT_RXEN0  RXEN
+ 102:bertos/cpu/avr/drv/ser_avr.c **** 	#define BIT_TXEN0  TXEN
+ 103:bertos/cpu/avr/drv/ser_avr.c **** 	#define BIT_UDRIE0 UDRIE
+ 104:bertos/cpu/avr/drv/ser_avr.c **** 
+ 105:bertos/cpu/avr/drv/ser_avr.c **** 	#define BIT_RXCIE1 RXCIE
+ 106:bertos/cpu/avr/drv/ser_avr.c **** 	#define BIT_RXEN1  RXEN
+ 107:bertos/cpu/avr/drv/ser_avr.c **** 	#define BIT_TXEN1  TXEN
+ 108:bertos/cpu/avr/drv/ser_avr.c **** 	#define BIT_UDRIE1 UDRIE
+ 109:bertos/cpu/avr/drv/ser_avr.c **** #endif
+ 110:bertos/cpu/avr/drv/ser_avr.c **** 
+ 111:bertos/cpu/avr/drv/ser_avr.c **** 
+ 112:bertos/cpu/avr/drv/ser_avr.c **** /**
+ 113:bertos/cpu/avr/drv/ser_avr.c ****  * \name Overridable serial bus hooks
+ 114:bertos/cpu/avr/drv/ser_avr.c ****  *
+ 115:bertos/cpu/avr/drv/ser_avr.c ****  * These can be redefined in hw.h to implement
+ 116:bertos/cpu/avr/drv/ser_avr.c ****  * special bus policies such as half-duplex, 485, etc.
+ 117:bertos/cpu/avr/drv/ser_avr.c ****  *
+ 118:bertos/cpu/avr/drv/ser_avr.c ****  *
+ 119:bertos/cpu/avr/drv/ser_avr.c ****  * \code
+ 120:bertos/cpu/avr/drv/ser_avr.c ****  *  TXBEGIN      TXCHAR      TXEND  TXOFF
+ 121:bertos/cpu/avr/drv/ser_avr.c ****  *    |   __________|__________ |     |
+ 122:bertos/cpu/avr/drv/ser_avr.c ****  *    |   |   |   |   |   |   | |     |
+ 123:bertos/cpu/avr/drv/ser_avr.c ****  *    v   v   v   v   v   v   v v     v
+ 124:bertos/cpu/avr/drv/ser_avr.c ****  * ______  __  __  __  __  __  __  ________________
+ 125:bertos/cpu/avr/drv/ser_avr.c ****  *       \/  \/  \/  \/  \/  \/  \/
+ 126:bertos/cpu/avr/drv/ser_avr.c ****  * ______/\__/\__/\__/\__/\__/\__/
+ 127:bertos/cpu/avr/drv/ser_avr.c ****  *
+ 128:bertos/cpu/avr/drv/ser_avr.c ****  * \endcode
+ 129:bertos/cpu/avr/drv/ser_avr.c ****  *
+ 130:bertos/cpu/avr/drv/ser_avr.c ****  * \{
+ 131:bertos/cpu/avr/drv/ser_avr.c ****  */
+ 132:bertos/cpu/avr/drv/ser_avr.c **** #ifndef SER_UART0_BUS_TXINIT
+ 133:bertos/cpu/avr/drv/ser_avr.c **** 	/**
+ 134:bertos/cpu/avr/drv/ser_avr.c **** 	 * Default TXINIT macro - invoked in uart0_init()
+ 135:bertos/cpu/avr/drv/ser_avr.c **** 	 *
+ 136:bertos/cpu/avr/drv/ser_avr.c **** 	 * - Enable both the receiver and the transmitter
+ 137:bertos/cpu/avr/drv/ser_avr.c **** 	 * - Enable only the RX complete interrupt
+ 138:bertos/cpu/avr/drv/ser_avr.c **** 	 */
+ 139:bertos/cpu/avr/drv/ser_avr.c **** 	#define SER_UART0_BUS_TXINIT do { \
+ 140:bertos/cpu/avr/drv/ser_avr.c **** 		UCSR0B = BV(BIT_RXCIE0) | BV(BIT_RXEN0) | BV(BIT_TXEN0); \
+ 141:bertos/cpu/avr/drv/ser_avr.c **** 	} while (0)
+ 142:bertos/cpu/avr/drv/ser_avr.c **** #endif
+ 143:bertos/cpu/avr/drv/ser_avr.c **** 
+ 144:bertos/cpu/avr/drv/ser_avr.c **** #ifndef SER_UART0_BUS_TXBEGIN
+ 145:bertos/cpu/avr/drv/ser_avr.c **** 	/**
+ 146:bertos/cpu/avr/drv/ser_avr.c **** 	 * Invoked before starting a transmission
+ 147:bertos/cpu/avr/drv/ser_avr.c **** 	 *
+ 148:bertos/cpu/avr/drv/ser_avr.c **** 	 * - Enable both the receiver and the transmitter
+ 149:bertos/cpu/avr/drv/ser_avr.c **** 	 * - Enable both the RX complete and UDR empty interrupts
+ 150:bertos/cpu/avr/drv/ser_avr.c **** 	 */
+ 151:bertos/cpu/avr/drv/ser_avr.c **** 	#define SER_UART0_BUS_TXBEGIN do { \
+ 152:bertos/cpu/avr/drv/ser_avr.c **** 		UCSR0B = BV(BIT_RXCIE0) | BV(BIT_UDRIE0) | BV(BIT_RXEN0) | BV(BIT_TXEN0); \
+ 153:bertos/cpu/avr/drv/ser_avr.c **** 	} while (0)
+ 154:bertos/cpu/avr/drv/ser_avr.c **** #endif
+ 155:bertos/cpu/avr/drv/ser_avr.c **** 
+ 156:bertos/cpu/avr/drv/ser_avr.c **** #ifndef SER_UART0_BUS_TXCHAR
+ 157:bertos/cpu/avr/drv/ser_avr.c **** 	/**
+ 158:bertos/cpu/avr/drv/ser_avr.c **** 	 * Invoked to send one character.
+ 159:bertos/cpu/avr/drv/ser_avr.c **** 	 */
+ 160:bertos/cpu/avr/drv/ser_avr.c **** 	#define SER_UART0_BUS_TXCHAR(c) do { \
+ 161:bertos/cpu/avr/drv/ser_avr.c **** 		UDR0 = (c); \
+ 162:bertos/cpu/avr/drv/ser_avr.c **** 	} while (0)
+ 163:bertos/cpu/avr/drv/ser_avr.c **** #endif
+ 164:bertos/cpu/avr/drv/ser_avr.c **** 
+ 165:bertos/cpu/avr/drv/ser_avr.c **** #ifndef SER_UART0_BUS_TXEND
+ 166:bertos/cpu/avr/drv/ser_avr.c **** 	/**
+ 167:bertos/cpu/avr/drv/ser_avr.c **** 	 * Invoked as soon as the txfifo becomes empty
+ 168:bertos/cpu/avr/drv/ser_avr.c **** 	 *
+ 169:bertos/cpu/avr/drv/ser_avr.c **** 	 * - Keep both the receiver and the transmitter enabled
+ 170:bertos/cpu/avr/drv/ser_avr.c **** 	 * - Keep the RX complete interrupt enabled
+ 171:bertos/cpu/avr/drv/ser_avr.c **** 	 * - Disable the UDR empty interrupt
+ 172:bertos/cpu/avr/drv/ser_avr.c **** 	 */
+ 173:bertos/cpu/avr/drv/ser_avr.c **** 	#define SER_UART0_BUS_TXEND do { \
+ 174:bertos/cpu/avr/drv/ser_avr.c **** 		UCSR0B = BV(BIT_RXCIE0) | BV(BIT_RXEN0) | BV(BIT_TXEN0); \
+ 175:bertos/cpu/avr/drv/ser_avr.c **** 	} while (0)
+ 176:bertos/cpu/avr/drv/ser_avr.c **** #endif
+ 177:bertos/cpu/avr/drv/ser_avr.c **** 
+ 178:bertos/cpu/avr/drv/ser_avr.c **** #ifndef SER_UART0_BUS_TXOFF
+ 179:bertos/cpu/avr/drv/ser_avr.c **** 	/**
+ 180:bertos/cpu/avr/drv/ser_avr.c **** 	 * \def SER_UART0_BUS_TXOFF
+ 181:bertos/cpu/avr/drv/ser_avr.c **** 	 *
+ 182:bertos/cpu/avr/drv/ser_avr.c **** 	 * Invoked after the last character has been transmitted
+ 183:bertos/cpu/avr/drv/ser_avr.c **** 	 *
+ 184:bertos/cpu/avr/drv/ser_avr.c **** 	 * The default is no action.
+ 185:bertos/cpu/avr/drv/ser_avr.c **** 	 */
+ 186:bertos/cpu/avr/drv/ser_avr.c **** 	#ifdef __doxygen__
+ 187:bertos/cpu/avr/drv/ser_avr.c **** 	#define SER_UART0_BUS_TXOFF
+ 188:bertos/cpu/avr/drv/ser_avr.c **** 	#endif
+ 189:bertos/cpu/avr/drv/ser_avr.c **** #endif
+ 190:bertos/cpu/avr/drv/ser_avr.c **** 
+ 191:bertos/cpu/avr/drv/ser_avr.c **** #ifndef SER_UART1_BUS_TXINIT
+ 192:bertos/cpu/avr/drv/ser_avr.c **** 	/** \sa SER_UART0_BUS_TXINIT */
+ 193:bertos/cpu/avr/drv/ser_avr.c **** 	#define SER_UART1_BUS_TXINIT do { \
+ 194:bertos/cpu/avr/drv/ser_avr.c **** 		UCSR1B = BV(BIT_RXCIE1) | BV(BIT_RXEN1) | BV(BIT_TXEN1); \
+ 195:bertos/cpu/avr/drv/ser_avr.c **** 	} while (0)
+ 196:bertos/cpu/avr/drv/ser_avr.c **** #endif
+ 197:bertos/cpu/avr/drv/ser_avr.c **** #ifndef SER_UART1_BUS_TXBEGIN
+ 198:bertos/cpu/avr/drv/ser_avr.c **** 	/** \sa SER_UART0_BUS_TXBEGIN */
+ 199:bertos/cpu/avr/drv/ser_avr.c **** 	#define SER_UART1_BUS_TXBEGIN do { \
+ 200:bertos/cpu/avr/drv/ser_avr.c **** 		UCSR1B = BV(BIT_RXCIE1) | BV(BIT_UDRIE1) | BV(BIT_RXEN1) | BV(BIT_TXEN1); \
+ 201:bertos/cpu/avr/drv/ser_avr.c **** 	} while (0)
+ 202:bertos/cpu/avr/drv/ser_avr.c **** #endif
+ 203:bertos/cpu/avr/drv/ser_avr.c **** #ifndef SER_UART1_BUS_TXCHAR
+ 204:bertos/cpu/avr/drv/ser_avr.c **** 	/** \sa SER_UART0_BUS_TXCHAR */
+ 205:bertos/cpu/avr/drv/ser_avr.c **** 	#define SER_UART1_BUS_TXCHAR(c) do { \
+ 206:bertos/cpu/avr/drv/ser_avr.c **** 		UDR1 = (c); \
+ 207:bertos/cpu/avr/drv/ser_avr.c **** 	} while (0)
+ 208:bertos/cpu/avr/drv/ser_avr.c **** #endif
+ 209:bertos/cpu/avr/drv/ser_avr.c **** #ifndef SER_UART1_BUS_TXEND
+ 210:bertos/cpu/avr/drv/ser_avr.c **** 	/** \sa SER_UART0_BUS_TXEND */
+ 211:bertos/cpu/avr/drv/ser_avr.c **** 	#define SER_UART1_BUS_TXEND do { \
+ 212:bertos/cpu/avr/drv/ser_avr.c **** 		UCSR1B = BV(BIT_RXCIE1) | BV(BIT_RXEN1) | BV(BIT_TXEN1); \
+ 213:bertos/cpu/avr/drv/ser_avr.c **** 	} while (0)
+ 214:bertos/cpu/avr/drv/ser_avr.c **** #endif
+ 215:bertos/cpu/avr/drv/ser_avr.c **** #ifndef SER_UART1_BUS_TXOFF
+ 216:bertos/cpu/avr/drv/ser_avr.c **** 	/**
+ 217:bertos/cpu/avr/drv/ser_avr.c **** 	 * \def SER_UART1_BUS_TXOFF
+ 218:bertos/cpu/avr/drv/ser_avr.c **** 	 *
+ 219:bertos/cpu/avr/drv/ser_avr.c **** 	 * \see SER_UART0_BUS_TXOFF
+ 220:bertos/cpu/avr/drv/ser_avr.c **** 	 */
+ 221:bertos/cpu/avr/drv/ser_avr.c **** 	#ifdef __doxygen__
+ 222:bertos/cpu/avr/drv/ser_avr.c **** 	#define SER_UART1_BUS_TXOFF
+ 223:bertos/cpu/avr/drv/ser_avr.c **** 	#endif
+ 224:bertos/cpu/avr/drv/ser_avr.c **** #endif
+ 225:bertos/cpu/avr/drv/ser_avr.c **** /*\}*/
+ 226:bertos/cpu/avr/drv/ser_avr.c **** 
+ 227:bertos/cpu/avr/drv/ser_avr.c **** 
+ 228:bertos/cpu/avr/drv/ser_avr.c **** /**
+ 229:bertos/cpu/avr/drv/ser_avr.c ****  * \name Overridable SPI hooks
+ 230:bertos/cpu/avr/drv/ser_avr.c ****  *
+ 231:bertos/cpu/avr/drv/ser_avr.c ****  * These can be redefined in hw.h to implement
+ 232:bertos/cpu/avr/drv/ser_avr.c ****  * special bus policies such as slave select pin handling, etc.
+ 233:bertos/cpu/avr/drv/ser_avr.c ****  *
+ 234:bertos/cpu/avr/drv/ser_avr.c ****  * \{
+ 235:bertos/cpu/avr/drv/ser_avr.c ****  */
+ 236:bertos/cpu/avr/drv/ser_avr.c **** #ifndef SER_SPI_BUS_TXINIT
+ 237:bertos/cpu/avr/drv/ser_avr.c **** 	/**
+ 238:bertos/cpu/avr/drv/ser_avr.c **** 	 * Default TXINIT macro - invoked in spi_init()
+ 239:bertos/cpu/avr/drv/ser_avr.c **** 	 * The default is no action.
+ 240:bertos/cpu/avr/drv/ser_avr.c **** 	 */
+ 241:bertos/cpu/avr/drv/ser_avr.c **** 	#define SER_SPI_BUS_TXINIT
+ 242:bertos/cpu/avr/drv/ser_avr.c **** #endif
+ 243:bertos/cpu/avr/drv/ser_avr.c **** 
+ 244:bertos/cpu/avr/drv/ser_avr.c **** #ifndef SER_SPI_BUS_TXCLOSE
+ 245:bertos/cpu/avr/drv/ser_avr.c **** 	/**
+ 246:bertos/cpu/avr/drv/ser_avr.c **** 	 * Invoked after the last character has been transmitted.
+ 247:bertos/cpu/avr/drv/ser_avr.c **** 	 * The default is no action.
+ 248:bertos/cpu/avr/drv/ser_avr.c **** 	 */
+ 249:bertos/cpu/avr/drv/ser_avr.c **** 	#define SER_SPI_BUS_TXCLOSE
+ 250:bertos/cpu/avr/drv/ser_avr.c **** #endif
+ 251:bertos/cpu/avr/drv/ser_avr.c **** /*\}*/
+ 252:bertos/cpu/avr/drv/ser_avr.c **** 
+ 253:bertos/cpu/avr/drv/ser_avr.c **** 
+ 254:bertos/cpu/avr/drv/ser_avr.c **** /* SPI port and pin configuration */
+ 255:bertos/cpu/avr/drv/ser_avr.c **** #if CPU_AVR_ATMEGA64 || CPU_AVR_ATMEGA128 || CPU_AVR_ATMEGA103 || CPU_AVR_ATMEGA1281
+ 256:bertos/cpu/avr/drv/ser_avr.c **** 	#define SPI_PORT      PORTB
+ 257:bertos/cpu/avr/drv/ser_avr.c **** 	#define SPI_DDR       DDRB
+ 258:bertos/cpu/avr/drv/ser_avr.c **** 	#define SPI_SS_BIT    PB0
+ 259:bertos/cpu/avr/drv/ser_avr.c **** 	#define SPI_SCK_BIT   PB1
+ 260:bertos/cpu/avr/drv/ser_avr.c **** 	#define SPI_MOSI_BIT  PB2
+ 261:bertos/cpu/avr/drv/ser_avr.c **** 	#define SPI_MISO_BIT  PB3
+ 262:bertos/cpu/avr/drv/ser_avr.c **** // TODO: these bits are the same as ATMEGA8 but the defines in avr-gcc are different.
+ 263:bertos/cpu/avr/drv/ser_avr.c **** // They should be the same!
+ 264:bertos/cpu/avr/drv/ser_avr.c **** #elif CPU_AVR_ATMEGA328P
+ 265:bertos/cpu/avr/drv/ser_avr.c **** 	#define SPI_PORT      PORTB
+ 266:bertos/cpu/avr/drv/ser_avr.c **** 	#define SPI_DDR       DDRB
+ 267:bertos/cpu/avr/drv/ser_avr.c **** 	#define SPI_SS_BIT    PORTB2
+ 268:bertos/cpu/avr/drv/ser_avr.c **** 	#define SPI_SCK_BIT   PORTB5
+ 269:bertos/cpu/avr/drv/ser_avr.c **** 	#define SPI_MOSI_BIT  PORTB3
+ 270:bertos/cpu/avr/drv/ser_avr.c **** 	#define SPI_MISO_BIT  PORTB4
+ 271:bertos/cpu/avr/drv/ser_avr.c **** #elif CPU_AVR_ATMEGA8 || CPU_AVR_ATMEGA168
+ 272:bertos/cpu/avr/drv/ser_avr.c **** 	#define SPI_PORT      PORTB
+ 273:bertos/cpu/avr/drv/ser_avr.c **** 	#define SPI_DDR       DDRB
+ 274:bertos/cpu/avr/drv/ser_avr.c **** 	#define SPI_SS_BIT    PB2
+ 275:bertos/cpu/avr/drv/ser_avr.c **** 	#define SPI_SCK_BIT   PB5
+ 276:bertos/cpu/avr/drv/ser_avr.c **** 	#define SPI_MOSI_BIT  PB3
+ 277:bertos/cpu/avr/drv/ser_avr.c **** 	#define SPI_MISO_BIT  PB4
+ 278:bertos/cpu/avr/drv/ser_avr.c **** #else
+ 279:bertos/cpu/avr/drv/ser_avr.c **** 	#error Unknown architecture
+ 280:bertos/cpu/avr/drv/ser_avr.c **** #endif
+ 281:bertos/cpu/avr/drv/ser_avr.c **** 
+ 282:bertos/cpu/avr/drv/ser_avr.c **** /* USART register definitions */
+ 283:bertos/cpu/avr/drv/ser_avr.c **** #if CPU_AVR_ATMEGA64 || CPU_AVR_ATMEGA128 || CPU_AVR_ATMEGA1281
+ 284:bertos/cpu/avr/drv/ser_avr.c **** 	#define AVR_HAS_UART1 1
+ 285:bertos/cpu/avr/drv/ser_avr.c **** #elif CPU_AVR_ATMEGA168 || CPU_AVR_ATMEGA328P
+ 286:bertos/cpu/avr/drv/ser_avr.c **** 	#define AVR_HAS_UART1 0
+ 287:bertos/cpu/avr/drv/ser_avr.c **** 	#define USART0_UDRE_vect USART_UDRE_vect
+ 288:bertos/cpu/avr/drv/ser_avr.c **** 	#define USART0_RX_vect USART_RX_vect
+ 289:bertos/cpu/avr/drv/ser_avr.c **** 	#define SIG_UART0_TRANS SIG_UART_TRANS
+ 290:bertos/cpu/avr/drv/ser_avr.c **** #elif CPU_AVR_ATMEGA8
+ 291:bertos/cpu/avr/drv/ser_avr.c **** 	#define AVR_HAS_UART1 0
+ 292:bertos/cpu/avr/drv/ser_avr.c **** 	#define UCSR0A UCSRA
+ 293:bertos/cpu/avr/drv/ser_avr.c **** 	#define UCSR0B UCSRB
+ 294:bertos/cpu/avr/drv/ser_avr.c **** 	#define UCSR0C UCSRC
+ 295:bertos/cpu/avr/drv/ser_avr.c **** 	#define UDR0   UDR
+ 296:bertos/cpu/avr/drv/ser_avr.c **** 	#define UBRR0L UBRRL
+ 297:bertos/cpu/avr/drv/ser_avr.c **** 	#define UBRR0H UBRRH
+ 298:bertos/cpu/avr/drv/ser_avr.c **** /* TODO: The following SIGs are old style interrupts, must be refactored */
+ 299:bertos/cpu/avr/drv/ser_avr.c **** 	#define SIG_UART0_DATA SIG_UART_DATA
+ 300:bertos/cpu/avr/drv/ser_avr.c **** 	#define SIG_UART0_RECV SIG_UART_RECV
+ 301:bertos/cpu/avr/drv/ser_avr.c **** 	#define SIG_UART0_TRANS SIG_UART_TRANS
+ 302:bertos/cpu/avr/drv/ser_avr.c **** #elif CPU_AVR_ATMEGA103
+ 303:bertos/cpu/avr/drv/ser_avr.c **** 	#define AVR_HAS_UART1 0
+ 304:bertos/cpu/avr/drv/ser_avr.c **** 	#define UCSR0B UCR
+ 305:bertos/cpu/avr/drv/ser_avr.c **** 	#define UDR0   UDR
+ 306:bertos/cpu/avr/drv/ser_avr.c **** 	#define UCSR0A USR
+ 307:bertos/cpu/avr/drv/ser_avr.c **** 	#define UBRR0L UBRR
+ 308:bertos/cpu/avr/drv/ser_avr.c **** /* TODO: The following SIGs are old style interrupts, must be refactored */
+ 309:bertos/cpu/avr/drv/ser_avr.c **** 	#define SIG_UART0_DATA SIG_UART_DATA
+ 310:bertos/cpu/avr/drv/ser_avr.c **** 	#define SIG_UART0_RECV SIG_UART_RECV
+ 311:bertos/cpu/avr/drv/ser_avr.c **** 	#define SIG_UART0_TRANS SIG_UART_TRANS
+ 312:bertos/cpu/avr/drv/ser_avr.c **** #else
+ 313:bertos/cpu/avr/drv/ser_avr.c **** 	#error Unknown architecture
+ 314:bertos/cpu/avr/drv/ser_avr.c **** #endif
+ 315:bertos/cpu/avr/drv/ser_avr.c **** 
+ 316:bertos/cpu/avr/drv/ser_avr.c **** 
+ 317:bertos/cpu/avr/drv/ser_avr.c **** /* From the high-level serial driver */
+ 318:bertos/cpu/avr/drv/ser_avr.c **** extern struct Serial *ser_handles[SER_CNT];
+ 319:bertos/cpu/avr/drv/ser_avr.c **** 
+ 320:bertos/cpu/avr/drv/ser_avr.c **** /* TX and RX buffers */
+ 321:bertos/cpu/avr/drv/ser_avr.c **** static unsigned char uart0_txbuffer[CONFIG_UART0_TXBUFSIZE];
+ 322:bertos/cpu/avr/drv/ser_avr.c **** static unsigned char uart0_rxbuffer[CONFIG_UART0_RXBUFSIZE];
+ 323:bertos/cpu/avr/drv/ser_avr.c **** #if AVR_HAS_UART1
+ 324:bertos/cpu/avr/drv/ser_avr.c **** 	static unsigned char uart1_txbuffer[CONFIG_UART1_TXBUFSIZE];
+ 325:bertos/cpu/avr/drv/ser_avr.c **** 	static unsigned char uart1_rxbuffer[CONFIG_UART1_RXBUFSIZE];
+ 326:bertos/cpu/avr/drv/ser_avr.c **** #endif
+ 327:bertos/cpu/avr/drv/ser_avr.c **** static unsigned char spi_txbuffer[CONFIG_SPI_TXBUFSIZE];
+ 328:bertos/cpu/avr/drv/ser_avr.c **** static unsigned char spi_rxbuffer[CONFIG_SPI_RXBUFSIZE];
+ 329:bertos/cpu/avr/drv/ser_avr.c **** 
+ 330:bertos/cpu/avr/drv/ser_avr.c **** 
+ 331:bertos/cpu/avr/drv/ser_avr.c **** /**
+ 332:bertos/cpu/avr/drv/ser_avr.c ****  * Internal hardware state structure
+ 333:bertos/cpu/avr/drv/ser_avr.c ****  *
+ 334:bertos/cpu/avr/drv/ser_avr.c ****  * The \a sending variable is true while the transmission
+ 335:bertos/cpu/avr/drv/ser_avr.c ****  * interrupt is retriggering itself.
+ 336:bertos/cpu/avr/drv/ser_avr.c ****  *
+ 337:bertos/cpu/avr/drv/ser_avr.c ****  * For the USARTs the \a sending flag is useful for taking specific
+ 338:bertos/cpu/avr/drv/ser_avr.c ****  * actions before sending a burst of data, at the start of a trasmission
+ 339:bertos/cpu/avr/drv/ser_avr.c ****  * but not before every char sent.
+ 340:bertos/cpu/avr/drv/ser_avr.c ****  *
+ 341:bertos/cpu/avr/drv/ser_avr.c ****  * For the SPI, this flag is necessary because the SPI sends and receives
+ 342:bertos/cpu/avr/drv/ser_avr.c ****  * bytes at the same time and the SPI IRQ is unique for send/receive.
+ 343:bertos/cpu/avr/drv/ser_avr.c ****  * The only way to start transmission is to write data in SPDR (this
+ 344:bertos/cpu/avr/drv/ser_avr.c ****  * is done by spi_starttx()). We do this *only* if a transfer is
+ 345:bertos/cpu/avr/drv/ser_avr.c ****  * not already started.
+ 346:bertos/cpu/avr/drv/ser_avr.c ****  */
+ 347:bertos/cpu/avr/drv/ser_avr.c **** struct AvrSerial
+ 348:bertos/cpu/avr/drv/ser_avr.c **** {
+ 349:bertos/cpu/avr/drv/ser_avr.c **** 	struct SerialHardware hw;
+ 350:bertos/cpu/avr/drv/ser_avr.c **** 	volatile bool sending;
+ 351:bertos/cpu/avr/drv/ser_avr.c **** };
+ 352:bertos/cpu/avr/drv/ser_avr.c **** 
+ 353:bertos/cpu/avr/drv/ser_avr.c **** 
+ 354:bertos/cpu/avr/drv/ser_avr.c **** 
+ 355:bertos/cpu/avr/drv/ser_avr.c **** /*
+ 356:bertos/cpu/avr/drv/ser_avr.c ****  * Callbacks
+ 357:bertos/cpu/avr/drv/ser_avr.c ****  */
+ 358:bertos/cpu/avr/drv/ser_avr.c **** static void uart0_init(
+ 359:bertos/cpu/avr/drv/ser_avr.c **** 	UNUSED_ARG(struct SerialHardware *, _hw),
+ 360:bertos/cpu/avr/drv/ser_avr.c **** 	UNUSED_ARG(struct Serial *, ser))
+ 361:bertos/cpu/avr/drv/ser_avr.c **** {
+  18               		.loc 1 361 0
+  19               		.cfi_startproc
+  20               	.LVL0:
+  21               	/* prologue: function */
+  22               	/* frame size = 0 */
+  23               	/* stack size = 0 */
+  24               	.L__stack_usage = 0
+ 362:bertos/cpu/avr/drv/ser_avr.c **** 	SER_UART0_BUS_TXINIT;
+  25               		.loc 1 362 0
+  26 0000 88E9      		ldi r24,lo8(-104)	 ;  8	*movqi/2	[length = 1]
+  27               	.LVL1:
+  28 0002 8093 C100 		sts 193,r24	 ;  9	*movqi/3	[length = 2]
+  29               	/* epilogue start */
+ 363:bertos/cpu/avr/drv/ser_avr.c **** 	RTS_ON;
+ 364:bertos/cpu/avr/drv/ser_avr.c **** 	SER_STROBE_INIT;
+ 365:bertos/cpu/avr/drv/ser_avr.c **** }
+  30               		.loc 1 365 0
+  31 0006 0895      		ret	 ;  15	return	[length = 1]
+  32               		.cfi_endproc
+  33               	.LFE44:
+  35               		.section	.text.uart0_cleanup,"ax",@progbits
+  37               	uart0_cleanup:
+  38               	.LFB45:
+ 366:bertos/cpu/avr/drv/ser_avr.c **** 
+ 367:bertos/cpu/avr/drv/ser_avr.c **** static void uart0_cleanup(UNUSED_ARG(struct SerialHardware *, _hw))
+ 368:bertos/cpu/avr/drv/ser_avr.c **** {
+  39               		.loc 1 368 0
+  40               		.cfi_startproc
+  41               	.LVL2:
+  42               	/* prologue: function */
+  43               	/* frame size = 0 */
+  44               	/* stack size = 0 */
+  45               	.L__stack_usage = 0
+ 369:bertos/cpu/avr/drv/ser_avr.c **** 	UCSR0B = 0;
+  46               		.loc 1 369 0
+  47 0000 1092 C100 		sts 193,__zero_reg__	 ;  7	*movqi/3	[length = 2]
+  48               	/* epilogue start */
+ 370:bertos/cpu/avr/drv/ser_avr.c **** }
+  49               		.loc 1 370 0
+  50 0004 0895      		ret	 ;  13	return	[length = 1]
+  51               		.cfi_endproc
+  52               	.LFE45:
+  54               		.section	.text.uart0_enabletxirq,"ax",@progbits
+  56               	uart0_enabletxirq:
+  57               	.LFB46:
+ 371:bertos/cpu/avr/drv/ser_avr.c **** 
+ 372:bertos/cpu/avr/drv/ser_avr.c **** static void uart0_enabletxirq(struct SerialHardware *_hw)
+ 373:bertos/cpu/avr/drv/ser_avr.c **** {
+  58               		.loc 1 373 0
+  59               		.cfi_startproc
+  60               	.LVL3:
+  61               	/* prologue: function */
+  62               	/* frame size = 0 */
+  63               	/* stack size = 0 */
+  64               	.L__stack_usage = 0
+  65 0000 FC01      		movw r30,r24	 ;  2	*movhi/1	[length = 1]
+  66               	.LVL4:
+ 374:bertos/cpu/avr/drv/ser_avr.c **** 	struct AvrSerial *hw = (struct AvrSerial *)_hw;
+ 375:bertos/cpu/avr/drv/ser_avr.c **** 
+ 376:bertos/cpu/avr/drv/ser_avr.c **** 	/*
+ 377:bertos/cpu/avr/drv/ser_avr.c **** 	 * WARNING: racy code here!  The tx interrupt sets hw->sending to false
+ 378:bertos/cpu/avr/drv/ser_avr.c **** 	 * when it runs with an empty fifo.  The order of statements in the
+ 379:bertos/cpu/avr/drv/ser_avr.c **** 	 * if-block matters.
+ 380:bertos/cpu/avr/drv/ser_avr.c **** 	 */
+ 381:bertos/cpu/avr/drv/ser_avr.c **** 	if (!hw->sending)
+  67               		.loc 1 381 0
+  68 0002 8285      		ldd r24,Z+10	 ;  7	*movqi/4	[length = 1]
+  69               	.LVL5:
+  70 0004 8823      		tst r24	 ;  8	*cmpqi/1	[length = 1]
+  71 0006 01F4      		brne .L3	 ;  9	branch	[length = 1]
+ 382:bertos/cpu/avr/drv/ser_avr.c **** 	{
+ 383:bertos/cpu/avr/drv/ser_avr.c **** 		hw->sending = true;
+  72               		.loc 1 383 0
+  73 0008 81E0      		ldi r24,lo8(1)	 ;  11	*movqi/2	[length = 1]
+  74 000a 8287      		std Z+10,r24	 ;  12	*movqi/3	[length = 1]
+ 384:bertos/cpu/avr/drv/ser_avr.c **** 		SER_UART0_BUS_TXBEGIN;
+  75               		.loc 1 384 0
+  76 000c 88EB      		ldi r24,lo8(-72)	 ;  14	*movqi/2	[length = 1]
+  77 000e 8093 C100 		sts 193,r24	 ;  15	*movqi/3	[length = 2]
+  78               	.LVL6:
+  79               	.L3:
+  80 0012 0895      		ret	 ;  24	return	[length = 1]
+  81               		.cfi_endproc
+  82               	.LFE46:
+  84               		.section	.text.uart0_setbaudrate,"ax",@progbits
+  86               	uart0_setbaudrate:
+  87               	.LFB47:
+ 385:bertos/cpu/avr/drv/ser_avr.c **** 	}
+ 386:bertos/cpu/avr/drv/ser_avr.c **** }
+ 387:bertos/cpu/avr/drv/ser_avr.c **** 
+ 388:bertos/cpu/avr/drv/ser_avr.c **** static void uart0_setbaudrate(UNUSED_ARG(struct SerialHardware *, _hw), unsigned long rate)
+ 389:bertos/cpu/avr/drv/ser_avr.c **** {
+  88               		.loc 1 389 0
+  89               		.cfi_startproc
+  90               	.LVL7:
+  91               	/* prologue: function */
+  92               	/* frame size = 0 */
+  93               	/* stack size = 0 */
+  94               	.L__stack_usage = 0
+  95 0000 9A01      		movw r18,r20	 ;  3	*movsi/1	[length = 2]
+  96 0002 AB01      		movw r20,r22
+ 390:bertos/cpu/avr/drv/ser_avr.c **** 	/* Compute baud-rate period */
+ 391:bertos/cpu/avr/drv/ser_avr.c **** 	uint16_t period = DIV_ROUND(CPU_FREQ / 16UL, rate) - 1;
+  97               		.loc 1 391 0
+  98 0004 DA01      		movw r26,r20	 ;  29	*movsi/1	[length = 2]
+  99 0006 C901      		movw r24,r18
+ 100               	.LVL8:
+ 101 0008 B695      		lsr r27	 ;  34	*lshrsi3_const/2	[length = 4]
+ 102 000a A795      		ror r26
+ 103 000c 9795      		ror r25
+ 104 000e 8795      		ror r24
+ 105 0010 805E      		subi r24,lo8(-(500000))	 ;  8	addsi3/4	[length = 4]
+ 106 0012 9E45      		sbci r25,hi8(-(500000))
+ 107 0014 A84F      		sbci r26,hlo8(-(500000))
+ 108 0016 BF4F      		sbci r27,hhi8(-(500000))
+ 109 0018 BC01      		movw r22,r24	 ;  23	*movsi/1	[length = 2]
+ 110 001a CD01      		movw r24,r26
+ 111 001c 0E94 0000 		call __udivmodsi4	 ;  25	*udivmodsi4_call	[length = 2]
+ 112 0020 2150      		subi r18,lo8(-(-1))	 ;  10	*addhi3/4	[length = 2]
+ 113 0022 3040      		sbci r19,hi8(-(-1))
  114               	.LVL9:
- 115               	/* prologue: function */
- 116               	/* frame size = 0 */
- 117               	.LSM17:
- 118 0000 E2EC      		ldi r30,lo8(194)	 ;  7	*movhi/4	[length = 2]
- 119 0002 F0E0      		ldi r31,hi8(194)
- 120 0004 8081      		ld r24,Z	 ;  8	*movqi/4	[length = 1]
- 121               	.LVL10:
- 122 0006 A4E0      		ldi r26,4	 ;  26	*ashlhi3_const/5	[length = 5]
- 123 0008 660F      	1:	lsl r22
- 124 000a 771F      		rol r23
- 125 000c AA95      		dec r26
- 126 000e 01F4      		brne 1b
- 127               	.LVL11:
- 128 0010 8F7C      		andi r24,lo8(-49)	 ;  10	andqi3/2	[length = 1]
- 129 0012 862B      		or r24,r22	 ;  11	iorqi3/1	[length = 1]
- 130 0014 8083      		st Z,r24	 ;  13	*movqi/3	[length = 1]
- 131               	/* epilogue start */
- 132               	.LSM18:
- 133 0016 0895      		ret	 ;  24	return	[length = 1]
- 134               	.LFE50:
- 136               		.section	.text.spi_init,"ax",@progbits
- 138               	spi_init:
- 139               	.LFB51:
- 140               	.LSM19:
- 141               	.LVL12:
- 142               	/* prologue: function */
- 143               	/* frame size = 0 */
- 144               	.LBB23:
- 145               	.LSM20:
- 146               	/* #APP */
- 147               	 ;  474 "bertos/cpu/avr/drv/ser_avr.c" 1
- 148 0000 9FB7      		in r25,__SREG__
- 149 0002 F894      		cli
- 150               	 ;  0 "" 2
- 151               	.LVL13:
- 152               	/* #NOAPP */
- 153 0004 84B1      		in r24,36-32	 ;  9	*movqi/4	[length = 1]
- 154               	.LVL14:
- 155 0006 8862      		ori r24,lo8(40)	 ;  10	iorqi3/2	[length = 1]
- 156 0008 84B9      		out 36-32,r24	 ;  12	*movqi/3	[length = 1]
- 157               	/* #APP */
- 158               	 ;  474 "bertos/cpu/avr/drv/ser_avr.c" 1
- 159 000a 9FBF      		out __SREG__,r25
- 160               	 ;  0 "" 2
- 161               	/* #NOAPP */
- 162               	.LBE23:
- 163               	.LBB24:
- 164               	.LSM21:
- 165               	/* #APP */
- 166               	 ;  485 "bertos/cpu/avr/drv/ser_avr.c" 1
- 167 000c 8FB7      		in r24,__SREG__
- 168 000e F894      		cli
- 169               	 ;  0 "" 2
- 170               	.LVL15:
- 171               	/* #NOAPP */
- 172 0010 229A      		sbi 36-32,2	 ;  19	*sbi	[length = 1]
- 173               	/* #APP */
- 174               	 ;  485 "bertos/cpu/avr/drv/ser_avr.c" 1
- 175 0012 8FBF      		out __SREG__,r24
- 176               	 ;  0 "" 2
- 177               	/* #NOAPP */
- 178               	.LBE24:
- 179               	.LBB25:
- 180               	.LSM22:
- 181               	/* #APP */
- 182               	 ;  487 "bertos/cpu/avr/drv/ser_avr.c" 1
- 183 0014 8FB7      		in r24,__SREG__
- 184 0016 F894      		cli
- 185               	 ;  0 "" 2
- 186               	.LVL16:
- 187               	/* #NOAPP */
- 188 0018 2498      		cbi 36-32,4	 ;  26	*cbi	[length = 1]
- 189               	/* #APP */
- 190               	 ;  487 "bertos/cpu/avr/drv/ser_avr.c" 1
- 191 001a 8FBF      		out __SREG__,r24
+ 392:bertos/cpu/avr/drv/ser_avr.c **** 
+ 393:bertos/cpu/avr/drv/ser_avr.c **** #if !CPU_AVR_ATMEGA103
+ 394:bertos/cpu/avr/drv/ser_avr.c **** 	UBRR0H = (period) >> 8;
+ 115               		.loc 1 394 0
+ 116 0024 3093 C500 		sts 197,r19	 ;  15	*movqi/3	[length = 2]
+ 395:bertos/cpu/avr/drv/ser_avr.c **** #endif
+ 396:bertos/cpu/avr/drv/ser_avr.c **** 	UBRR0L = (period);
+ 117               		.loc 1 396 0
+ 118 0028 2093 C400 		sts 196,r18	 ;  18	*movqi/3	[length = 2]
+ 119               	/* epilogue start */
+ 397:bertos/cpu/avr/drv/ser_avr.c **** 
+ 398:bertos/cpu/avr/drv/ser_avr.c **** 	//DB(kprintf("uart0_setbaudrate(rate=%lu): period=%d\n", rate, period);)
+ 399:bertos/cpu/avr/drv/ser_avr.c **** }
+ 120               		.loc 1 399 0
+ 121 002c 0895      		ret	 ;  32	return	[length = 1]
+ 122               		.cfi_endproc
+ 123               	.LFE47:
+ 125               		.section	.text.uart0_setparity,"ax",@progbits
+ 127               	uart0_setparity:
+ 128               	.LFB48:
+ 400:bertos/cpu/avr/drv/ser_avr.c **** 
+ 401:bertos/cpu/avr/drv/ser_avr.c **** static void uart0_setparity(UNUSED_ARG(struct SerialHardware *, _hw), int parity)
+ 402:bertos/cpu/avr/drv/ser_avr.c **** {
+ 129               		.loc 1 402 0
+ 130               		.cfi_startproc
+ 131               	.LVL10:
+ 132               	/* prologue: function */
+ 133               	/* frame size = 0 */
+ 134               	/* stack size = 0 */
+ 135               	.L__stack_usage = 0
+ 403:bertos/cpu/avr/drv/ser_avr.c **** #if !CPU_AVR_ATMEGA103
+ 404:bertos/cpu/avr/drv/ser_avr.c **** 	UCSR0C = (UCSR0C & ~(BV(UPM01) | BV(UPM00))) | ((parity) << UPM00);
+ 136               		.loc 1 404 0
+ 137 0000 E2EC      		ldi r30,lo8(194)	 ;  7	*movhi/4	[length = 2]
+ 138 0002 F0E0      		ldi r31,hi8(194)
+ 139 0004 8081      		ld r24,Z	 ;  8	*movqi/4	[length = 1]
+ 140               	.LVL11:
+ 141 0006 A4E0      		ldi r26,4	 ;  21	*ashlhi3_const/5	[length = 5]
+ 142 0008 660F      	1:	lsl r22
+ 143 000a 771F      		rol r23
+ 144 000c AA95      		dec r26
+ 145 000e 01F4      		brne 1b
+ 146               	.LVL12:
+ 147 0010 8F7C      		andi r24,lo8(-49)	 ;  10	andqi3/2	[length = 1]
+ 148 0012 862B      		or r24,r22	 ;  11	iorqi3/1	[length = 1]
+ 149 0014 8083      		st Z,r24	 ;  13	*movqi/3	[length = 1]
+ 150               	/* epilogue start */
+ 405:bertos/cpu/avr/drv/ser_avr.c **** #endif
+ 406:bertos/cpu/avr/drv/ser_avr.c **** }
+ 151               		.loc 1 406 0
+ 152 0016 0895      		ret	 ;  19	return	[length = 1]
+ 153               		.cfi_endproc
+ 154               	.LFE48:
+ 156               		.section	.text.spi_init,"ax",@progbits
+ 158               	spi_init:
+ 159               	.LFB49:
+ 407:bertos/cpu/avr/drv/ser_avr.c **** 
+ 408:bertos/cpu/avr/drv/ser_avr.c **** #if AVR_HAS_UART1
+ 409:bertos/cpu/avr/drv/ser_avr.c **** 
+ 410:bertos/cpu/avr/drv/ser_avr.c **** static void uart1_init(
+ 411:bertos/cpu/avr/drv/ser_avr.c **** 	UNUSED_ARG(struct SerialHardware *, _hw),
+ 412:bertos/cpu/avr/drv/ser_avr.c **** 	UNUSED_ARG(struct Serial *, ser))
+ 413:bertos/cpu/avr/drv/ser_avr.c **** {
+ 414:bertos/cpu/avr/drv/ser_avr.c **** 	SER_UART1_BUS_TXINIT;
+ 415:bertos/cpu/avr/drv/ser_avr.c **** 	RTS_ON;
+ 416:bertos/cpu/avr/drv/ser_avr.c **** 	SER_STROBE_INIT;
+ 417:bertos/cpu/avr/drv/ser_avr.c **** }
+ 418:bertos/cpu/avr/drv/ser_avr.c **** 
+ 419:bertos/cpu/avr/drv/ser_avr.c **** static void uart1_cleanup(UNUSED_ARG(struct SerialHardware *, _hw))
+ 420:bertos/cpu/avr/drv/ser_avr.c **** {
+ 421:bertos/cpu/avr/drv/ser_avr.c **** 	UCSR1B = 0;
+ 422:bertos/cpu/avr/drv/ser_avr.c **** }
+ 423:bertos/cpu/avr/drv/ser_avr.c **** 
+ 424:bertos/cpu/avr/drv/ser_avr.c **** static void uart1_enabletxirq(struct SerialHardware *_hw)
+ 425:bertos/cpu/avr/drv/ser_avr.c **** {
+ 426:bertos/cpu/avr/drv/ser_avr.c **** 	struct AvrSerial *hw = (struct AvrSerial *)_hw;
+ 427:bertos/cpu/avr/drv/ser_avr.c **** 
+ 428:bertos/cpu/avr/drv/ser_avr.c **** 	/*
+ 429:bertos/cpu/avr/drv/ser_avr.c **** 	 * WARNING: racy code here!  The tx interrupt
+ 430:bertos/cpu/avr/drv/ser_avr.c **** 	 * sets hw->sending to false when it runs with
+ 431:bertos/cpu/avr/drv/ser_avr.c **** 	 * an empty fifo.  The order of the statements
+ 432:bertos/cpu/avr/drv/ser_avr.c **** 	 * in the if-block matters.
+ 433:bertos/cpu/avr/drv/ser_avr.c **** 	 */
+ 434:bertos/cpu/avr/drv/ser_avr.c **** 	if (!hw->sending)
+ 435:bertos/cpu/avr/drv/ser_avr.c **** 	{
+ 436:bertos/cpu/avr/drv/ser_avr.c **** 		hw->sending = true;
+ 437:bertos/cpu/avr/drv/ser_avr.c **** 		SER_UART1_BUS_TXBEGIN;
+ 438:bertos/cpu/avr/drv/ser_avr.c **** 	}
+ 439:bertos/cpu/avr/drv/ser_avr.c **** }
+ 440:bertos/cpu/avr/drv/ser_avr.c **** 
+ 441:bertos/cpu/avr/drv/ser_avr.c **** static void uart1_setbaudrate(UNUSED_ARG(struct SerialHardware *, _hw), unsigned long rate)
+ 442:bertos/cpu/avr/drv/ser_avr.c **** {
+ 443:bertos/cpu/avr/drv/ser_avr.c **** 	/* Compute baud-rate period */
+ 444:bertos/cpu/avr/drv/ser_avr.c **** 	uint16_t period = DIV_ROUND(CPU_FREQ / 16UL, rate) - 1;
+ 445:bertos/cpu/avr/drv/ser_avr.c **** 
+ 446:bertos/cpu/avr/drv/ser_avr.c **** 	UBRR1H = (period) >> 8;
+ 447:bertos/cpu/avr/drv/ser_avr.c **** 	UBRR1L = (period);
+ 448:bertos/cpu/avr/drv/ser_avr.c **** 
+ 449:bertos/cpu/avr/drv/ser_avr.c **** 	//DB(kprintf("uart1_setbaudrate(rate=%ld): period=%d\n", rate, period);)
+ 450:bertos/cpu/avr/drv/ser_avr.c **** }
+ 451:bertos/cpu/avr/drv/ser_avr.c **** 
+ 452:bertos/cpu/avr/drv/ser_avr.c **** static void uart1_setparity(UNUSED_ARG(struct SerialHardware *, _hw), int parity)
+ 453:bertos/cpu/avr/drv/ser_avr.c **** {
+ 454:bertos/cpu/avr/drv/ser_avr.c **** 	UCSR1C = (UCSR1C & ~(BV(UPM11) | BV(UPM10))) | ((parity) << UPM10);
+ 455:bertos/cpu/avr/drv/ser_avr.c **** }
+ 456:bertos/cpu/avr/drv/ser_avr.c **** 
+ 457:bertos/cpu/avr/drv/ser_avr.c **** #endif // AVR_HAS_UART1
+ 458:bertos/cpu/avr/drv/ser_avr.c **** 
+ 459:bertos/cpu/avr/drv/ser_avr.c **** static void spi_init(UNUSED_ARG(struct SerialHardware *, _hw), UNUSED_ARG(struct Serial *, ser))
+ 460:bertos/cpu/avr/drv/ser_avr.c **** {
+ 160               		.loc 1 460 0
+ 161               		.cfi_startproc
+ 162               	.LVL13:
+ 163               	/* prologue: function */
+ 164               	/* frame size = 0 */
+ 165               	/* stack size = 0 */
+ 166               	.L__stack_usage = 0
+ 167               	.LBB23:
+ 461:bertos/cpu/avr/drv/ser_avr.c **** 	/*
+ 462:bertos/cpu/avr/drv/ser_avr.c **** 	 * Set MOSI and SCK ports out, MISO in.
+ 463:bertos/cpu/avr/drv/ser_avr.c **** 	 *
+ 464:bertos/cpu/avr/drv/ser_avr.c **** 	 * The ATmega64/128 datasheet explicitly states that the input/output
+ 465:bertos/cpu/avr/drv/ser_avr.c **** 	 * state of the SPI pins is not significant, as when the SPI is
+ 466:bertos/cpu/avr/drv/ser_avr.c **** 	 * active the I/O port are overrided.
+ 467:bertos/cpu/avr/drv/ser_avr.c **** 	 * This is *blatantly FALSE*.
+ 468:bertos/cpu/avr/drv/ser_avr.c **** 	 *
+ 469:bertos/cpu/avr/drv/ser_avr.c **** 	 * Moreover, the MISO pin on the board_kc *must* be in high impedance
+ 470:bertos/cpu/avr/drv/ser_avr.c **** 	 * state even when the SPI is off, because the line is wired together
+ 471:bertos/cpu/avr/drv/ser_avr.c **** 	 * with the KBus serial RX, and the transmitter of the slave boards
+ 472:bertos/cpu/avr/drv/ser_avr.c **** 	 * would be unable to drive the line.
+ 473:bertos/cpu/avr/drv/ser_avr.c **** 	 */
+ 474:bertos/cpu/avr/drv/ser_avr.c **** 	ATOMIC(SPI_DDR |= (BV(SPI_MOSI_BIT) | BV(SPI_SCK_BIT)));
+ 168               		.loc 1 474 0
+ 169               	/* #APP */
+ 170               	 ;  474 "bertos/cpu/avr/drv/ser_avr.c" 1
+ 171 0000 9FB7      		in r25,__SREG__
+ 172 0002 F894      		cli
+ 173               	 ;  0 "" 2
+ 174               	.LVL14:
+ 175               	/* #NOAPP */
+ 176 0004 84B1      		in r24,36-32	 ;  11	*movqi/4	[length = 1]
+ 177               	.LVL15:
+ 178 0006 8862      		ori r24,lo8(40)	 ;  12	iorqi3/2	[length = 1]
+ 179 0008 84B9      		out 36-32,r24	 ;  14	*movqi/3	[length = 1]
+ 180               	/* #APP */
+ 181               	 ;  474 "bertos/cpu/avr/drv/ser_avr.c" 1
+ 182 000a 9FBF      		out __SREG__,r25
+ 183               	 ;  0 "" 2
+ 184               	/* #NOAPP */
+ 185               	.LBE23:
+ 186               	.LBB24:
+ 475:bertos/cpu/avr/drv/ser_avr.c **** 
+ 476:bertos/cpu/avr/drv/ser_avr.c **** 	/*
+ 477:bertos/cpu/avr/drv/ser_avr.c **** 	 * If the SPI master mode is activated and the SS pin is in input and tied low,
+ 478:bertos/cpu/avr/drv/ser_avr.c **** 	 * the SPI hardware will automatically switch to slave mode!
+ 479:bertos/cpu/avr/drv/ser_avr.c **** 	 * For proper communication this pins should therefore be:
+ 480:bertos/cpu/avr/drv/ser_avr.c **** 	 * - as output
+ 481:bertos/cpu/avr/drv/ser_avr.c **** 	 * - as input but tied high forever!
+ 482:bertos/cpu/avr/drv/ser_avr.c **** 	 * This driver set the pin as output.
+ 483:bertos/cpu/avr/drv/ser_avr.c **** 	 */
+ 484:bertos/cpu/avr/drv/ser_avr.c **** 	#warning FIXME:SPI SS pin set as output for proper operation, check schematics for possible confli
+ 485:bertos/cpu/avr/drv/ser_avr.c **** 	ATOMIC(SPI_DDR |= BV(SPI_SS_BIT));
+ 187               		.loc 1 485 0
+ 188               	/* #APP */
+ 189               	 ;  485 "bertos/cpu/avr/drv/ser_avr.c" 1
+ 190 000c 8FB7      		in r24,__SREG__
+ 191 000e F894      		cli
  192               	 ;  0 "" 2
- 193               	/* #NOAPP */
- 194               	.LBE25:
- 195               	.LSM23:
- 196 001c 80ED      		ldi r24,lo8(-48)	 ;  29	*movqi/2	[length = 1]
- 197               	.LVL17:
- 198 001e 8CBD      		out 76-32,r24	 ;  30	*movqi/3	[length = 1]
- 199               	.LSM24:
- 200 0020 8CB5      		in r24,76-32	 ;  32	*movqi/4	[length = 1]
- 201 0022 8160      		ori r24,lo8(1)	 ;  33	iorqi3/2	[length = 1]
- 202 0024 8CBD      		out 76-32,r24	 ;  35	*movqi/3	[length = 1]
- 203               	.LSM25:
- 204 0026 8DB5      		in r24,77-32	 ;  37	*movqi/4	[length = 1]
- 205 0028 8E7F      		andi r24,lo8(-2)	 ;  38	andqi3/2	[length = 1]
- 206 002a 8DBD      		out 77-32,r24	 ;  40	*movqi/3	[length = 1]
- 207               	/* epilogue start */
- 208               	.LSM26:
- 209 002c 0895      		ret	 ;  51	return	[length = 1]
- 210               	.LFE51:
- 212               		.section	.text.spi_cleanup,"ax",@progbits
- 214               	spi_cleanup:
- 215               	.LFB52:
- 216               	.LSM27:
- 217               	.LVL18:
- 218               	/* prologue: function */
- 219               	/* frame size = 0 */
- 220               	.LSM28:
- 221 0000 1CBC      		out 76-32,__zero_reg__	 ;  7	*movqi/3	[length = 1]
- 222               	.LBB26:
- 223               	.LSM29:
- 224               	/* #APP */
- 225               	 ;  540 "bertos/cpu/avr/drv/ser_avr.c" 1
- 226 0002 9FB7      		in r25,__SREG__
- 227 0004 F894      		cli
- 228               	 ;  0 "" 2
- 229               	.LVL19:
- 230               	/* #NOAPP */
- 231 0006 84B1      		in r24,36-32	 ;  10	*movqi/4	[length = 1]
- 232               	.LVL20:
- 233 0008 837C      		andi r24,lo8(-61)	 ;  11	andqi3/2	[length = 1]
- 234 000a 84B9      		out 36-32,r24	 ;  13	*movqi/3	[length = 1]
- 235               	/* #APP */
- 236               	 ;  540 "bertos/cpu/avr/drv/ser_avr.c" 1
- 237 000c 9FBF      		out __SREG__,r25
- 238               	 ;  0 "" 2
- 239               	/* epilogue start */
- 240               	/* #NOAPP */
- 241               	.LBE26:
- 242               	.LSM30:
- 243 000e 0895      		ret	 ;  25	return	[length = 1]
- 244               	.LFE52:
- 246               		.section	.text.spi_starttx,"ax",@progbits
- 248               	spi_starttx:
- 249               	.LFB53:
- 250               	.LSM31:
- 251               	.LVL21:
- 252               	/* prologue: function */
- 253               	/* frame size = 0 */
- 254               	.LSM32:
- 255 0000 FC01      		movw r30,r24	 ;  67	*movhi/1	[length = 1]
- 256               	.LVL22:
- 257               	.LSM33:
- 258               	/* #APP */
- 259               	 ;  548 "bertos/cpu/avr/drv/ser_avr.c" 1
- 260 0002 4FB7      		in r20,__SREG__
- 261 0004 F894      		cli
- 262               	 ;  0 "" 2
- 263               	.LVL23:
- 264               	.LSM34:
- 265               	/* #NOAPP */
- 266 0006 8285      		ldd r24,Z+10	 ;  8	*movqi/4	[length = 1]
- 267               	.LVL24:
- 268 0008 8823      		tst r24	 ;  9	tstqi	[length = 1]
- 269 000a 01F4      		brne .L17	 ;  10	branch	[length = 1]
- 270 000c A091 0000 		lds r26,ser_handles+2	 ;  13	*movhi/2	[length = 4]
- 271 0010 B091 0000 		lds r27,(ser_handles+2)+1
- 272               	.LBB27:
- 273               	.LBB28:
- 274               	.LSM35:
- 275 0014 5F96      		adiw r26,31	 ;  14	*movhi/2	[length = 4]
- 276 0016 2D91      		ld r18,X+
- 277 0018 3C91      		ld r19,X
- 278 001a 9097      		sbiw r26,31+1
- 279 001c 9196      		adiw r26,33	 ;  15	*movhi/2	[length = 4]
- 280 001e 8D91      		ld r24,X+
- 281 0020 9C91      		ld r25,X
- 282 0022 9297      		sbiw r26,33+1
- 283               	.LBE28:
- 284               	.LBE27:
- 285               	.LSM36:
- 286 0024 2817      		cp r18,r24	 ;  16	cmphi/1	[length = 2]
- 287 0026 3907      		cpc r19,r25
- 288 0028 01F0      		breq .L17	 ;  17	branch	[length = 1]
- 289               	.LSM37:
- 290 002a 81E0      		ldi r24,lo8(1)	 ;  19	*movqi/2	[length = 1]
- 291 002c 8287      		std Z+10,r24	 ;  20	*movqi/3	[length = 1]
- 292               	.LBB29:
- 293               	.LBB30:
- 294               	.LSM38:
- 295 002e 5F96      		adiw r26,31	 ;  21	*movhi/2	[length = 4]
- 296 0030 ED91      		ld r30,X+
- 297 0032 FC91      		ld r31,X
- 298 0034 9097      		sbiw r26,31+1
- 299               	.LVL25:
- 300 0036 9596      		adiw r26,37	 ;  22	*movhi/2	[length = 4]
- 301 0038 8D91      		ld r24,X+
- 302 003a 9C91      		ld r25,X
- 303 003c 9697      		sbiw r26,37+1
- 304 003e E817      		cp r30,r24	 ;  23	cmphi/1	[length = 2]
- 305 0040 F907      		cpc r31,r25
- 306 0042 01F4      		brne .L18	 ;  24	branch	[length = 1]
- 307               	.LSM39:
- 308 0044 9396      		adiw r26,35	 ;  26	*movhi/2	[length = 4]
- 309 0046 8D91      		ld r24,X+
- 310 0048 9C91      		ld r25,X
- 311 004a 9497      		sbiw r26,35+1
- 312 004c 9096      		adiw r26,31+1	 ;  27	*movhi/3	[length = 4]
- 313 004e 9C93      		st X,r25
- 314 0050 8E93      		st -X,r24
- 315 0052 5F97      		sbiw r26,31
- 316               	.LSM40:
- 317 0054 8081      		ld r24,Z	 ;  29	*movqi/4	[length = 1]
- 318 0056 00C0      		rjmp .L19	 ;  68	jump	[length = 1]
- 319               	.L18:
- 320               	.LSM41:
- 321 0058 5F96      		adiw r26,31	 ;  34	*movhi/2	[length = 4]
- 322 005a ED91      		ld r30,X+
- 323 005c FC91      		ld r31,X
- 324 005e 9097      		sbiw r26,31+1
- 325 0060 8191      		ld r24,Z+	 ;  35	*movqi/4	[length = 1]
- 326 0062 9096      		adiw r26,31+1	 ;  37	*movhi/3	[length = 4]
- 327 0064 FC93      		st X,r31
- 328 0066 EE93      		st -X,r30
- 329 0068 5F97      		sbiw r26,31
- 330               	.L19:
- 331               	.LBE30:
- 332               	.LBE29:
- 333               	.LSM42:
- 334 006a 8EBD      		out 78-32,r24	 ;  41	*movqi/3	[length = 1]
- 335               	.LVL26:
- 336               	.L17:
- 337               	.LSM43:
- 338               	/* #APP */
- 339               	 ;  557 "bertos/cpu/avr/drv/ser_avr.c" 1
- 340 006c 4FBF      		out __SREG__,r20
- 341               	 ;  0 "" 2
- 342               	/* epilogue start */
- 343               	.LSM44:
- 344               	/* #NOAPP */
- 345 006e 0895      		ret	 ;  65	return	[length = 1]
- 346               	.LFE53:
- 348               		.section	.text.spi_setbaudrate,"ax",@progbits
- 350               	spi_setbaudrate:
- 351               	.LFB54:
- 352               	.LSM45:
- 353               	.LVL27:
- 354               	/* prologue: function */
- 355               	/* frame size = 0 */
- 356               	/* epilogue start */
- 357               	.LSM46:
- 358 0000 0895      		ret	 ;  17	return	[length = 1]
- 359               	.LFE54:
- 361               		.section	.text.spi_setparity,"ax",@progbits
- 363               	spi_setparity:
- 364               	.LFB55:
- 365               	.LSM47:
- 366               	.LVL28:
- 367               	/* prologue: function */
- 368               	/* frame size = 0 */
- 369               	/* epilogue start */
- 370               	.LSM48:
- 371 0000 0895      		ret	 ;  17	return	[length = 1]
- 372               	.LFE55:
- 374               		.section	.text.tx_sending,"ax",@progbits
- 376               	tx_sending:
- 377               	.LFB56:
- 378               	.LSM49:
- 379               	.LVL29:
- 380               	/* prologue: function */
- 381               	/* frame size = 0 */
- 382               	.LSM50:
- 383 0000 FC01      		movw r30,r24	 ;  33	*movhi/1	[length = 1]
- 384               	.LVL30:
- 385               	.LSM51:
- 386 0002 8285      		ldd r24,Z+10	 ;  7	*movqi/4	[length = 1]
- 387               	.LVL31:
- 388               	/* epilogue start */
- 389               	.LSM52:
- 390 0004 0895      		ret	 ;  31	return	[length = 1]
- 391               	.LFE56:
- 393               		.section	.text.__vector_19,"ax",@progbits
- 394               	.global	__vector_19
- 396               	__vector_19:
- 397               	.LFB58:
- 398               	.LSM53:
- 399 0000 1F92      		push __zero_reg__	 ;  57	*pushqi/1	[length = 1]
- 400 0002 0F92      		push r0	 ;  58	*pushqi/1	[length = 1]
- 401 0004 0FB6      		in r0,__SREG__	 ;  59	*movqi/4	[length = 1]
- 402 0006 0F92      		push r0	 ;  60	*pushqi/1	[length = 1]
- 403 0008 1124      		clr __zero_reg__	 ;  61	*movqi/7	[length = 1]
- 404 000a 2F93      		push r18	 ;  63	*pushqi/1	[length = 1]
- 405 000c 3F93      		push r19	 ;  64	*pushqi/1	[length = 1]
- 406 000e 8F93      		push r24	 ;  65	*pushqi/1	[length = 1]
- 407 0010 9F93      		push r25	 ;  66	*pushqi/1	[length = 1]
- 408 0012 AF93      		push r26	 ;  67	*pushqi/1	[length = 1]
- 409 0014 BF93      		push r27	 ;  68	*pushqi/1	[length = 1]
- 410 0016 EF93      		push r30	 ;  69	*pushqi/1	[length = 1]
- 411 0018 FF93      		push r31	 ;  70	*pushqi/1	[length = 1]
- 412               	/* prologue: Signal */
- 413               	/* frame size = 0 */
- 414               	.LSM54:
- 415 001a A091 0000 		lds r26,ser_handles	 ;  6	*movhi/2	[length = 4]
- 416 001e B091 0000 		lds r27,(ser_handles)+1
- 417               	.LBB31:
- 418               	.LBB32:
- 419               	.LSM55:
- 420 0022 5F96      		adiw r26,31	 ;  7	*movhi/2	[length = 4]
- 421 0024 2D91      		ld r18,X+
- 422 0026 3C91      		ld r19,X
- 423 0028 9097      		sbiw r26,31+1
- 424 002a 9196      		adiw r26,33	 ;  8	*movhi/2	[length = 4]
- 425 002c 8D91      		ld r24,X+
- 426 002e 9C91      		ld r25,X
- 427 0030 9297      		sbiw r26,33+1
- 428               	.LBE32:
- 429               	.LBE31:
- 430               	.LSM56:
- 431 0032 2817      		cp r18,r24	 ;  9	cmphi/1	[length = 2]
- 432 0034 3907      		cpc r19,r25
- 433 0036 01F4      		brne .L28	 ;  10	branch	[length = 1]
- 434               	.LSM57:
- 435 0038 88E9      		ldi r24,lo8(-104)	 ;  13	*movqi/2	[length = 1]
- 436 003a 8093 C100 		sts 193,r24	 ;  14	*movqi/3	[length = 2]
- 437               	.LSM58:
- 438 003e 1092 0000 		sts UARTDescs+10,__zero_reg__	 ;  16	*movqi/3	[length = 2]
- 439 0042 00C0      		rjmp .L32	 ;  87	jump	[length = 1]
- 440               	.L28:
- 441               	.LBB33:
- 442               	.LBB34:
- 443               	.LBB35:
- 444               	.LSM59:
- 445 0044 5F96      		adiw r26,31	 ;  21	*movhi/2	[length = 4]
- 446 0046 ED91      		ld r30,X+
- 447 0048 FC91      		ld r31,X
- 448 004a 9097      		sbiw r26,31+1
- 449 004c 9596      		adiw r26,37	 ;  22	*movhi/2	[length = 4]
- 450 004e 8D91      		ld r24,X+
- 451 0050 9C91      		ld r25,X
- 452 0052 9697      		sbiw r26,37+1
- 453 0054 E817      		cp r30,r24	 ;  23	cmphi/1	[length = 2]
- 454 0056 F907      		cpc r31,r25
- 455 0058 01F4      		brne .L30	 ;  24	branch	[length = 1]
- 456               	.LSM60:
- 457 005a 9396      		adiw r26,35	 ;  26	*movhi/2	[length = 4]
- 458 005c 8D91      		ld r24,X+
- 459 005e 9C91      		ld r25,X
- 460 0060 9497      		sbiw r26,35+1
- 461 0062 9096      		adiw r26,31+1	 ;  27	*movhi/3	[length = 4]
- 462 0064 9C93      		st X,r25
- 463 0066 8E93      		st -X,r24
- 464 0068 5F97      		sbiw r26,31
- 465               	.LSM61:
- 466 006a 8081      		ld r24,Z	 ;  29	*movqi/4	[length = 1]
- 467 006c 00C0      		rjmp .L31	 ;  89	jump	[length = 1]
- 468               	.L30:
- 469               	.LSM62:
- 470 006e 5F96      		adiw r26,31	 ;  34	*movhi/2	[length = 4]
- 471 0070 ED91      		ld r30,X+
- 472 0072 FC91      		ld r31,X
- 473 0074 9097      		sbiw r26,31+1
- 474 0076 8191      		ld r24,Z+	 ;  35	*movqi/4	[length = 1]
- 475 0078 9096      		adiw r26,31+1	 ;  37	*movhi/3	[length = 4]
- 476 007a FC93      		st X,r31
- 477 007c EE93      		st -X,r30
- 478 007e 5F97      		sbiw r26,31
- 479               	.L31:
- 480               	.LBE35:
- 481               	.LBE34:
- 482               	.LSM63:
- 483 0080 8093 C600 		sts 198,r24	 ;  41	*movqi/3	[length = 2]
- 484               	.L32:
- 485               	/* epilogue start */
- 486               	.LBE33:
- 487               	.LSM64:
- 488 0084 FF91      		pop r31	 ;  73	popqi	[length = 1]
- 489 0086 EF91      		pop r30	 ;  74	popqi	[length = 1]
- 490 0088 BF91      		pop r27	 ;  75	popqi	[length = 1]
- 491 008a AF91      		pop r26	 ;  76	popqi	[length = 1]
- 492 008c 9F91      		pop r25	 ;  77	popqi	[length = 1]
- 493 008e 8F91      		pop r24	 ;  78	popqi	[length = 1]
- 494 0090 3F91      		pop r19	 ;  79	popqi	[length = 1]
- 495 0092 2F91      		pop r18	 ;  80	popqi	[length = 1]
- 496 0094 0F90      		pop r0	 ;  81	popqi	[length = 1]
- 497 0096 0FBE      		out __SREG__,r0	 ;  82	*movqi/3	[length = 1]
- 498 0098 0F90      		pop r0	 ;  83	popqi	[length = 1]
- 499 009a 1F90      		pop __zero_reg__	 ;  84	popqi	[length = 1]
- 500 009c 1895      		reti	 ;  85	return_from_interrupt_epilogue	[length = 1]
- 501               	.LFE58:
- 503               		.section	.text.__vector_18,"ax",@progbits
- 504               	.global	__vector_18
- 506               	__vector_18:
- 507               	.LFB59:
- 508               	.LSM65:
- 509 0000 1F92      		push __zero_reg__	 ;  82	*pushqi/1	[length = 1]
- 510 0002 0F92      		push r0	 ;  83	*pushqi/1	[length = 1]
- 511 0004 0FB6      		in r0,__SREG__	 ;  84	*movqi/4	[length = 1]
- 512 0006 0F92      		push r0	 ;  85	*pushqi/1	[length = 1]
- 513 0008 1124      		clr __zero_reg__	 ;  86	*movqi/7	[length = 1]
- 514 000a 2F93      		push r18	 ;  88	*pushqi/1	[length = 1]
- 515 000c 3F93      		push r19	 ;  89	*pushqi/1	[length = 1]
- 516 000e 4F93      		push r20	 ;  90	*pushqi/1	[length = 1]
- 517 0010 8F93      		push r24	 ;  91	*pushqi/1	[length = 1]
- 518 0012 9F93      		push r25	 ;  92	*pushqi/1	[length = 1]
- 519 0014 AF93      		push r26	 ;  93	*pushqi/1	[length = 1]
- 520 0016 BF93      		push r27	 ;  94	*pushqi/1	[length = 1]
- 521 0018 EF93      		push r30	 ;  95	*pushqi/1	[length = 1]
- 522 001a FF93      		push r31	 ;  96	*pushqi/1	[length = 1]
- 523               	/* prologue: Signal */
- 524               	/* frame size = 0 */
- 525               	.LSM66:
- 526 001c A091 0000 		lds r26,ser_handles	 ;  6	*movhi/2	[length = 4]
- 527 0020 B091 0000 		lds r27,(ser_handles)+1
- 528 0024 9F96      		adiw r26,47	 ;  7	*movqi/4	[length = 3]
- 529 0026 9C91      		ld r25,X
- 530 0028 9F97      		sbiw r26,47
- 531 002a 8091 C000 		lds r24,192	 ;  9	*movqi/4	[length = 2]
- 532 002e 8871      		andi r24,lo8(24)	 ;  10	andqi3/2	[length = 1]
- 533 0030 892B      		or r24,r25	 ;  11	iorqi3/1	[length = 1]
- 534 0032 9F96      		adiw r26,47	 ;  12	*movqi/3	[length = 3]
- 535 0034 8C93      		st X,r24
- 536 0036 9F97      		sbiw r26,47
- 537               	.LSM67:
- 538 0038 4091 C600 		lds r20,198	 ;  14	*movqi/4	[length = 2]
- 539               	.LBB36:
- 540               	.LBB37:
- 541               	.LSM68:
- 542 003c 9796      		adiw r26,39	 ;  15	*movhi/2	[length = 4]
- 543 003e 2D91      		ld r18,X+
- 544 0040 3C91      		ld r19,X
- 545 0042 9897      		sbiw r26,39+1
- 546 0044 9B96      		adiw r26,43	 ;  16	*movhi/2	[length = 4]
- 547 0046 8D91      		ld r24,X+
- 548 0048 9C91      		ld r25,X
- 549 004a 9C97      		sbiw r26,43+1
- 550 004c 2817      		cp r18,r24	 ;  17	cmphi/1	[length = 2]
- 551 004e 3907      		cpc r19,r25
- 552 0050 01F4      		brne .L34	 ;  18	branch	[length = 1]
- 553 0052 9996      		adiw r26,41	 ;  20	*movhi/2	[length = 4]
- 554 0054 2D91      		ld r18,X+
- 555 0056 3C91      		ld r19,X
- 556 0058 9A97      		sbiw r26,41+1
- 557 005a 9D96      		adiw r26,45	 ;  21	*movhi/2	[length = 4]
- 558 005c 8D91      		ld r24,X+
- 559 005e 9C91      		ld r25,X
- 560 0060 9E97      		sbiw r26,45+1
- 561 0062 2817      		cp r18,r24	 ;  22	cmphi/1	[length = 2]
- 562 0064 3907      		cpc r19,r25
- 563 0066 01F0      		breq .L35	 ;  23	branch	[length = 1]
- 564               	.L34:
- 565 0068 9996      		adiw r26,41	 ;  26	*movhi/2	[length = 4]
- 566 006a 2D91      		ld r18,X+
- 567 006c 3C91      		ld r19,X
- 568 006e 9A97      		sbiw r26,41+1
- 569 0070 9796      		adiw r26,39	 ;  27	*movhi/2	[length = 4]
- 570 0072 8D91      		ld r24,X+
- 571 0074 9C91      		ld r25,X
- 572 0076 9897      		sbiw r26,39+1
- 573 0078 0197      		sbiw r24,1	 ;  28	*addhi3/3	[length = 1]
- 574 007a 2817      		cp r18,r24	 ;  29	cmphi/1	[length = 2]
- 575 007c 3907      		cpc r19,r25
- 576 007e 01F4      		brne .L36	 ;  30	branch	[length = 1]
- 577               	.L35:
- 578               	.LBE37:
- 579               	.LBE36:
- 580               	.LSM69:
- 581 0080 9F96      		adiw r26,47	 ;  33	*movqi/4	[length = 3]
- 582 0082 8C91      		ld r24,X
- 583 0084 9F97      		sbiw r26,47
- 584 0086 8160      		ori r24,lo8(1)	 ;  34	iorqi3/2	[length = 1]
- 585 0088 9F96      		adiw r26,47	 ;  35	*movqi/3	[length = 2]
- 586 008a 8C93      		st X,r24
- 587 008c 00C0      		rjmp .L40	 ;  119	jump	[length = 1]
- 588               	.L43:
- 589               	.LBB38:
- 590               	.LBB39:
- 591               	.LSM70:
- 592 008e 9B96      		adiw r26,43	 ;  39	*movhi/2	[length = 4]
- 593 0090 8D91      		ld r24,X+
- 594 0092 9C91      		ld r25,X
- 595 0094 9C97      		sbiw r26,43+1
- 596 0096 00C0      		rjmp .L42	 ;  121	jump	[length = 1]
- 597               	.L41:
- 598               	.LSM71:
- 599 0098 9996      		adiw r26,41	 ;  44	*movhi/2	[length = 4]
- 600 009a 8D91      		ld r24,X+
- 601 009c 9C91      		ld r25,X
- 602 009e 9A97      		sbiw r26,41+1
- 603 00a0 0196      		adiw r24,1	 ;  45	*addhi3/2	[length = 1]
- 604               	.L42:
- 605 00a2 9A96      		adiw r26,41+1	 ;  46	*movhi/3	[length = 4]
- 606 00a4 9C93      		st X,r25
- 607 00a6 8E93      		st -X,r24
- 608 00a8 9997      		sbiw r26,41
- 609 00aa 00C0      		rjmp .L40	 ;  123	jump	[length = 1]
- 610               	.L36:
- 611               	.LSM72:
- 612 00ac 9996      		adiw r26,41	 ;  53	*movhi/2	[length = 4]
- 613 00ae ED91      		ld r30,X+
- 614 00b0 FC91      		ld r31,X
- 615 00b2 9A97      		sbiw r26,41+1
- 616 00b4 4083      		st Z,r20	 ;  54	*movqi/3	[length = 1]
- 617               	.LSM73:
- 618 00b6 9996      		adiw r26,41	 ;  55	*movhi/2	[length = 4]
- 619 00b8 2D91      		ld r18,X+
- 620 00ba 3C91      		ld r19,X
- 621 00bc 9A97      		sbiw r26,41+1
- 622 00be 9D96      		adiw r26,45	 ;  57	*movhi/2	[length = 4]
- 623 00c0 8D91      		ld r24,X+
- 624 00c2 9C91      		ld r25,X
- 625 00c4 9E97      		sbiw r26,45+1
- 626 00c6 2817      		cp r18,r24	 ;  58	cmphi/1	[length = 2]
- 627 00c8 3907      		cpc r19,r25
- 628 00ca 01F4      		brne .L41	 ;  59	branch	[length = 1]
- 629 00cc 00C0      		rjmp .L43	 ;  127	jump	[length = 1]
- 630               	.L40:
- 631               	/* epilogue start */
- 632               	.LBE39:
- 633               	.LBE38:
- 634               	.LSM74:
- 635 00ce FF91      		pop r31	 ;  99	popqi	[length = 1]
- 636 00d0 EF91      		pop r30	 ;  100	popqi	[length = 1]
- 637 00d2 BF91      		pop r27	 ;  101	popqi	[length = 1]
- 638 00d4 AF91      		pop r26	 ;  102	popqi	[length = 1]
- 639 00d6 9F91      		pop r25	 ;  103	popqi	[length = 1]
- 640 00d8 8F91      		pop r24	 ;  104	popqi	[length = 1]
- 641 00da 4F91      		pop r20	 ;  105	popqi	[length = 1]
- 642 00dc 3F91      		pop r19	 ;  106	popqi	[length = 1]
- 643 00de 2F91      		pop r18	 ;  107	popqi	[length = 1]
- 644 00e0 0F90      		pop r0	 ;  108	popqi	[length = 1]
- 645 00e2 0FBE      		out __SREG__,r0	 ;  109	*movqi/3	[length = 1]
- 646 00e4 0F90      		pop r0	 ;  110	popqi	[length = 1]
- 647 00e6 1F90      		pop __zero_reg__	 ;  111	popqi	[length = 1]
- 648 00e8 1895      		reti	 ;  112	return_from_interrupt_epilogue	[length = 1]
- 649               	.LFE59:
- 651               		.section	.text.__vector_17,"ax",@progbits
- 652               	.global	__vector_17
- 654               	__vector_17:
- 655               	.LFB60:
- 656               	.LSM75:
- 657 0000 1F92      		push __zero_reg__	 ;  110	*pushqi/1	[length = 1]
- 658 0002 0F92      		push r0	 ;  111	*pushqi/1	[length = 1]
- 659 0004 0FB6      		in r0,__SREG__	 ;  112	*movqi/4	[length = 1]
- 660 0006 0F92      		push r0	 ;  113	*pushqi/1	[length = 1]
- 661 0008 1124      		clr __zero_reg__	 ;  114	*movqi/7	[length = 1]
- 662 000a 2F93      		push r18	 ;  116	*pushqi/1	[length = 1]
- 663 000c 3F93      		push r19	 ;  117	*pushqi/1	[length = 1]
- 664 000e 8F93      		push r24	 ;  118	*pushqi/1	[length = 1]
- 665 0010 9F93      		push r25	 ;  119	*pushqi/1	[length = 1]
- 666 0012 AF93      		push r26	 ;  120	*pushqi/1	[length = 1]
- 667 0014 BF93      		push r27	 ;  121	*pushqi/1	[length = 1]
- 668 0016 EF93      		push r30	 ;  122	*pushqi/1	[length = 1]
- 669 0018 FF93      		push r31	 ;  123	*pushqi/1	[length = 1]
- 670               	/* prologue: Signal */
- 671               	/* frame size = 0 */
- 672               	.LSM76:
- 673 001a A091 0000 		lds r26,ser_handles+2	 ;  6	*movhi/2	[length = 4]
- 674 001e B091 0000 		lds r27,(ser_handles+2)+1
- 675               	.LBB40:
- 676               	.LBB41:
- 677               	.LSM77:
- 678 0022 9796      		adiw r26,39	 ;  7	*movhi/2	[length = 4]
- 679 0024 2D91      		ld r18,X+
- 680 0026 3C91      		ld r19,X
- 681 0028 9897      		sbiw r26,39+1
- 682 002a 9B96      		adiw r26,43	 ;  8	*movhi/2	[length = 4]
- 683 002c 8D91      		ld r24,X+
- 684 002e 9C91      		ld r25,X
- 685 0030 9C97      		sbiw r26,43+1
- 686 0032 2817      		cp r18,r24	 ;  9	cmphi/1	[length = 2]
- 687 0034 3907      		cpc r19,r25
- 688 0036 01F4      		brne .L45	 ;  10	branch	[length = 1]
- 689 0038 9996      		adiw r26,41	 ;  12	*movhi/2	[length = 4]
- 690 003a 2D91      		ld r18,X+
- 691 003c 3C91      		ld r19,X
- 692 003e 9A97      		sbiw r26,41+1
- 693 0040 9D96      		adiw r26,45	 ;  13	*movhi/2	[length = 4]
- 694 0042 8D91      		ld r24,X+
- 695 0044 9C91      		ld r25,X
- 696 0046 9E97      		sbiw r26,45+1
- 697 0048 2817      		cp r18,r24	 ;  14	cmphi/1	[length = 2]
- 698 004a 3907      		cpc r19,r25
- 699 004c 01F0      		breq .L48	 ;  15	branch	[length = 1]
- 700               	.L45:
- 701 004e 9996      		adiw r26,41	 ;  22	*movhi/2	[length = 4]
- 702 0050 2D91      		ld r18,X+
- 703 0052 3C91      		ld r19,X
- 704 0054 9A97      		sbiw r26,41+1
- 705 0056 9796      		adiw r26,39	 ;  23	*movhi/2	[length = 4]
- 706 0058 8D91      		ld r24,X+
- 707 005a 9C91      		ld r25,X
- 708 005c 9897      		sbiw r26,39+1
- 709 005e 0197      		sbiw r24,1	 ;  25	*addhi3/3	[length = 1]
- 710 0060 2817      		cp r18,r24	 ;  26	cmphi/1	[length = 2]
- 711 0062 3907      		cpc r19,r25
- 712 0064 01F0      		breq .L48	 ;  27	branch	[length = 1]
- 713               	.LBE41:
- 714               	.LBE40:
- 715               	.LSM78:
- 716 0066 8EB5      		in r24,78-32	 ;  37	*movqi/4	[length = 1]
- 717               	.LBB42:
- 718               	.LBB43:
- 719               	.LSM79:
- 720 0068 9996      		adiw r26,41	 ;  38	*movhi/2	[length = 4]
- 721 006a ED91      		ld r30,X+
- 722 006c FC91      		ld r31,X
- 723 006e 9A97      		sbiw r26,41+1
- 724 0070 8083      		st Z,r24	 ;  39	*movqi/3	[length = 1]
- 725               	.LSM80:
- 726 0072 9996      		adiw r26,41	 ;  40	*movhi/2	[length = 4]
- 727 0074 2D91      		ld r18,X+
- 728 0076 3C91      		ld r19,X
- 729 0078 9A97      		sbiw r26,41+1
- 730 007a 9D96      		adiw r26,45	 ;  41	*movhi/2	[length = 4]
- 731 007c 8D91      		ld r24,X+
- 732 007e 9C91      		ld r25,X
- 733 0080 9E97      		sbiw r26,45+1
- 734 0082 2817      		cp r18,r24	 ;  42	cmphi/1	[length = 2]
- 735 0084 3907      		cpc r19,r25
- 736 0086 01F4      		brne .L49	 ;  43	branch	[length = 1]
- 737               	.LSM81:
- 738 0088 9B96      		adiw r26,43	 ;  45	*movhi/2	[length = 4]
- 739 008a 8D91      		ld r24,X+
- 740 008c 9C91      		ld r25,X
- 741 008e 9C97      		sbiw r26,43+1
- 742 0090 00C0      		rjmp .L56	 ;  145	jump	[length = 1]
- 743               	.L49:
- 744               	.LSM82:
- 745 0092 9996      		adiw r26,41	 ;  51	*movhi/2	[length = 4]
- 746 0094 8D91      		ld r24,X+
- 747 0096 9C91      		ld r25,X
- 748 0098 9A97      		sbiw r26,41+1
- 749 009a 0196      		adiw r24,1	 ;  52	*addhi3/2	[length = 1]
- 750               	.L56:
- 751 009c 9A96      		adiw r26,41+1	 ;  53	*movhi/3	[length = 4]
- 752 009e 9C93      		st X,r25
- 753 00a0 8E93      		st -X,r24
- 754 00a2 9997      		sbiw r26,41
- 755               	.L48:
- 756               	.LBE43:
- 757               	.LBE42:
- 758               	.LSM83:
- 759 00a4 A091 0000 		lds r26,ser_handles+2	 ;  57	*movhi/2	[length = 4]
- 760 00a8 B091 0000 		lds r27,(ser_handles+2)+1
- 761               	.LBB44:
- 762               	.LBB45:
- 763               	.LSM84:
- 764 00ac 5F96      		adiw r26,31	 ;  58	*movhi/2	[length = 4]
- 765 00ae 2D91      		ld r18,X+
- 766 00b0 3C91      		ld r19,X
- 767 00b2 9097      		sbiw r26,31+1
- 768 00b4 9196      		adiw r26,33	 ;  59	*movhi/2	[length = 4]
- 769 00b6 8D91      		ld r24,X+
- 770 00b8 9C91      		ld r25,X
- 771 00ba 9297      		sbiw r26,33+1
- 772               	.LBE45:
- 773               	.LBE44:
- 774               	.LSM85:
- 775 00bc 2817      		cp r18,r24	 ;  60	cmphi/1	[length = 2]
- 776 00be 3907      		cpc r19,r25
- 777 00c0 01F0      		breq .L50	 ;  61	branch	[length = 1]
- 778               	.LBB46:
- 779               	.LBB47:
- 780               	.LSM86:
- 781 00c2 5F96      		adiw r26,31	 ;  63	*movhi/2	[length = 4]
- 782 00c4 ED91      		ld r30,X+
- 783 00c6 FC91      		ld r31,X
- 784 00c8 9097      		sbiw r26,31+1
- 785 00ca 9596      		adiw r26,37	 ;  64	*movhi/2	[length = 4]
- 786 00cc 8D91      		ld r24,X+
- 787 00ce 9C91      		ld r25,X
- 788 00d0 9697      		sbiw r26,37+1
- 789 00d2 E817      		cp r30,r24	 ;  65	cmphi/1	[length = 2]
- 790 00d4 F907      		cpc r31,r25
- 791 00d6 01F4      		brne .L51	 ;  66	branch	[length = 1]
- 792               	.LSM87:
- 793 00d8 9396      		adiw r26,35	 ;  68	*movhi/2	[length = 4]
- 794 00da 8D91      		ld r24,X+
- 795 00dc 9C91      		ld r25,X
- 796 00de 9497      		sbiw r26,35+1
- 797 00e0 9096      		adiw r26,31+1	 ;  69	*movhi/3	[length = 4]
- 798 00e2 9C93      		st X,r25
- 799 00e4 8E93      		st -X,r24
- 800 00e6 5F97      		sbiw r26,31
- 801               	.LSM88:
- 802 00e8 8081      		ld r24,Z	 ;  71	*movqi/4	[length = 1]
- 803 00ea 00C0      		rjmp .L52	 ;  147	jump	[length = 1]
- 804               	.L51:
- 805               	.LSM89:
- 806 00ec 5F96      		adiw r26,31	 ;  76	*movhi/2	[length = 4]
- 807 00ee ED91      		ld r30,X+
- 808 00f0 FC91      		ld r31,X
- 809 00f2 9097      		sbiw r26,31+1
- 810 00f4 8191      		ld r24,Z+	 ;  77	*movqi/4	[length = 1]
- 811 00f6 9096      		adiw r26,31+1	 ;  79	*movhi/3	[length = 4]
- 812 00f8 FC93      		st X,r31
- 813 00fa EE93      		st -X,r30
- 814 00fc 5F97      		sbiw r26,31
- 815               	.L52:
- 816               	.LBE47:
- 817               	.LBE46:
- 818               	.LSM90:
- 819 00fe 8EBD      		out 78-32,r24	 ;  83	*movqi/3	[length = 1]
- 820 0100 00C0      		rjmp .L54	 ;  149	jump	[length = 1]
- 821               	.L50:
- 822               	.LSM91:
- 823 0102 1092 0000 		sts UARTDescs+21,__zero_reg__	 ;  89	*movqi/3	[length = 2]
- 824               	.L54:
- 825               	/* epilogue start */
- 826               	.LSM92:
- 827 0106 FF91      		pop r31	 ;  126	popqi	[length = 1]
- 828 0108 EF91      		pop r30	 ;  127	popqi	[length = 1]
- 829 010a BF91      		pop r27	 ;  128	popqi	[length = 1]
- 830 010c AF91      		pop r26	 ;  129	popqi	[length = 1]
- 831 010e 9F91      		pop r25	 ;  130	popqi	[length = 1]
- 832 0110 8F91      		pop r24	 ;  131	popqi	[length = 1]
- 833 0112 3F91      		pop r19	 ;  132	popqi	[length = 1]
- 834 0114 2F91      		pop r18	 ;  133	popqi	[length = 1]
- 835 0116 0F90      		pop r0	 ;  134	popqi	[length = 1]
- 836 0118 0FBE      		out __SREG__,r0	 ;  135	*movqi/3	[length = 1]
- 837 011a 0F90      		pop r0	 ;  136	popqi	[length = 1]
- 838 011c 1F90      		pop __zero_reg__	 ;  137	popqi	[length = 1]
- 839 011e 1895      		reti	 ;  138	return_from_interrupt_epilogue	[length = 1]
- 840               	.LFE60:
- 842               		.section	.text.ser_hw_getdesc,"ax",@progbits
- 843               	.global	ser_hw_getdesc
- 845               	ser_hw_getdesc:
- 846               	.LFB57:
- 847               	.LSM93:
- 848               	.LVL32:
- 849 0000 CF93      		push r28	 ;  43	*pushqi/1	[length = 1]
- 850 0002 DF93      		push r29	 ;  44	*pushqi/1	[length = 1]
- 851               	/* prologue: function */
- 852               	/* frame size = 0 */
- 853 0004 EC01      		movw r28,r24	 ;  2	*movhi/1	[length = 1]
- 854               	.LSM94:
- 855 0006 8230      		cpi r24,2	 ;  6	cmphi/2	[length = 2]
- 856 0008 9105      		cpc r25,__zero_reg__
- 857 000a 04F0      		brlt .L58	 ;  7	branch	[length = 1]
- 858 000c 80E0      		ldi r24,lo8(__c.2026)	 ;  12	*movhi/4	[length = 2]
- 859 000e 90E0      		ldi r25,hi8(__c.2026)
- 860               	.LVL33:
- 861 0010 60E0      		ldi r22,lo8(__c.2028)	 ;  13	*movhi/4	[length = 2]
- 862 0012 70E0      		ldi r23,hi8(__c.2028)
- 863 0014 47E9      		ldi r20,lo8(663)	 ;  14	*movhi/4	[length = 2]
- 864 0016 52E0      		ldi r21,hi8(663)
- 865 0018 0E94 0000 		call __bassert_P	 ;  15	call_value_insn/3	[length = 2]
- 866               	.LVL34:
- 867               	.L58:
- 868 001c 8BE0      		ldi r24,lo8(11)	 ;  18	*movhi/4	[length = 2]
- 869 001e 90E0      		ldi r25,hi8(11)
- 870 0020 C89F      		mul r28,r24	 ;  19	*mulhi3_enh	[length = 7]
- 871 0022 9001      		movw r18,r0
- 872 0024 C99F      		mul r28,r25
- 873 0026 300D      		add r19,r0
- 874 0028 D89F      		mul r29,r24
- 875 002a 300D      		add r19,r0
- 876 002c 1124      		clr r1
- 877 002e 2050      		subi r18,lo8(-(UARTDescs))	 ;  21	*addhi3/4	[length = 2]
- 878 0030 3040      		sbci r19,hi8(-(UARTDescs))
- 879               	.LSM95:
- 880 0032 C901      		movw r24,r18	 ;  51	*movhi/1	[length = 1]
- 881               	/* epilogue start */
- 882 0034 DF91      		pop r29	 ;  47	popqi	[length = 1]
- 883 0036 CF91      		pop r28	 ;  48	popqi	[length = 1]
- 884               	.LVL35:
- 885 0038 0895      		ret	 ;  49	return_from_epilogue	[length = 1]
- 886               	.LFE57:
- 888               		.section	.data.UARTDescs,"aw",@progbits
- 891               	UARTDescs:
- 892 0000 0000      		.word	UART0_VT
- 893 0002 0000      		.word	uart0_txbuffer
- 894 0004 0000      		.word	uart0_rxbuffer
- 895 0006 2000      		.word	32
- 896 0008 2000      		.word	32
- 897 000a 00        		.byte	0
- 898 000b 0000      		.word	SPI_VT
- 899 000d 0000      		.word	spi_txbuffer
- 900 000f 0000      		.word	spi_rxbuffer
- 901 0011 2000      		.word	32
- 902 0013 2000      		.word	32
- 903 0015 00        		.byte	0
- 904               		.section	.progmem.data,"a",@progbits
- 907               	__c.2028:
- 908 0000 6265 7274 		.string	"bertos/cpu/avr/drv/ser_avr.c"
- 908      6F73 2F63 
- 908      7075 2F61 
- 908      7672 2F64 
- 908      7276 2F73 
- 911               	__c.2026:
- 912 001d 756E 6974 		.string	"unit < SER_CNT"
- 912      203C 2053 
- 912      4552 5F43 
- 912      4E54 00
- 913               		.section	.rodata.UART0_VT,"a",@progbits
- 916               	UART0_VT:
- 917 0000 0000      		.word	gs(uart0_init)
- 918 0002 0000      		.word	gs(uart0_cleanup)
- 919 0004 0000      		.word	gs(uart0_setbaudrate)
- 920 0006 0000      		.word	gs(uart0_setparity)
- 921 0008 0000      		.word	gs(uart0_enabletxirq)
- 922 000a 0000      		.word	gs(tx_sending)
- 923               		.section	.bss.uart0_txbuffer,"aw",@nobits
- 926               	uart0_txbuffer:
- 927 0000 0000 0000 		.skip 32,0
- 927      0000 0000 
- 927      0000 0000 
- 927      0000 0000 
- 927      0000 0000 
- 928               		.section	.bss.uart0_rxbuffer,"aw",@nobits
- 931               	uart0_rxbuffer:
- 932 0000 0000 0000 		.skip 32,0
- 932      0000 0000 
- 932      0000 0000 
- 932      0000 0000 
- 932      0000 0000 
- 933               		.section	.rodata.SPI_VT,"a",@progbits
- 936               	SPI_VT:
- 937 0000 0000      		.word	gs(spi_init)
- 938 0002 0000      		.word	gs(spi_cleanup)
- 939 0004 0000      		.word	gs(spi_setbaudrate)
- 940 0006 0000      		.word	gs(spi_setparity)
- 941 0008 0000      		.word	gs(spi_starttx)
- 942 000a 0000      		.word	gs(tx_sending)
- 943               		.section	.bss.spi_txbuffer,"aw",@nobits
- 946               	spi_txbuffer:
- 947 0000 0000 0000 		.skip 32,0
- 947      0000 0000 
- 947      0000 0000 
- 947      0000 0000 
- 947      0000 0000 
- 948               		.section	.bss.spi_rxbuffer,"aw",@nobits
- 951               	spi_rxbuffer:
- 952 0000 0000 0000 		.skip 32,0
- 952      0000 0000 
- 952      0000 0000 
- 952      0000 0000 
- 952      0000 0000 
- 1089               	.Letext0:
+ 193               	.LVL16:
+ 194               	/* #NOAPP */
+ 195 0010 229A      		sbi 36-32,2	 ;  23	*sbi	[length = 1]
+ 196               	/* #APP */
+ 197               	 ;  485 "bertos/cpu/avr/drv/ser_avr.c" 1
+ 198 0012 8FBF      		out __SREG__,r24
+ 199               	 ;  0 "" 2
+ 200               	/* #NOAPP */
+ 201               	.LBE24:
+ 202               	.LBB25:
+ 486:bertos/cpu/avr/drv/ser_avr.c **** 
+ 487:bertos/cpu/avr/drv/ser_avr.c **** 	ATOMIC(SPI_DDR &= ~BV(SPI_MISO_BIT));
+ 203               		.loc 1 487 0
+ 204               	/* #APP */
+ 205               	 ;  487 "bertos/cpu/avr/drv/ser_avr.c" 1
+ 206 0014 8FB7      		in r24,__SREG__
+ 207 0016 F894      		cli
+ 208               	 ;  0 "" 2
+ 209               	.LVL17:
+ 210               	/* #NOAPP */
+ 211 0018 2498      		cbi 36-32,4	 ;  32	*cbi	[length = 1]
+ 212               	/* #APP */
+ 213               	 ;  487 "bertos/cpu/avr/drv/ser_avr.c" 1
+ 214 001a 8FBF      		out __SREG__,r24
+ 215               	 ;  0 "" 2
+ 216               	/* #NOAPP */
+ 217               	.LBE25:
+ 488:bertos/cpu/avr/drv/ser_avr.c **** 	/* Enable SPI, IRQ on, Master */
+ 489:bertos/cpu/avr/drv/ser_avr.c **** 	SPCR = BV(SPE) | BV(SPIE) | BV(MSTR);
+ 218               		.loc 1 489 0
+ 219 001c 80ED      		ldi r24,lo8(-48)	 ;  35	*movqi/2	[length = 1]
+ 220 001e 8CBD      		out 76-32,r24	 ;  36	*movqi/3	[length = 1]
+ 490:bertos/cpu/avr/drv/ser_avr.c **** 
+ 491:bertos/cpu/avr/drv/ser_avr.c **** 	/* Set data order */
+ 492:bertos/cpu/avr/drv/ser_avr.c **** 	#if CONFIG_SPI_DATA_ORDER == SER_LSB_FIRST
+ 493:bertos/cpu/avr/drv/ser_avr.c **** 		SPCR |= BV(DORD);
+ 494:bertos/cpu/avr/drv/ser_avr.c **** 	#endif
+ 495:bertos/cpu/avr/drv/ser_avr.c **** 
+ 496:bertos/cpu/avr/drv/ser_avr.c **** 	/* Set SPI clock rate */
+ 497:bertos/cpu/avr/drv/ser_avr.c **** 	#if CONFIG_SPI_CLOCK_DIV == 128
+ 498:bertos/cpu/avr/drv/ser_avr.c **** 		SPCR |= (BV(SPR1) | BV(SPR0));
+ 499:bertos/cpu/avr/drv/ser_avr.c **** 	#elif (CONFIG_SPI_CLOCK_DIV == 64 || CONFIG_SPI_CLOCK_DIV == 32)
+ 500:bertos/cpu/avr/drv/ser_avr.c **** 		SPCR |= BV(SPR1);
+ 501:bertos/cpu/avr/drv/ser_avr.c **** 	#elif (CONFIG_SPI_CLOCK_DIV == 16 || CONFIG_SPI_CLOCK_DIV == 8)
+ 502:bertos/cpu/avr/drv/ser_avr.c **** 		SPCR |= BV(SPR0);
+ 221               		.loc 1 502 0
+ 222 0020 8CB5      		in r24,76-32	 ;  38	*movqi/4	[length = 1]
+ 223 0022 8160      		ori r24,lo8(1)	 ;  39	iorqi3/2	[length = 1]
+ 224 0024 8CBD      		out 76-32,r24	 ;  41	*movqi/3	[length = 1]
+ 503:bertos/cpu/avr/drv/ser_avr.c **** 	#elif (CONFIG_SPI_CLOCK_DIV == 4 || CONFIG_SPI_CLOCK_DIV == 2)
+ 504:bertos/cpu/avr/drv/ser_avr.c **** 		// SPR0 & SDPR1 both at 0
+ 505:bertos/cpu/avr/drv/ser_avr.c **** 	#else
+ 506:bertos/cpu/avr/drv/ser_avr.c **** 		#error Unsupported SPI clock division factor.
+ 507:bertos/cpu/avr/drv/ser_avr.c **** 	#endif
+ 508:bertos/cpu/avr/drv/ser_avr.c **** 
+ 509:bertos/cpu/avr/drv/ser_avr.c **** 	/* Set SPI2X bit (spi double frequency) */
+ 510:bertos/cpu/avr/drv/ser_avr.c **** 	#if (CONFIG_SPI_CLOCK_DIV == 128 || CONFIG_SPI_CLOCK_DIV == 64 \
+ 511:bertos/cpu/avr/drv/ser_avr.c **** 	  || CONFIG_SPI_CLOCK_DIV == 16 || CONFIG_SPI_CLOCK_DIV == 4)
+ 512:bertos/cpu/avr/drv/ser_avr.c **** 		SPSR &= ~BV(SPI2X);
+ 225               		.loc 1 512 0
+ 226 0026 8DB5      		in r24,77-32	 ;  43	*movqi/4	[length = 1]
+ 227 0028 8E7F      		andi r24,lo8(-2)	 ;  44	andqi3/2	[length = 1]
+ 228 002a 8DBD      		out 77-32,r24	 ;  46	*movqi/3	[length = 1]
+ 229               	/* epilogue start */
+ 513:bertos/cpu/avr/drv/ser_avr.c **** 	#elif (CONFIG_SPI_CLOCK_DIV == 32 || CONFIG_SPI_CLOCK_DIV == 8 || CONFIG_SPI_CLOCK_DIV == 2)
+ 514:bertos/cpu/avr/drv/ser_avr.c **** 		SPSR |= BV(SPI2X);
+ 515:bertos/cpu/avr/drv/ser_avr.c **** 	#else
+ 516:bertos/cpu/avr/drv/ser_avr.c **** 		#error Unsupported SPI clock division factor.
+ 517:bertos/cpu/avr/drv/ser_avr.c **** 	#endif
+ 518:bertos/cpu/avr/drv/ser_avr.c **** 
+ 519:bertos/cpu/avr/drv/ser_avr.c **** 	/* Set clock polarity */
+ 520:bertos/cpu/avr/drv/ser_avr.c **** 	#if CONFIG_SPI_CLOCK_POL == 1
+ 521:bertos/cpu/avr/drv/ser_avr.c **** 		SPCR |= BV(CPOL);
+ 522:bertos/cpu/avr/drv/ser_avr.c **** 	#endif
+ 523:bertos/cpu/avr/drv/ser_avr.c **** 
+ 524:bertos/cpu/avr/drv/ser_avr.c **** 	/* Set clock phase */
+ 525:bertos/cpu/avr/drv/ser_avr.c **** 	#if CONFIG_SPI_CLOCK_PHASE == 1
+ 526:bertos/cpu/avr/drv/ser_avr.c **** 		SPCR |= BV(CPHA);
+ 527:bertos/cpu/avr/drv/ser_avr.c **** 	#endif
+ 528:bertos/cpu/avr/drv/ser_avr.c **** 	SER_SPI_BUS_TXINIT;
+ 529:bertos/cpu/avr/drv/ser_avr.c **** 
+ 530:bertos/cpu/avr/drv/ser_avr.c **** 	SER_STROBE_INIT;
+ 531:bertos/cpu/avr/drv/ser_avr.c **** }
+ 230               		.loc 1 531 0
+ 231 002c 0895      		ret	 ;  52	return	[length = 1]
+ 232               		.cfi_endproc
+ 233               	.LFE49:
+ 235               		.section	.text.spi_cleanup,"ax",@progbits
+ 237               	spi_cleanup:
+ 238               	.LFB50:
+ 532:bertos/cpu/avr/drv/ser_avr.c **** 
+ 533:bertos/cpu/avr/drv/ser_avr.c **** static void spi_cleanup(UNUSED_ARG(struct SerialHardware *, _hw))
+ 534:bertos/cpu/avr/drv/ser_avr.c **** {
+ 239               		.loc 1 534 0
+ 240               		.cfi_startproc
+ 241               	.LVL18:
+ 242               	/* prologue: function */
+ 243               	/* frame size = 0 */
+ 244               	/* stack size = 0 */
+ 245               	.L__stack_usage = 0
+ 535:bertos/cpu/avr/drv/ser_avr.c **** 	SPCR = 0;
+ 246               		.loc 1 535 0
+ 247 0000 1CBC      		out 76-32,__zero_reg__	 ;  7	*movqi/3	[length = 1]
+ 248               	.LBB26:
+ 536:bertos/cpu/avr/drv/ser_avr.c **** 
+ 537:bertos/cpu/avr/drv/ser_avr.c **** 	SER_SPI_BUS_TXCLOSE;
+ 538:bertos/cpu/avr/drv/ser_avr.c **** 
+ 539:bertos/cpu/avr/drv/ser_avr.c **** 	/* Set all pins as inputs */
+ 540:bertos/cpu/avr/drv/ser_avr.c **** 	ATOMIC(SPI_DDR &= ~(BV(SPI_MISO_BIT) | BV(SPI_MOSI_BIT) | BV(SPI_SCK_BIT) | BV(SPI_SS_BIT)));
+ 249               		.loc 1 540 0
+ 250               	/* #APP */
+ 251               	 ;  540 "bertos/cpu/avr/drv/ser_avr.c" 1
+ 252 0002 9FB7      		in r25,__SREG__
+ 253 0004 F894      		cli
+ 254               	 ;  0 "" 2
+ 255               	.LVL19:
+ 256               	/* #NOAPP */
+ 257 0006 84B1      		in r24,36-32	 ;  12	*movqi/4	[length = 1]
+ 258               	.LVL20:
+ 259 0008 837C      		andi r24,lo8(-61)	 ;  13	andqi3/2	[length = 1]
+ 260 000a 84B9      		out 36-32,r24	 ;  15	*movqi/3	[length = 1]
+ 261               	/* #APP */
+ 262               	 ;  540 "bertos/cpu/avr/drv/ser_avr.c" 1
+ 263 000c 9FBF      		out __SREG__,r25
+ 264               	 ;  0 "" 2
+ 265               	/* epilogue start */
+ 266               	/* #NOAPP */
+ 267               	.LBE26:
+ 541:bertos/cpu/avr/drv/ser_avr.c **** }
+ 268               		.loc 1 541 0
+ 269 000e 0895      		ret	 ;  22	return	[length = 1]
+ 270               		.cfi_endproc
+ 271               	.LFE50:
+ 273               		.section	.text.spi_setbaudrate,"ax",@progbits
+ 275               	spi_setbaudrate:
+ 276               	.LFB52:
+ 542:bertos/cpu/avr/drv/ser_avr.c **** 
+ 543:bertos/cpu/avr/drv/ser_avr.c **** static void spi_starttx(struct SerialHardware *_hw)
+ 544:bertos/cpu/avr/drv/ser_avr.c **** {
+ 545:bertos/cpu/avr/drv/ser_avr.c **** 	struct AvrSerial *hw = (struct AvrSerial *)_hw;
+ 546:bertos/cpu/avr/drv/ser_avr.c **** 
+ 547:bertos/cpu/avr/drv/ser_avr.c **** 	cpu_flags_t flags;
+ 548:bertos/cpu/avr/drv/ser_avr.c **** 	IRQ_SAVE_DISABLE(flags);
+ 549:bertos/cpu/avr/drv/ser_avr.c **** 
+ 550:bertos/cpu/avr/drv/ser_avr.c **** 	/* Send data only if the SPI is not already transmitting */
+ 551:bertos/cpu/avr/drv/ser_avr.c **** 	if (!hw->sending && !fifo_isempty(&ser_handles[SER_SPI]->txfifo))
+ 552:bertos/cpu/avr/drv/ser_avr.c **** 	{
+ 553:bertos/cpu/avr/drv/ser_avr.c **** 		hw->sending = true;
+ 554:bertos/cpu/avr/drv/ser_avr.c **** 		SPDR = fifo_pop(&ser_handles[SER_SPI]->txfifo);
+ 555:bertos/cpu/avr/drv/ser_avr.c **** 	}
+ 556:bertos/cpu/avr/drv/ser_avr.c **** 
+ 557:bertos/cpu/avr/drv/ser_avr.c **** 	IRQ_RESTORE(flags);
+ 558:bertos/cpu/avr/drv/ser_avr.c **** }
+ 559:bertos/cpu/avr/drv/ser_avr.c **** 
+ 560:bertos/cpu/avr/drv/ser_avr.c **** static void spi_setbaudrate(
+ 561:bertos/cpu/avr/drv/ser_avr.c **** 	UNUSED_ARG(struct SerialHardware *, _hw),
+ 562:bertos/cpu/avr/drv/ser_avr.c **** 	UNUSED_ARG(unsigned long, rate))
+ 563:bertos/cpu/avr/drv/ser_avr.c **** {
+ 277               		.loc 1 563 0
+ 278               		.cfi_startproc
+ 279               	.LVL21:
+ 280               	/* prologue: function */
+ 281               	/* frame size = 0 */
+ 282               	/* stack size = 0 */
+ 283               	.L__stack_usage = 0
+ 284               	/* epilogue start */
+ 564:bertos/cpu/avr/drv/ser_avr.c **** 	// nop
+ 565:bertos/cpu/avr/drv/ser_avr.c **** }
+ 285               		.loc 1 565 0
+ 286 0000 0895      		ret	 ;  12	return	[length = 1]
+ 287               		.cfi_endproc
+ 288               	.LFE52:
+ 290               		.section	.text.spi_setparity,"ax",@progbits
+ 292               	spi_setparity:
+ 293               	.LFB53:
+ 566:bertos/cpu/avr/drv/ser_avr.c **** 
+ 567:bertos/cpu/avr/drv/ser_avr.c **** static void spi_setparity(UNUSED_ARG(struct SerialHardware *, _hw), UNUSED_ARG(int, parity))
+ 568:bertos/cpu/avr/drv/ser_avr.c **** {
+ 294               		.loc 1 568 0
+ 295               		.cfi_startproc
+ 296               	.LVL22:
+ 297               	/* prologue: function */
+ 298               	/* frame size = 0 */
+ 299               	/* stack size = 0 */
+ 300               	.L__stack_usage = 0
+ 301               	/* epilogue start */
+ 569:bertos/cpu/avr/drv/ser_avr.c **** 	// nop
+ 570:bertos/cpu/avr/drv/ser_avr.c **** }
+ 302               		.loc 1 570 0
+ 303 0000 0895      		ret	 ;  12	return	[length = 1]
+ 304               		.cfi_endproc
+ 305               	.LFE53:
+ 307               		.section	.text.tx_sending,"ax",@progbits
+ 309               	tx_sending:
+ 310               	.LFB54:
+ 571:bertos/cpu/avr/drv/ser_avr.c **** 
+ 572:bertos/cpu/avr/drv/ser_avr.c **** static bool tx_sending(struct SerialHardware* _hw)
+ 573:bertos/cpu/avr/drv/ser_avr.c **** {
+ 311               		.loc 1 573 0
+ 312               		.cfi_startproc
+ 313               	.LVL23:
+ 314               	/* prologue: function */
+ 315               	/* frame size = 0 */
+ 316               	/* stack size = 0 */
+ 317               	.L__stack_usage = 0
+ 574:bertos/cpu/avr/drv/ser_avr.c **** 	struct AvrSerial *hw = (struct AvrSerial *)_hw;
+ 575:bertos/cpu/avr/drv/ser_avr.c **** 	return hw->sending;
+ 318               		.loc 1 575 0
+ 319 0000 FC01      		movw r30,r24	 ;  19	*movhi/1	[length = 1]
+ 320 0002 8285      		ldd r24,Z+10	 ;  7	*movqi/4	[length = 1]
+ 321               	.LVL24:
+ 322               	/* epilogue start */
+ 576:bertos/cpu/avr/drv/ser_avr.c **** }
+ 323               		.loc 1 576 0
+ 324 0004 0895      		ret	 ;  22	return	[length = 1]
+ 325               		.cfi_endproc
+ 326               	.LFE54:
+ 328               		.section	.text.spi_starttx,"ax",@progbits
+ 330               	spi_starttx:
+ 331               	.LFB51:
+ 544:bertos/cpu/avr/drv/ser_avr.c **** {
+ 332               		.loc 1 544 0
+ 333               		.cfi_startproc
+ 334               	.LVL25:
+ 335               	/* prologue: function */
+ 336               	/* frame size = 0 */
+ 337               	/* stack size = 0 */
+ 338               	.L__stack_usage = 0
+ 339 0000 DC01      		movw r26,r24	 ;  2	*movhi/1	[length = 1]
+ 340               	.LVL26:
+ 548:bertos/cpu/avr/drv/ser_avr.c **** 	IRQ_SAVE_DISABLE(flags);
+ 341               		.loc 1 548 0
+ 342               	/* #APP */
+ 343               	 ;  548 "bertos/cpu/avr/drv/ser_avr.c" 1
+ 344 0002 4FB7      		in r20,__SREG__
+ 345 0004 F894      		cli
+ 346               	 ;  0 "" 2
+ 347               	.LVL27:
+ 551:bertos/cpu/avr/drv/ser_avr.c **** 	if (!hw->sending && !fifo_isempty(&ser_handles[SER_SPI]->txfifo))
+ 348               		.loc 1 551 0
+ 349               	/* #NOAPP */
+ 350 0006 1A96      		adiw r26,10	 ;  10	*movqi/4	[length = 3]
+ 351 0008 8C91      		ld r24,X
+ 352 000a 1A97      		sbiw r26,10
+ 353               	.LVL28:
+ 354 000c 8823      		tst r24	 ;  11	*cmpqi/1	[length = 1]
+ 355 000e 01F4      		brne .L13	 ;  12	branch	[length = 1]
+ 551:bertos/cpu/avr/drv/ser_avr.c **** 	if (!hw->sending && !fifo_isempty(&ser_handles[SER_SPI]->txfifo))
+ 356               		.loc 1 551 0 is_stmt 0 discriminator 1
+ 357 0010 E091 0000 		lds r30,ser_handles+2	 ;  15	*movhi/2	[length = 4]
+ 358 0014 F091 0000 		lds r31,ser_handles+2+1
+ 359               	.LVL29:
+ 360               	.LBB27:
+ 361               	.LBB28:
+ 362               		.file 2 "bertos/struct/fifobuf.h"
+   1:bertos/struct/fifobuf.h **** /**
+   2:bertos/struct/fifobuf.h ****  * \file
+   3:bertos/struct/fifobuf.h ****  * <!--
+   4:bertos/struct/fifobuf.h ****  * This file is part of BeRTOS.
+   5:bertos/struct/fifobuf.h ****  *
+   6:bertos/struct/fifobuf.h ****  * Bertos is free software; you can redistribute it and/or modify
+   7:bertos/struct/fifobuf.h ****  * it under the terms of the GNU General Public License as published by
+   8:bertos/struct/fifobuf.h ****  * the Free Software Foundation; either version 2 of the License, or
+   9:bertos/struct/fifobuf.h ****  * (at your option) any later version.
+  10:bertos/struct/fifobuf.h ****  *
+  11:bertos/struct/fifobuf.h ****  * This program is distributed in the hope that it will be useful,
+  12:bertos/struct/fifobuf.h ****  * but WITHOUT ANY WARRANTY; without even the implied warranty of
+  13:bertos/struct/fifobuf.h ****  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  14:bertos/struct/fifobuf.h ****  * GNU General Public License for more details.
+  15:bertos/struct/fifobuf.h ****  *
+  16:bertos/struct/fifobuf.h ****  * You should have received a copy of the GNU General Public License
+  17:bertos/struct/fifobuf.h ****  * along with this program; if not, write to the Free Software
+  18:bertos/struct/fifobuf.h ****  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+  19:bertos/struct/fifobuf.h ****  *
+  20:bertos/struct/fifobuf.h ****  * As a special exception, you may use this file as part of a free software
+  21:bertos/struct/fifobuf.h ****  * library without restriction.  Specifically, if other files instantiate
+  22:bertos/struct/fifobuf.h ****  * templates or use macros or inline functions from this file, or you compile
+  23:bertos/struct/fifobuf.h ****  * this file and link it with other files to produce an executable, this
+  24:bertos/struct/fifobuf.h ****  * file does not by itself cause the resulting executable to be covered by
+  25:bertos/struct/fifobuf.h ****  * the GNU General Public License.  This exception does not however
+  26:bertos/struct/fifobuf.h ****  * invalidate any other reasons why the executable file might be covered by
+  27:bertos/struct/fifobuf.h ****  * the GNU General Public License.
+  28:bertos/struct/fifobuf.h ****  *
+  29:bertos/struct/fifobuf.h ****  * Copyright 2003, 2004 Develer S.r.l. (http://www.develer.com/)
+  30:bertos/struct/fifobuf.h ****  * Copyright 2001, 2008 Bernie Innocenti <bernie@codewiz.org>
+  31:bertos/struct/fifobuf.h ****  * -->
+  32:bertos/struct/fifobuf.h ****  *
+  33:bertos/struct/fifobuf.h ****  * \brief General pourpose FIFO buffer implemented with a ring buffer
+  34:bertos/struct/fifobuf.h ****  *
+  35:bertos/struct/fifobuf.h ****  * \li \c begin points to the first buffer element;
+  36:bertos/struct/fifobuf.h ****  * \li \c end points to the last buffer element (unlike the STL convention);
+  37:bertos/struct/fifobuf.h ****  * \li \c head points to the element to be extracted next;
+  38:bertos/struct/fifobuf.h ****  * \li \c tail points to the location following the last insertion;
+  39:bertos/struct/fifobuf.h ****  * \li when any of the pointers advances beyond \c end, it is reset
+  40:bertos/struct/fifobuf.h ****  *     back to \c begin.
+  41:bertos/struct/fifobuf.h ****  *
+  42:bertos/struct/fifobuf.h ****  * \code
+  43:bertos/struct/fifobuf.h ****  *
+  44:bertos/struct/fifobuf.h ****  *  +-----------------------------------+
+  45:bertos/struct/fifobuf.h ****  *  |  empty  |   valid data   |  empty |
+  46:bertos/struct/fifobuf.h ****  *  +-----------------------------------+
+  47:bertos/struct/fifobuf.h ****  *  ^         ^                ^        ^
+  48:bertos/struct/fifobuf.h ****  *  begin    head             tail     end
+  49:bertos/struct/fifobuf.h ****  *
+  50:bertos/struct/fifobuf.h ****  * \endcode
+  51:bertos/struct/fifobuf.h ****  *
+  52:bertos/struct/fifobuf.h ****  * The buffer is EMPTY when \c head and \c tail point to the same location:
+  53:bertos/struct/fifobuf.h ****  *		\code head == tail \endcode
+  54:bertos/struct/fifobuf.h ****  *
+  55:bertos/struct/fifobuf.h ****  * The buffer is FULL when \c tail points to the location immediately
+  56:bertos/struct/fifobuf.h ****  * after \c head:
+  57:bertos/struct/fifobuf.h ****  *		\code tail == head - 1 \endcode
+  58:bertos/struct/fifobuf.h ****  *
+  59:bertos/struct/fifobuf.h ****  * The buffer is also FULL when \c tail points to the last buffer
+  60:bertos/struct/fifobuf.h ****  * location and head points to the first one:
+  61:bertos/struct/fifobuf.h ****  *		\code head == begin && tail == end \endcode
+  62:bertos/struct/fifobuf.h ****  *
+  63:bertos/struct/fifobuf.h ****  * \version $Id: fifobuf.h 2506 2009-04-15 08:29:07Z duplo $
+  64:bertos/struct/fifobuf.h ****  * \author Bernie Innocenti <bernie@codewiz.org>
+  65:bertos/struct/fifobuf.h ****  */
+  66:bertos/struct/fifobuf.h **** 
+  67:bertos/struct/fifobuf.h **** #ifndef STRUCT_FIFO_H
+  68:bertos/struct/fifobuf.h **** #define STRUCT_FIFO_H
+  69:bertos/struct/fifobuf.h **** 
+  70:bertos/struct/fifobuf.h **** #include <cpu/types.h>
+  71:bertos/struct/fifobuf.h **** #include <cpu/irq.h>
+  72:bertos/struct/fifobuf.h **** #include <cfg/debug.h>
+  73:bertos/struct/fifobuf.h **** 
+  74:bertos/struct/fifobuf.h **** typedef struct FIFOBuffer
+  75:bertos/struct/fifobuf.h **** {
+  76:bertos/struct/fifobuf.h **** 	unsigned char * volatile head;
+  77:bertos/struct/fifobuf.h **** 	unsigned char * volatile tail;
+  78:bertos/struct/fifobuf.h **** 	unsigned char *begin;
+  79:bertos/struct/fifobuf.h **** 	unsigned char *end;
+  80:bertos/struct/fifobuf.h **** } FIFOBuffer;
+  81:bertos/struct/fifobuf.h **** 
+  82:bertos/struct/fifobuf.h **** 
+  83:bertos/struct/fifobuf.h **** #define ASSERT_VALID_FIFO(fifo) \
+  84:bertos/struct/fifobuf.h **** 	ATOMIC( \
+  85:bertos/struct/fifobuf.h **** 		ASSERT((fifo)->head >= (fifo)->begin); \
+  86:bertos/struct/fifobuf.h **** 		ASSERT((fifo)->head <= (fifo)->end); \
+  87:bertos/struct/fifobuf.h **** 		ASSERT((fifo)->tail >= (fifo)->begin); \
+  88:bertos/struct/fifobuf.h **** 		ASSERT((fifo)->tail <= (fifo)->end); \
+  89:bertos/struct/fifobuf.h **** 	)
+  90:bertos/struct/fifobuf.h **** 
+  91:bertos/struct/fifobuf.h **** 
+  92:bertos/struct/fifobuf.h **** /**
+  93:bertos/struct/fifobuf.h ****  * Check whether the fifo is empty
+  94:bertos/struct/fifobuf.h ****  *
+  95:bertos/struct/fifobuf.h ****  * \note Calling fifo_isempty() is safe while a concurrent
+  96:bertos/struct/fifobuf.h ****  *       execution context is calling fifo_push() or fifo_pop()
+  97:bertos/struct/fifobuf.h ****  *       only if the CPU can atomically update a pointer
+  98:bertos/struct/fifobuf.h ****  *       (which the AVR and other 8-bit processors can't do).
+  99:bertos/struct/fifobuf.h ****  *
+ 100:bertos/struct/fifobuf.h ****  * \sa fifo_isempty_locked
+ 101:bertos/struct/fifobuf.h ****  */
+ 102:bertos/struct/fifobuf.h **** INLINE bool fifo_isempty(const FIFOBuffer *fb)
+ 103:bertos/struct/fifobuf.h **** {
+ 104:bertos/struct/fifobuf.h **** 	//ASSERT_VALID_FIFO(fb);
+ 105:bertos/struct/fifobuf.h **** 	return fb->head == fb->tail;
+ 363               		.loc 2 105 0 is_stmt 1 discriminator 1
+ 364 0018 278D      		ldd r18,Z+31	 ;  18	*movhi/2	[length = 2]
+ 365 001a 30A1      		ldd r19,Z+32
+ 366 001c 81A1      		ldd r24,Z+33	 ;  19	*movhi/2	[length = 2]
+ 367 001e 92A1      		ldd r25,Z+34
+ 368               	.LBE28:
+ 369               	.LBE27:
+ 551:bertos/cpu/avr/drv/ser_avr.c **** 	if (!hw->sending && !fifo_isempty(&ser_handles[SER_SPI]->txfifo))
+ 370               		.loc 1 551 0 discriminator 1
+ 371 0020 2817      		cp r18,r24	 ;  20	*cmphi/3	[length = 2]
+ 372 0022 3907      		cpc r19,r25
+ 373 0024 01F0      		breq .L13	 ;  21	branch	[length = 1]
+ 553:bertos/cpu/avr/drv/ser_avr.c **** 		hw->sending = true;
+ 374               		.loc 1 553 0
+ 375 0026 81E0      		ldi r24,lo8(1)	 ;  23	*movqi/2	[length = 1]
+ 376 0028 1A96      		adiw r26,10	 ;  24	*movqi/3	[length = 2]
+ 377 002a 8C93      		st X,r24
+ 378               	.LVL30:
+ 379               	.LBB29:
+ 380               	.LBB30:
+ 106:bertos/struct/fifobuf.h **** }
+ 107:bertos/struct/fifobuf.h **** 
+ 108:bertos/struct/fifobuf.h **** 
+ 109:bertos/struct/fifobuf.h **** /**
+ 110:bertos/struct/fifobuf.h ****  * Check whether the fifo is full
+ 111:bertos/struct/fifobuf.h ****  *
+ 112:bertos/struct/fifobuf.h ****  * \note Calling fifo_isfull() is safe while a concurrent
+ 113:bertos/struct/fifobuf.h ****  *       execution context is calling fifo_pop() and the
+ 114:bertos/struct/fifobuf.h ****  *       CPU can update a pointer atomically.
+ 115:bertos/struct/fifobuf.h ****  *       It is NOT safe when the other context calls
+ 116:bertos/struct/fifobuf.h ****  *       fifo_push().
+ 117:bertos/struct/fifobuf.h ****  *       This limitation is not usually problematic in a
+ 118:bertos/struct/fifobuf.h ****  *       consumer/producer scenario because the
+ 119:bertos/struct/fifobuf.h ****  *       fifo_isfull() and fifo_push() are usually called
+ 120:bertos/struct/fifobuf.h ****  *       in the producer context.
+ 121:bertos/struct/fifobuf.h ****  */
+ 122:bertos/struct/fifobuf.h **** INLINE bool fifo_isfull(const FIFOBuffer *fb)
+ 123:bertos/struct/fifobuf.h **** {
+ 124:bertos/struct/fifobuf.h **** 	//ASSERT_VALID_FIFO(fb);
+ 125:bertos/struct/fifobuf.h **** 	return
+ 126:bertos/struct/fifobuf.h **** 		((fb->head == fb->begin) && (fb->tail == fb->end))
+ 127:bertos/struct/fifobuf.h **** 		|| (fb->tail == fb->head - 1);
+ 128:bertos/struct/fifobuf.h **** }
+ 129:bertos/struct/fifobuf.h **** 
+ 130:bertos/struct/fifobuf.h **** 
+ 131:bertos/struct/fifobuf.h **** /**
+ 132:bertos/struct/fifobuf.h ****  * Push a character on the fifo buffer.
+ 133:bertos/struct/fifobuf.h ****  *
+ 134:bertos/struct/fifobuf.h ****  * \note Calling \c fifo_push() on a full buffer is undefined.
+ 135:bertos/struct/fifobuf.h ****  *       The caller must make sure the buffer has at least
+ 136:bertos/struct/fifobuf.h ****  *       one free slot before calling this function.
+ 137:bertos/struct/fifobuf.h ****  *
+ 138:bertos/struct/fifobuf.h ****  * \note It is safe to call fifo_pop() and fifo_push() from
+ 139:bertos/struct/fifobuf.h ****  *       concurrent contexts, unless the CPU can't update
+ 140:bertos/struct/fifobuf.h ****  *       a pointer atomically (which the AVR and other 8-bit
+ 141:bertos/struct/fifobuf.h ****  *       processors can't do).
+ 142:bertos/struct/fifobuf.h ****  *
+ 143:bertos/struct/fifobuf.h ****  * \sa fifo_push_locked
+ 144:bertos/struct/fifobuf.h ****  */
+ 145:bertos/struct/fifobuf.h **** INLINE void fifo_push(FIFOBuffer *fb, unsigned char c)
+ 146:bertos/struct/fifobuf.h **** {
+ 147:bertos/struct/fifobuf.h **** #ifdef __MWERKS__
+ 148:bertos/struct/fifobuf.h **** #pragma interrupt called
+ 149:bertos/struct/fifobuf.h **** #endif
+ 150:bertos/struct/fifobuf.h **** 	//ASSERT_VALID_FIFO(fb);
+ 151:bertos/struct/fifobuf.h **** 
+ 152:bertos/struct/fifobuf.h **** 	/* Write at tail position */
+ 153:bertos/struct/fifobuf.h **** 	*(fb->tail) = c;
+ 154:bertos/struct/fifobuf.h **** 
+ 155:bertos/struct/fifobuf.h **** 	if (UNLIKELY(fb->tail == fb->end))
+ 156:bertos/struct/fifobuf.h **** 		/* wrap tail around */
+ 157:bertos/struct/fifobuf.h **** 		fb->tail = fb->begin;
+ 158:bertos/struct/fifobuf.h **** 	else
+ 159:bertos/struct/fifobuf.h **** 		/* Move tail forward */
+ 160:bertos/struct/fifobuf.h **** 		fb->tail++;
+ 161:bertos/struct/fifobuf.h **** }
+ 162:bertos/struct/fifobuf.h **** 
+ 163:bertos/struct/fifobuf.h **** 
+ 164:bertos/struct/fifobuf.h **** /**
+ 165:bertos/struct/fifobuf.h ****  * Pop a character from the fifo buffer.
+ 166:bertos/struct/fifobuf.h ****  *
+ 167:bertos/struct/fifobuf.h ****  * \note Calling \c fifo_pop() on an empty buffer is undefined.
+ 168:bertos/struct/fifobuf.h ****  *       The caller must make sure the buffer contains at least
+ 169:bertos/struct/fifobuf.h ****  *       one character before calling this function.
+ 170:bertos/struct/fifobuf.h ****  *
+ 171:bertos/struct/fifobuf.h ****  * \note It is safe to call fifo_pop() and fifo_push() from
+ 172:bertos/struct/fifobuf.h ****  *       concurrent contexts.
+ 173:bertos/struct/fifobuf.h ****  */
+ 174:bertos/struct/fifobuf.h **** INLINE unsigned char fifo_pop(FIFOBuffer *fb)
+ 175:bertos/struct/fifobuf.h **** {
+ 176:bertos/struct/fifobuf.h **** #ifdef __MWERKS__
+ 177:bertos/struct/fifobuf.h **** #pragma interrupt called
+ 178:bertos/struct/fifobuf.h **** #endif
+ 179:bertos/struct/fifobuf.h **** 	//ASSERT_VALID_FIFO(fb);
+ 180:bertos/struct/fifobuf.h **** 
+ 181:bertos/struct/fifobuf.h **** 	if (UNLIKELY(fb->head == fb->end))
+ 381               		.loc 2 181 0
+ 382 002c A78D      		ldd r26,Z+31	 ;  27	*movhi/2	[length = 2]
+ 383 002e B0A1      		ldd r27,Z+32
+ 384               	.LVL31:
+ 385 0030 85A1      		ldd r24,Z+37	 ;  28	*movhi/2	[length = 2]
+ 386 0032 96A1      		ldd r25,Z+38
+ 387 0034 A817      		cp r26,r24	 ;  29	*cmphi/3	[length = 2]
+ 388 0036 B907      		cpc r27,r25
+ 389 0038 01F4      		brne .L14	 ;  30	branch	[length = 1]
+ 182:bertos/struct/fifobuf.h **** 	{
+ 183:bertos/struct/fifobuf.h **** 		/* wrap head around */
+ 184:bertos/struct/fifobuf.h **** 		fb->head = fb->begin;
+ 390               		.loc 2 184 0
+ 391 003a 83A1      		ldd r24,Z+35	 ;  32	*movhi/2	[length = 2]
+ 392 003c 94A1      		ldd r25,Z+36
+ 393 003e 90A3      		std Z+32,r25	 ;  33	*movhi/3	[length = 2]
+ 394 0040 878F      		std Z+31,r24
+ 185:bertos/struct/fifobuf.h **** 		return *(fb->end);
+ 395               		.loc 2 185 0
+ 396 0042 8C91      		ld r24,X	 ;  34	*movqi/4	[length = 1]
+ 397 0044 00C0      		rjmp .L15	 ;  61	jump	[length = 1]
+ 398               	.L14:
+ 186:bertos/struct/fifobuf.h **** 	}
+ 187:bertos/struct/fifobuf.h **** 	else
+ 188:bertos/struct/fifobuf.h **** 		/* move head forward */
+ 189:bertos/struct/fifobuf.h **** 		return *(fb->head++);
+ 399               		.loc 2 189 0
+ 400 0046 A78D      		ldd r26,Z+31	 ;  39	*movhi/2	[length = 2]
+ 401 0048 B0A1      		ldd r27,Z+32
+ 402 004a 8D91      		ld r24,X+	 ;  40	*movqi/4	[length = 1]
+ 403 004c B0A3      		std Z+32,r27	 ;  42	*movhi/3	[length = 2]
+ 404 004e A78F      		std Z+31,r26
+ 405               	.L15:
+ 406               	.LBE30:
+ 407               	.LBE29:
+ 554:bertos/cpu/avr/drv/ser_avr.c **** 		SPDR = fifo_pop(&ser_handles[SER_SPI]->txfifo);
+ 408               		.loc 1 554 0
+ 409 0050 8EBD      		out 78-32,r24	 ;  46	*movqi/3	[length = 1]
+ 410               	.LVL32:
+ 411               	.L13:
+ 557:bertos/cpu/avr/drv/ser_avr.c **** 	IRQ_RESTORE(flags);
+ 412               		.loc 1 557 0
+ 413               	/* #APP */
+ 414               	 ;  557 "bertos/cpu/avr/drv/ser_avr.c" 1
+ 415 0052 4FBF      		out __SREG__,r20
+ 416               	 ;  0 "" 2
+ 417               	/* epilogue start */
+ 558:bertos/cpu/avr/drv/ser_avr.c **** }
+ 418               		.loc 1 558 0
+ 419               	/* #NOAPP */
+ 420 0054 0895      		ret	 ;  59	return	[length = 1]
+ 421               		.cfi_endproc
+ 422               	.LFE51:
+ 424               		.section	.text.ser_hw_getdesc,"ax",@progbits
+ 425               	.global	ser_hw_getdesc
+ 427               	ser_hw_getdesc:
+ 428               	.LFB55:
+ 577:bertos/cpu/avr/drv/ser_avr.c **** 
+ 578:bertos/cpu/avr/drv/ser_avr.c **** 
+ 579:bertos/cpu/avr/drv/ser_avr.c **** 
+ 580:bertos/cpu/avr/drv/ser_avr.c **** // FIXME: move into compiler.h?  Ditch?
+ 581:bertos/cpu/avr/drv/ser_avr.c **** #if COMPILER_C99
+ 582:bertos/cpu/avr/drv/ser_avr.c **** 	#define	C99INIT(name,val) .name = val
+ 583:bertos/cpu/avr/drv/ser_avr.c **** #elif defined(__GNUC__)
+ 584:bertos/cpu/avr/drv/ser_avr.c **** 	#define C99INIT(name,val) name: val
+ 585:bertos/cpu/avr/drv/ser_avr.c **** #else
+ 586:bertos/cpu/avr/drv/ser_avr.c **** 	#warning No designated initializers, double check your code
+ 587:bertos/cpu/avr/drv/ser_avr.c **** 	#define C99INIT(name,val) (val)
+ 588:bertos/cpu/avr/drv/ser_avr.c **** #endif
+ 589:bertos/cpu/avr/drv/ser_avr.c **** 
+ 590:bertos/cpu/avr/drv/ser_avr.c **** /*
+ 591:bertos/cpu/avr/drv/ser_avr.c ****  * High-level interface data structures
+ 592:bertos/cpu/avr/drv/ser_avr.c ****  */
+ 593:bertos/cpu/avr/drv/ser_avr.c **** static const struct SerialHardwareVT UART0_VT =
+ 594:bertos/cpu/avr/drv/ser_avr.c **** {
+ 595:bertos/cpu/avr/drv/ser_avr.c **** 	C99INIT(init, uart0_init),
+ 596:bertos/cpu/avr/drv/ser_avr.c **** 	C99INIT(cleanup, uart0_cleanup),
+ 597:bertos/cpu/avr/drv/ser_avr.c **** 	C99INIT(setBaudrate, uart0_setbaudrate),
+ 598:bertos/cpu/avr/drv/ser_avr.c **** 	C99INIT(setParity, uart0_setparity),
+ 599:bertos/cpu/avr/drv/ser_avr.c **** 	C99INIT(txStart, uart0_enabletxirq),
+ 600:bertos/cpu/avr/drv/ser_avr.c **** 	C99INIT(txSending, tx_sending),
+ 601:bertos/cpu/avr/drv/ser_avr.c **** };
+ 602:bertos/cpu/avr/drv/ser_avr.c **** 
+ 603:bertos/cpu/avr/drv/ser_avr.c **** #if AVR_HAS_UART1
+ 604:bertos/cpu/avr/drv/ser_avr.c **** static const struct SerialHardwareVT UART1_VT =
+ 605:bertos/cpu/avr/drv/ser_avr.c **** {
+ 606:bertos/cpu/avr/drv/ser_avr.c **** 	C99INIT(init, uart1_init),
+ 607:bertos/cpu/avr/drv/ser_avr.c **** 	C99INIT(cleanup, uart1_cleanup),
+ 608:bertos/cpu/avr/drv/ser_avr.c **** 	C99INIT(setBaudrate, uart1_setbaudrate),
+ 609:bertos/cpu/avr/drv/ser_avr.c **** 	C99INIT(setParity, uart1_setparity),
+ 610:bertos/cpu/avr/drv/ser_avr.c **** 	C99INIT(txStart, uart1_enabletxirq),
+ 611:bertos/cpu/avr/drv/ser_avr.c **** 	C99INIT(txSending, tx_sending),
+ 612:bertos/cpu/avr/drv/ser_avr.c **** };
+ 613:bertos/cpu/avr/drv/ser_avr.c **** #endif // AVR_HAS_UART1
+ 614:bertos/cpu/avr/drv/ser_avr.c **** 
+ 615:bertos/cpu/avr/drv/ser_avr.c **** static const struct SerialHardwareVT SPI_VT =
+ 616:bertos/cpu/avr/drv/ser_avr.c **** {
+ 617:bertos/cpu/avr/drv/ser_avr.c **** 	C99INIT(init, spi_init),
+ 618:bertos/cpu/avr/drv/ser_avr.c **** 	C99INIT(cleanup, spi_cleanup),
+ 619:bertos/cpu/avr/drv/ser_avr.c **** 	C99INIT(setBaudrate, spi_setbaudrate),
+ 620:bertos/cpu/avr/drv/ser_avr.c **** 	C99INIT(setParity, spi_setparity),
+ 621:bertos/cpu/avr/drv/ser_avr.c **** 	C99INIT(txStart, spi_starttx),
+ 622:bertos/cpu/avr/drv/ser_avr.c **** 	C99INIT(txSending, tx_sending),
+ 623:bertos/cpu/avr/drv/ser_avr.c **** };
+ 624:bertos/cpu/avr/drv/ser_avr.c **** 
+ 625:bertos/cpu/avr/drv/ser_avr.c **** static struct AvrSerial UARTDescs[SER_CNT] =
+ 626:bertos/cpu/avr/drv/ser_avr.c **** {
+ 627:bertos/cpu/avr/drv/ser_avr.c **** 	{
+ 628:bertos/cpu/avr/drv/ser_avr.c **** 		C99INIT(hw, /**/) {
+ 629:bertos/cpu/avr/drv/ser_avr.c **** 			C99INIT(table, &UART0_VT),
+ 630:bertos/cpu/avr/drv/ser_avr.c **** 			C99INIT(txbuffer, uart0_txbuffer),
+ 631:bertos/cpu/avr/drv/ser_avr.c **** 			C99INIT(rxbuffer, uart0_rxbuffer),
+ 632:bertos/cpu/avr/drv/ser_avr.c **** 			C99INIT(txbuffer_size, sizeof(uart0_txbuffer)),
+ 633:bertos/cpu/avr/drv/ser_avr.c **** 			C99INIT(rxbuffer_size, sizeof(uart0_rxbuffer)),
+ 634:bertos/cpu/avr/drv/ser_avr.c **** 		},
+ 635:bertos/cpu/avr/drv/ser_avr.c **** 		C99INIT(sending, false),
+ 636:bertos/cpu/avr/drv/ser_avr.c **** 	},
+ 637:bertos/cpu/avr/drv/ser_avr.c **** #if AVR_HAS_UART1
+ 638:bertos/cpu/avr/drv/ser_avr.c **** 	{
+ 639:bertos/cpu/avr/drv/ser_avr.c **** 		C99INIT(hw, /**/) {
+ 640:bertos/cpu/avr/drv/ser_avr.c **** 			C99INIT(table, &UART1_VT),
+ 641:bertos/cpu/avr/drv/ser_avr.c **** 			C99INIT(txbuffer, uart1_txbuffer),
+ 642:bertos/cpu/avr/drv/ser_avr.c **** 			C99INIT(rxbuffer, uart1_rxbuffer),
+ 643:bertos/cpu/avr/drv/ser_avr.c **** 			C99INIT(txbuffer_size, sizeof(uart1_txbuffer)),
+ 644:bertos/cpu/avr/drv/ser_avr.c **** 			C99INIT(rxbuffer_size, sizeof(uart1_rxbuffer)),
+ 645:bertos/cpu/avr/drv/ser_avr.c **** 		},
+ 646:bertos/cpu/avr/drv/ser_avr.c **** 		C99INIT(sending, false),
+ 647:bertos/cpu/avr/drv/ser_avr.c **** 	},
+ 648:bertos/cpu/avr/drv/ser_avr.c **** #endif
+ 649:bertos/cpu/avr/drv/ser_avr.c **** 	{
+ 650:bertos/cpu/avr/drv/ser_avr.c **** 		C99INIT(hw, /**/) {
+ 651:bertos/cpu/avr/drv/ser_avr.c **** 			C99INIT(table, &SPI_VT),
+ 652:bertos/cpu/avr/drv/ser_avr.c **** 			C99INIT(txbuffer, spi_txbuffer),
+ 653:bertos/cpu/avr/drv/ser_avr.c **** 			C99INIT(rxbuffer, spi_rxbuffer),
+ 654:bertos/cpu/avr/drv/ser_avr.c **** 			C99INIT(txbuffer_size, sizeof(spi_txbuffer)),
+ 655:bertos/cpu/avr/drv/ser_avr.c **** 			C99INIT(rxbuffer_size, sizeof(spi_rxbuffer)),
+ 656:bertos/cpu/avr/drv/ser_avr.c **** 		},
+ 657:bertos/cpu/avr/drv/ser_avr.c **** 		C99INIT(sending, false),
+ 658:bertos/cpu/avr/drv/ser_avr.c **** 	}
+ 659:bertos/cpu/avr/drv/ser_avr.c **** };
+ 660:bertos/cpu/avr/drv/ser_avr.c **** 
+ 661:bertos/cpu/avr/drv/ser_avr.c **** struct SerialHardware *ser_hw_getdesc(int unit)
+ 662:bertos/cpu/avr/drv/ser_avr.c **** {
+ 429               		.loc 1 662 0
+ 430               		.cfi_startproc
+ 431               	.LVL33:
+ 432 0000 CF93      		push r28	 ;  37	*pushqi/1	[length = 1]
+ 433               	.LCFI0:
+ 434               		.cfi_def_cfa_offset 3
+ 435               		.cfi_offset 28, -2
+ 436 0002 DF93      		push r29	 ;  38	*pushqi/1	[length = 1]
+ 437               	.LCFI1:
+ 438               		.cfi_def_cfa_offset 4
+ 439               		.cfi_offset 29, -3
+ 440               	/* prologue: function */
+ 441               	/* frame size = 0 */
+ 442               	/* stack size = 2 */
+ 443               	.L__stack_usage = 2
+ 444 0004 EC01      		movw r28,r24	 ;  2	*movhi/1	[length = 1]
+ 663:bertos/cpu/avr/drv/ser_avr.c **** 	ASSERT(unit < SER_CNT);
+ 445               		.loc 1 663 0
+ 446 0006 8230      		cpi r24,2	 ;  6	*cmphi/4	[length = 2]
+ 447 0008 9105      		cpc r25,__zero_reg__
+ 448 000a 04F0      		brlt .L17	 ;  7	branch	[length = 1]
+ 449               		.loc 1 663 0 is_stmt 0 discriminator 1
+ 450 000c 80E0      		ldi r24,lo8(__c.1878)	 ;  12	*movhi/4	[length = 2]
+ 451 000e 90E0      		ldi r25,hi8(__c.1878)
+ 452               	.LVL34:
+ 453 0010 60E0      		ldi r22,lo8(__c.1880)	 ;  13	*movhi/4	[length = 2]
+ 454 0012 70E0      		ldi r23,hi8(__c.1880)
+ 455 0014 47E9      		ldi r20,lo8(663)	 ;  14	*movhi/4	[length = 2]
+ 456 0016 52E0      		ldi r21,hi8(663)
+ 457 0018 0E94 0000 		call __bassert_P	 ;  15	call_value_insn/3	[length = 2]
+ 458               	.L17:
+ 664:bertos/cpu/avr/drv/ser_avr.c **** 	return &UARTDescs[unit].hw;
+ 459               		.loc 1 664 0 is_stmt 1
+ 460 001c 2BE0      		ldi r18,lo8(11)	 ;  18	*movhi/4	[length = 2]
+ 461 001e 30E0      		ldi r19,hi8(11)
+ 462 0020 C29F      		mul r28,r18	 ;  19	*mulhi3_enh	[length = 7]
+ 463 0022 C001      		movw r24,r0
+ 464 0024 C39F      		mul r28,r19
+ 465 0026 900D      		add r25,r0
+ 466 0028 D29F      		mul r29,r18
+ 467 002a 900D      		add r25,r0
+ 468 002c 1124      		clr r1
+ 469 002e 8050      		subi r24,lo8(-(UARTDescs))	 ;  20	*addhi3/4	[length = 2]
+ 470 0030 9040      		sbci r25,hi8(-(UARTDescs))
+ 471               	/* epilogue start */
+ 665:bertos/cpu/avr/drv/ser_avr.c **** }
+ 472               		.loc 1 665 0
+ 473 0032 DF91      		pop r29	 ;  41	popqi	[length = 1]
+ 474 0034 CF91      		pop r28	 ;  42	popqi	[length = 1]
+ 475               	.LVL35:
+ 476 0036 0895      		ret	 ;  43	return_from_epilogue	[length = 1]
+ 477               		.cfi_endproc
+ 478               	.LFE55:
+ 480               		.section	.text.__vector_19,"ax",@progbits
+ 481               	.global	__vector_19
+ 483               	__vector_19:
+ 484               	.LFB56:
+ 666:bertos/cpu/avr/drv/ser_avr.c **** 
+ 667:bertos/cpu/avr/drv/ser_avr.c **** 
+ 668:bertos/cpu/avr/drv/ser_avr.c **** /*
+ 669:bertos/cpu/avr/drv/ser_avr.c ****  * Interrupt handlers
+ 670:bertos/cpu/avr/drv/ser_avr.c ****  */
+ 671:bertos/cpu/avr/drv/ser_avr.c **** 
+ 672:bertos/cpu/avr/drv/ser_avr.c **** #if CONFIG_SER_HWHANDSHAKE
+ 673:bertos/cpu/avr/drv/ser_avr.c **** 
+ 674:bertos/cpu/avr/drv/ser_avr.c **** /// This interrupt is triggered when the CTS line goes high
+ 675:bertos/cpu/avr/drv/ser_avr.c **** DECLARE_ISR(SIG_CTS)
+ 676:bertos/cpu/avr/drv/ser_avr.c **** {
+ 677:bertos/cpu/avr/drv/ser_avr.c **** 	// Re-enable UDR empty interrupt and TX, then disable CTS interrupt
+ 678:bertos/cpu/avr/drv/ser_avr.c **** 	UCSR0B = BV(BIT_RXCIE0) | BV(BIT_UDRIE0) | BV(BIT_RXEN0) | BV(BIT_TXEN0);
+ 679:bertos/cpu/avr/drv/ser_avr.c **** 	EIMSK &= ~EIMSKF_CTS;
+ 680:bertos/cpu/avr/drv/ser_avr.c **** }
+ 681:bertos/cpu/avr/drv/ser_avr.c **** 
+ 682:bertos/cpu/avr/drv/ser_avr.c **** #endif // CONFIG_SER_HWHANDSHAKE
+ 683:bertos/cpu/avr/drv/ser_avr.c **** 
+ 684:bertos/cpu/avr/drv/ser_avr.c **** 
+ 685:bertos/cpu/avr/drv/ser_avr.c **** /**
+ 686:bertos/cpu/avr/drv/ser_avr.c ****  * Serial 0 TX interrupt handler
+ 687:bertos/cpu/avr/drv/ser_avr.c ****  */
+ 688:bertos/cpu/avr/drv/ser_avr.c **** DECLARE_ISR(USART0_UDRE_vect)
+ 689:bertos/cpu/avr/drv/ser_avr.c **** {
+ 485               		.loc 1 689 0
+ 486               		.cfi_startproc
+ 487 0000 1F92      		push r1	 ;  56	*pushqi/1	[length = 1]
+ 488               	.LCFI2:
+ 489               		.cfi_def_cfa_offset 3
+ 490               		.cfi_offset 1, -2
+ 491 0002 0F92      		push r0	 ;  57	*pushqi/1	[length = 1]
+ 492               	.LCFI3:
+ 493               		.cfi_def_cfa_offset 4
+ 494               		.cfi_offset 0, -3
+ 495 0004 0FB6      		in r0,__SREG__	 ;  58	*movqi/4	[length = 1]
+ 496 0006 0F92      		push r0	 ;  59	*pushqi/1	[length = 1]
+ 497 0008 1124      		clr __zero_reg__	 ;  60	*movqi/7	[length = 1]
+ 498 000a 2F93      		push r18	 ;  62	*pushqi/1	[length = 1]
+ 499               	.LCFI4:
+ 500               		.cfi_def_cfa_offset 5
+ 501               		.cfi_offset 18, -4
+ 502 000c 3F93      		push r19	 ;  63	*pushqi/1	[length = 1]
+ 503               	.LCFI5:
+ 504               		.cfi_def_cfa_offset 6
+ 505               		.cfi_offset 19, -5
+ 506 000e 8F93      		push r24	 ;  64	*pushqi/1	[length = 1]
+ 507               	.LCFI6:
+ 508               		.cfi_def_cfa_offset 7
+ 509               		.cfi_offset 24, -6
+ 510 0010 9F93      		push r25	 ;  65	*pushqi/1	[length = 1]
+ 511               	.LCFI7:
+ 512               		.cfi_def_cfa_offset 8
+ 513               		.cfi_offset 25, -7
+ 514 0012 AF93      		push r26	 ;  66	*pushqi/1	[length = 1]
+ 515               	.LCFI8:
+ 516               		.cfi_def_cfa_offset 9
+ 517               		.cfi_offset 26, -8
+ 518 0014 BF93      		push r27	 ;  67	*pushqi/1	[length = 1]
+ 519               	.LCFI9:
+ 520               		.cfi_def_cfa_offset 10
+ 521               		.cfi_offset 27, -9
+ 522 0016 EF93      		push r30	 ;  68	*pushqi/1	[length = 1]
+ 523               	.LCFI10:
+ 524               		.cfi_def_cfa_offset 11
+ 525               		.cfi_offset 30, -10
+ 526 0018 FF93      		push r31	 ;  69	*pushqi/1	[length = 1]
+ 527               	.LCFI11:
+ 528               		.cfi_def_cfa_offset 12
+ 529               		.cfi_offset 31, -11
+ 530               	/* prologue: Signal */
+ 531               	/* frame size = 0 */
+ 532               	/* stack size = 11 */
+ 533               	.L__stack_usage = 11
+ 690:bertos/cpu/avr/drv/ser_avr.c **** 	SER_STROBE_ON;
+ 691:bertos/cpu/avr/drv/ser_avr.c **** 
+ 692:bertos/cpu/avr/drv/ser_avr.c **** 	struct FIFOBuffer * const txfifo = &ser_handles[SER_UART0]->txfifo;
+ 534               		.loc 1 692 0
+ 535 001a E091 0000 		lds r30,ser_handles	 ;  6	*movhi/2	[length = 4]
+ 536 001e F091 0000 		lds r31,ser_handles+1
+ 537               	.LVL36:
+ 538               	.LBB31:
+ 539               	.LBB32:
+ 105:bertos/struct/fifobuf.h **** 	return fb->head == fb->tail;
+ 540               		.loc 2 105 0
+ 541 0022 278D      		ldd r18,Z+31	 ;  10	*movhi/2	[length = 2]
+ 542 0024 30A1      		ldd r19,Z+32
+ 543 0026 81A1      		ldd r24,Z+33	 ;  11	*movhi/2	[length = 2]
+ 544 0028 92A1      		ldd r25,Z+34
+ 545               	.LBE32:
+ 546               	.LBE31:
+ 693:bertos/cpu/avr/drv/ser_avr.c **** 
+ 694:bertos/cpu/avr/drv/ser_avr.c **** 	if (fifo_isempty(txfifo))
+ 547               		.loc 1 694 0
+ 548 002a 2817      		cp r18,r24	 ;  12	*cmphi/3	[length = 2]
+ 549 002c 3907      		cpc r19,r25
+ 550 002e 01F4      		brne .L19	 ;  13	branch	[length = 1]
+ 695:bertos/cpu/avr/drv/ser_avr.c **** 	{
+ 696:bertos/cpu/avr/drv/ser_avr.c **** 		SER_UART0_BUS_TXEND;
+ 551               		.loc 1 696 0
+ 552 0030 88E9      		ldi r24,lo8(-104)	 ;  16	*movqi/2	[length = 1]
+ 553 0032 8093 C100 		sts 193,r24	 ;  17	*movqi/3	[length = 2]
+ 697:bertos/cpu/avr/drv/ser_avr.c **** #ifndef SER_UART0_BUS_TXOFF
+ 698:bertos/cpu/avr/drv/ser_avr.c **** 		UARTDescs[SER_UART0].sending = false;
+ 554               		.loc 1 698 0
+ 555 0036 1092 0000 		sts UARTDescs+10,__zero_reg__	 ;  19	*movqi/3	[length = 2]
+ 556 003a 00C0      		rjmp .L18	 ;  86	jump	[length = 1]
+ 557               	.L19:
+ 558               	.LVL37:
+ 559               	.LBB33:
+ 560               	.LBB34:
+ 561               	.LBB35:
+ 181:bertos/struct/fifobuf.h **** 	if (UNLIKELY(fb->head == fb->end))
+ 562               		.loc 2 181 0
+ 563 003c A78D      		ldd r26,Z+31	 ;  25	*movhi/2	[length = 2]
+ 564 003e B0A1      		ldd r27,Z+32
+ 565 0040 85A1      		ldd r24,Z+37	 ;  26	*movhi/2	[length = 2]
+ 566 0042 96A1      		ldd r25,Z+38
+ 567 0044 A817      		cp r26,r24	 ;  27	*cmphi/3	[length = 2]
+ 568 0046 B907      		cpc r27,r25
+ 569 0048 01F4      		brne .L21	 ;  28	branch	[length = 1]
+ 184:bertos/struct/fifobuf.h **** 		fb->head = fb->begin;
+ 570               		.loc 2 184 0
+ 571 004a 83A1      		ldd r24,Z+35	 ;  30	*movhi/2	[length = 2]
+ 572 004c 94A1      		ldd r25,Z+36
+ 573 004e 90A3      		std Z+32,r25	 ;  31	*movhi/3	[length = 2]
+ 574 0050 878F      		std Z+31,r24
+ 185:bertos/struct/fifobuf.h **** 		return *(fb->end);
+ 575               		.loc 2 185 0
+ 576 0052 8C91      		ld r24,X	 ;  32	*movqi/4	[length = 1]
+ 577 0054 00C0      		rjmp .L22	 ;  88	jump	[length = 1]
+ 578               	.L21:
+ 579               		.loc 2 189 0
+ 580 0056 A78D      		ldd r26,Z+31	 ;  37	*movhi/2	[length = 2]
+ 581 0058 B0A1      		ldd r27,Z+32
+ 582 005a 8D91      		ld r24,X+	 ;  38	*movqi/4	[length = 1]
+ 583 005c B0A3      		std Z+32,r27	 ;  40	*movhi/3	[length = 2]
+ 584 005e A78F      		std Z+31,r26
+ 585               	.L22:
+ 586               	.LVL38:
+ 587               	.LBE35:
+ 588               	.LBE34:
+ 699:bertos/cpu/avr/drv/ser_avr.c **** #endif
+ 700:bertos/cpu/avr/drv/ser_avr.c **** 	}
+ 701:bertos/cpu/avr/drv/ser_avr.c **** #if CPU_AVR_ATMEGA64 || CPU_AVR_ATMEGA128 || CPU_AVR_ATMEGA103
+ 702:bertos/cpu/avr/drv/ser_avr.c **** 	else if (!IS_CTS_ON)
+ 703:bertos/cpu/avr/drv/ser_avr.c **** 	{
+ 704:bertos/cpu/avr/drv/ser_avr.c **** 		// Disable rx interrupt and tx, enable CTS interrupt
+ 705:bertos/cpu/avr/drv/ser_avr.c **** 		// UNTESTED
+ 706:bertos/cpu/avr/drv/ser_avr.c **** 		UCSR0B = BV(BIT_RXCIE0) | BV(BIT_RXEN0) | BV(BIT_TXEN0);
+ 707:bertos/cpu/avr/drv/ser_avr.c **** 		EIFR |= EIMSKF_CTS;
+ 708:bertos/cpu/avr/drv/ser_avr.c **** 		EIMSK |= EIMSKF_CTS;
+ 709:bertos/cpu/avr/drv/ser_avr.c **** 	}
+ 710:bertos/cpu/avr/drv/ser_avr.c **** #endif
+ 711:bertos/cpu/avr/drv/ser_avr.c **** 	else
+ 712:bertos/cpu/avr/drv/ser_avr.c **** 	{
+ 713:bertos/cpu/avr/drv/ser_avr.c **** 		char c = fifo_pop(txfifo);
+ 714:bertos/cpu/avr/drv/ser_avr.c **** 		SER_UART0_BUS_TXCHAR(c);
+ 589               		.loc 1 714 0
+ 590 0060 8093 C600 		sts 198,r24	 ;  45	*movqi/3	[length = 2]
+ 591               	.LVL39:
+ 592               	.L18:
+ 593               	/* epilogue start */
+ 594               	.LBE33:
+ 715:bertos/cpu/avr/drv/ser_avr.c **** 	}
+ 716:bertos/cpu/avr/drv/ser_avr.c **** 
+ 717:bertos/cpu/avr/drv/ser_avr.c **** 	SER_STROBE_OFF;
+ 718:bertos/cpu/avr/drv/ser_avr.c **** }
+ 595               		.loc 1 718 0
+ 596 0064 FF91      		pop r31	 ;  72	popqi	[length = 1]
+ 597 0066 EF91      		pop r30	 ;  73	popqi	[length = 1]
+ 598 0068 BF91      		pop r27	 ;  74	popqi	[length = 1]
+ 599 006a AF91      		pop r26	 ;  75	popqi	[length = 1]
+ 600 006c 9F91      		pop r25	 ;  76	popqi	[length = 1]
+ 601 006e 8F91      		pop r24	 ;  77	popqi	[length = 1]
+ 602 0070 3F91      		pop r19	 ;  78	popqi	[length = 1]
+ 603 0072 2F91      		pop r18	 ;  79	popqi	[length = 1]
+ 604 0074 0F90      		pop r0	 ;  80	popqi	[length = 1]
+ 605 0076 0FBE      		out __SREG__,r0	 ;  81	*movqi/3	[length = 1]
+ 606 0078 0F90      		pop r0	 ;  82	popqi	[length = 1]
+ 607 007a 1F90      		pop r1	 ;  83	popqi	[length = 1]
+ 608 007c 1895      		reti	 ;  84	return_from_interrupt_epilogue	[length = 1]
+ 609               		.cfi_endproc
+ 610               	.LFE56:
+ 612               		.section	.text.__vector_18,"ax",@progbits
+ 613               	.global	__vector_18
+ 615               	__vector_18:
+ 616               	.LFB57:
+ 719:bertos/cpu/avr/drv/ser_avr.c **** 
+ 720:bertos/cpu/avr/drv/ser_avr.c **** #ifdef SER_UART0_BUS_TXOFF
+ 721:bertos/cpu/avr/drv/ser_avr.c **** /**
+ 722:bertos/cpu/avr/drv/ser_avr.c ****  * Serial port 0 TX complete interrupt handler.
+ 723:bertos/cpu/avr/drv/ser_avr.c ****  *
+ 724:bertos/cpu/avr/drv/ser_avr.c ****  * This IRQ is usually disabled.  The UDR-empty interrupt
+ 725:bertos/cpu/avr/drv/ser_avr.c ****  * enables it when there's no more data to transmit.
+ 726:bertos/cpu/avr/drv/ser_avr.c ****  * We need to wait until the last character has been
+ 727:bertos/cpu/avr/drv/ser_avr.c ****  * transmitted before switching the 485 transceiver to
+ 728:bertos/cpu/avr/drv/ser_avr.c ****  * receive mode.
+ 729:bertos/cpu/avr/drv/ser_avr.c ****  *
+ 730:bertos/cpu/avr/drv/ser_avr.c ****  * The txfifo might have been refilled by putchar() while
+ 731:bertos/cpu/avr/drv/ser_avr.c ****  * we were waiting for the transmission complete interrupt.
+ 732:bertos/cpu/avr/drv/ser_avr.c ****  * In this case, we must restart the UDR empty interrupt,
+ 733:bertos/cpu/avr/drv/ser_avr.c ****  * otherwise we'd stop the serial port with some data
+ 734:bertos/cpu/avr/drv/ser_avr.c ****  * still pending in the buffer.
+ 735:bertos/cpu/avr/drv/ser_avr.c ****  */
+ 736:bertos/cpu/avr/drv/ser_avr.c **** DECLARE_ISR(SIG_UART0_TRANS)
+ 737:bertos/cpu/avr/drv/ser_avr.c **** {
+ 738:bertos/cpu/avr/drv/ser_avr.c **** 	SER_STROBE_ON;
+ 739:bertos/cpu/avr/drv/ser_avr.c **** 
+ 740:bertos/cpu/avr/drv/ser_avr.c **** 	struct FIFOBuffer * const txfifo = &ser_handles[SER_UART0]->txfifo;
+ 741:bertos/cpu/avr/drv/ser_avr.c **** 	if (fifo_isempty(txfifo))
+ 742:bertos/cpu/avr/drv/ser_avr.c **** 	{
+ 743:bertos/cpu/avr/drv/ser_avr.c **** 		SER_UART0_BUS_TXOFF;
+ 744:bertos/cpu/avr/drv/ser_avr.c **** 		UARTDescs[SER_UART0].sending = false;
+ 745:bertos/cpu/avr/drv/ser_avr.c **** 	}
+ 746:bertos/cpu/avr/drv/ser_avr.c **** 	else
+ 747:bertos/cpu/avr/drv/ser_avr.c **** 		UCSR0B = BV(BIT_RXCIE0) | BV(BIT_UDRIE0) | BV(BIT_RXEN0) | BV(BIT_TXEN0);
+ 748:bertos/cpu/avr/drv/ser_avr.c **** 
+ 749:bertos/cpu/avr/drv/ser_avr.c **** 	SER_STROBE_OFF;
+ 750:bertos/cpu/avr/drv/ser_avr.c **** }
+ 751:bertos/cpu/avr/drv/ser_avr.c **** #endif /* SER_UART0_BUS_TXOFF */
+ 752:bertos/cpu/avr/drv/ser_avr.c **** 
+ 753:bertos/cpu/avr/drv/ser_avr.c **** 
+ 754:bertos/cpu/avr/drv/ser_avr.c **** #if AVR_HAS_UART1
+ 755:bertos/cpu/avr/drv/ser_avr.c **** 
+ 756:bertos/cpu/avr/drv/ser_avr.c **** /**
+ 757:bertos/cpu/avr/drv/ser_avr.c ****  * Serial 1 TX interrupt handler
+ 758:bertos/cpu/avr/drv/ser_avr.c ****  */
+ 759:bertos/cpu/avr/drv/ser_avr.c **** DECLARE_ISR(USART1_UDRE_vect)
+ 760:bertos/cpu/avr/drv/ser_avr.c **** {
+ 761:bertos/cpu/avr/drv/ser_avr.c **** 	SER_STROBE_ON;
+ 762:bertos/cpu/avr/drv/ser_avr.c **** 
+ 763:bertos/cpu/avr/drv/ser_avr.c **** 	struct FIFOBuffer * const txfifo = &ser_handles[SER_UART1]->txfifo;
+ 764:bertos/cpu/avr/drv/ser_avr.c **** 
+ 765:bertos/cpu/avr/drv/ser_avr.c **** 	if (fifo_isempty(txfifo))
+ 766:bertos/cpu/avr/drv/ser_avr.c **** 	{
+ 767:bertos/cpu/avr/drv/ser_avr.c **** 		SER_UART1_BUS_TXEND;
+ 768:bertos/cpu/avr/drv/ser_avr.c **** #ifndef SER_UART1_BUS_TXOFF
+ 769:bertos/cpu/avr/drv/ser_avr.c **** 		UARTDescs[SER_UART1].sending = false;
+ 770:bertos/cpu/avr/drv/ser_avr.c **** #endif
+ 771:bertos/cpu/avr/drv/ser_avr.c **** 	}
+ 772:bertos/cpu/avr/drv/ser_avr.c **** #if CPU_AVR_ATMEGA64 || CPU_AVR_ATMEGA128 || CPU_AVR_ATMEGA103
+ 773:bertos/cpu/avr/drv/ser_avr.c **** 	else if (!IS_CTS_ON)
+ 774:bertos/cpu/avr/drv/ser_avr.c **** 	{
+ 775:bertos/cpu/avr/drv/ser_avr.c **** 		// Disable rx interrupt and tx, enable CTS interrupt
+ 776:bertos/cpu/avr/drv/ser_avr.c **** 		// UNTESTED
+ 777:bertos/cpu/avr/drv/ser_avr.c **** 		UCSR1B = BV(BIT_RXCIE1) | BV(BIT_RXEN1) | BV(BIT_TXEN1);
+ 778:bertos/cpu/avr/drv/ser_avr.c **** 		EIFR |= EIMSKF_CTS;
+ 779:bertos/cpu/avr/drv/ser_avr.c **** 		EIMSK |= EIMSKF_CTS;
+ 780:bertos/cpu/avr/drv/ser_avr.c **** 	}
+ 781:bertos/cpu/avr/drv/ser_avr.c **** #endif
+ 782:bertos/cpu/avr/drv/ser_avr.c **** 	else
+ 783:bertos/cpu/avr/drv/ser_avr.c **** 	{
+ 784:bertos/cpu/avr/drv/ser_avr.c **** 		char c = fifo_pop(txfifo);
+ 785:bertos/cpu/avr/drv/ser_avr.c **** 		SER_UART1_BUS_TXCHAR(c);
+ 786:bertos/cpu/avr/drv/ser_avr.c **** 	}
+ 787:bertos/cpu/avr/drv/ser_avr.c **** 
+ 788:bertos/cpu/avr/drv/ser_avr.c **** 	SER_STROBE_OFF;
+ 789:bertos/cpu/avr/drv/ser_avr.c **** }
+ 790:bertos/cpu/avr/drv/ser_avr.c **** 
+ 791:bertos/cpu/avr/drv/ser_avr.c **** #ifdef SER_UART1_BUS_TXOFF
+ 792:bertos/cpu/avr/drv/ser_avr.c **** /**
+ 793:bertos/cpu/avr/drv/ser_avr.c ****  * Serial port 1 TX complete interrupt handler.
+ 794:bertos/cpu/avr/drv/ser_avr.c ****  *
+ 795:bertos/cpu/avr/drv/ser_avr.c ****  * \sa port 0 TX complete handler.
+ 796:bertos/cpu/avr/drv/ser_avr.c ****  */
+ 797:bertos/cpu/avr/drv/ser_avr.c **** DECLARE_ISR(USART1_TX_vect)
+ 798:bertos/cpu/avr/drv/ser_avr.c **** {
+ 799:bertos/cpu/avr/drv/ser_avr.c **** 	SER_STROBE_ON;
+ 800:bertos/cpu/avr/drv/ser_avr.c **** 
+ 801:bertos/cpu/avr/drv/ser_avr.c **** 	struct FIFOBuffer * const txfifo = &ser_handles[SER_UART1]->txfifo;
+ 802:bertos/cpu/avr/drv/ser_avr.c **** 	if (fifo_isempty(txfifo))
+ 803:bertos/cpu/avr/drv/ser_avr.c **** 	{
+ 804:bertos/cpu/avr/drv/ser_avr.c **** 		SER_UART1_BUS_TXOFF;
+ 805:bertos/cpu/avr/drv/ser_avr.c **** 		UARTDescs[SER_UART1].sending = false;
+ 806:bertos/cpu/avr/drv/ser_avr.c **** 	}
+ 807:bertos/cpu/avr/drv/ser_avr.c **** 	else
+ 808:bertos/cpu/avr/drv/ser_avr.c **** 		UCSR1B = BV(BIT_RXCIE1) | BV(BIT_UDRIE1) | BV(BIT_RXEN1) | BV(BIT_TXEN1);
+ 809:bertos/cpu/avr/drv/ser_avr.c **** 
+ 810:bertos/cpu/avr/drv/ser_avr.c **** 	SER_STROBE_OFF;
+ 811:bertos/cpu/avr/drv/ser_avr.c **** }
+ 812:bertos/cpu/avr/drv/ser_avr.c **** #endif /* SER_UART1_BUS_TXOFF */
+ 813:bertos/cpu/avr/drv/ser_avr.c **** 
+ 814:bertos/cpu/avr/drv/ser_avr.c **** #endif // AVR_HAS_UART1
+ 815:bertos/cpu/avr/drv/ser_avr.c **** 
+ 816:bertos/cpu/avr/drv/ser_avr.c **** 
+ 817:bertos/cpu/avr/drv/ser_avr.c **** /**
+ 818:bertos/cpu/avr/drv/ser_avr.c ****  * Serial 0 RX complete interrupt handler.
+ 819:bertos/cpu/avr/drv/ser_avr.c ****  *
+ 820:bertos/cpu/avr/drv/ser_avr.c ****  * This handler is interruptible.
+ 821:bertos/cpu/avr/drv/ser_avr.c ****  * Interrupt are reenabled as soon as recv complete interrupt is
+ 822:bertos/cpu/avr/drv/ser_avr.c ****  * disabled. Using INTERRUPT() is troublesome when the serial
+ 823:bertos/cpu/avr/drv/ser_avr.c ****  * is heavily loaded, because an interrupt could be retriggered
+ 824:bertos/cpu/avr/drv/ser_avr.c ****  * when executing the handler prologue before RXCIE is disabled.
+ 825:bertos/cpu/avr/drv/ser_avr.c ****  *
+ 826:bertos/cpu/avr/drv/ser_avr.c ****  * \note The code that re-enables interrupts is commented out
+ 827:bertos/cpu/avr/drv/ser_avr.c ****  *       because in some nasty cases the interrupt is retriggered.
+ 828:bertos/cpu/avr/drv/ser_avr.c ****  *       This is probably due to the RXC flag being set before
+ 829:bertos/cpu/avr/drv/ser_avr.c ****  *       RXCIE is cleared.  Unfortunately the RXC flag is read-only
+ 830:bertos/cpu/avr/drv/ser_avr.c ****  *       and can't be cleared by code.
+ 831:bertos/cpu/avr/drv/ser_avr.c ****  */
+ 832:bertos/cpu/avr/drv/ser_avr.c **** DECLARE_ISR(USART0_RX_vect)
+ 833:bertos/cpu/avr/drv/ser_avr.c **** {
+ 617               		.loc 1 833 0
+ 618               		.cfi_startproc
+ 619 0000 1F92      		push r1	 ;  83	*pushqi/1	[length = 1]
+ 620               	.LCFI12:
+ 621               		.cfi_def_cfa_offset 3
+ 622               		.cfi_offset 1, -2
+ 623 0002 0F92      		push r0	 ;  84	*pushqi/1	[length = 1]
+ 624               	.LCFI13:
+ 625               		.cfi_def_cfa_offset 4
+ 626               		.cfi_offset 0, -3
+ 627 0004 0FB6      		in r0,__SREG__	 ;  85	*movqi/4	[length = 1]
+ 628 0006 0F92      		push r0	 ;  86	*pushqi/1	[length = 1]
+ 629 0008 1124      		clr __zero_reg__	 ;  87	*movqi/7	[length = 1]
+ 630 000a 2F93      		push r18	 ;  89	*pushqi/1	[length = 1]
+ 631               	.LCFI14:
+ 632               		.cfi_def_cfa_offset 5
+ 633               		.cfi_offset 18, -4
+ 634 000c 3F93      		push r19	 ;  90	*pushqi/1	[length = 1]
+ 635               	.LCFI15:
+ 636               		.cfi_def_cfa_offset 6
+ 637               		.cfi_offset 19, -5
+ 638 000e 4F93      		push r20	 ;  91	*pushqi/1	[length = 1]
+ 639               	.LCFI16:
+ 640               		.cfi_def_cfa_offset 7
+ 641               		.cfi_offset 20, -6
+ 642 0010 8F93      		push r24	 ;  92	*pushqi/1	[length = 1]
+ 643               	.LCFI17:
+ 644               		.cfi_def_cfa_offset 8
+ 645               		.cfi_offset 24, -7
+ 646 0012 9F93      		push r25	 ;  93	*pushqi/1	[length = 1]
+ 647               	.LCFI18:
+ 648               		.cfi_def_cfa_offset 9
+ 649               		.cfi_offset 25, -8
+ 650 0014 AF93      		push r26	 ;  94	*pushqi/1	[length = 1]
+ 651               	.LCFI19:
+ 652               		.cfi_def_cfa_offset 10
+ 653               		.cfi_offset 26, -9
+ 654 0016 BF93      		push r27	 ;  95	*pushqi/1	[length = 1]
+ 655               	.LCFI20:
+ 656               		.cfi_def_cfa_offset 11
+ 657               		.cfi_offset 27, -10
+ 658 0018 EF93      		push r30	 ;  96	*pushqi/1	[length = 1]
+ 659               	.LCFI21:
+ 660               		.cfi_def_cfa_offset 12
+ 661               		.cfi_offset 30, -11
+ 662 001a FF93      		push r31	 ;  97	*pushqi/1	[length = 1]
+ 663               	.LCFI22:
+ 664               		.cfi_def_cfa_offset 13
+ 665               		.cfi_offset 31, -12
+ 666               	/* prologue: Signal */
+ 667               	/* frame size = 0 */
+ 668               	/* stack size = 12 */
+ 669               	.L__stack_usage = 12
+ 834:bertos/cpu/avr/drv/ser_avr.c **** 	SER_STROBE_ON;
+ 835:bertos/cpu/avr/drv/ser_avr.c **** 
+ 836:bertos/cpu/avr/drv/ser_avr.c **** 	/* Disable Recv complete IRQ */
+ 837:bertos/cpu/avr/drv/ser_avr.c **** 	//UCSR0B &= ~BV(RXCIE);
+ 838:bertos/cpu/avr/drv/ser_avr.c **** 	//IRQ_ENABLE;
+ 839:bertos/cpu/avr/drv/ser_avr.c **** 
+ 840:bertos/cpu/avr/drv/ser_avr.c **** 	/* Should be read before UDR */
+ 841:bertos/cpu/avr/drv/ser_avr.c **** 	ser_handles[SER_UART0]->status |= UCSR0A & (SERRF_RXSROVERRUN | SERRF_FRAMEERROR);
+ 670               		.loc 1 841 0
+ 671 001c E091 0000 		lds r30,ser_handles	 ;  6	*movhi/2	[length = 4]
+ 672 0020 F091 0000 		lds r31,ser_handles+1
+ 673 0024 97A5      		ldd r25,Z+47	 ;  7	*movqi/4	[length = 1]
+ 674 0026 8091 C000 		lds r24,192	 ;  9	*movqi/4	[length = 2]
+ 675 002a 8871      		andi r24,lo8(24)	 ;  10	andqi3/2	[length = 1]
+ 676 002c 892B      		or r24,r25	 ;  11	iorqi3/1	[length = 1]
+ 677 002e 87A7      		std Z+47,r24	 ;  12	*movqi/3	[length = 1]
+ 842:bertos/cpu/avr/drv/ser_avr.c **** 
+ 843:bertos/cpu/avr/drv/ser_avr.c **** 	/* To clear the RXC flag we must _always_ read the UDR even when we're
+ 844:bertos/cpu/avr/drv/ser_avr.c **** 	 * not going to accept the incoming data, otherwise a new interrupt
+ 845:bertos/cpu/avr/drv/ser_avr.c **** 	 * will occur once the handler terminates.
+ 846:bertos/cpu/avr/drv/ser_avr.c **** 	 */
+ 847:bertos/cpu/avr/drv/ser_avr.c **** 	char c = UDR0;
+ 678               		.loc 1 847 0
+ 679 0030 4091 C600 		lds r20,198	 ;  14	*movqi/4	[length = 2]
+ 680               	.LVL40:
+ 681               	.LBB36:
+ 682               	.LBB37:
+ 126:bertos/struct/fifobuf.h **** 		((fb->head == fb->begin) && (fb->tail == fb->end))
+ 683               		.loc 2 126 0
+ 684 0034 27A1      		ldd r18,Z+39	 ;  19	*movhi/2	[length = 2]
+ 685 0036 30A5      		ldd r19,Z+40
+ 127:bertos/struct/fifobuf.h **** 		|| (fb->tail == fb->head - 1);
+ 686               		.loc 2 127 0
+ 687 0038 83A5      		ldd r24,Z+43	 ;  20	*movhi/2	[length = 2]
+ 688 003a 94A5      		ldd r25,Z+44
+ 689 003c 2817      		cp r18,r24	 ;  21	*cmphi/3	[length = 2]
+ 690 003e 3907      		cpc r19,r25
+ 691 0040 01F4      		brne .L24	 ;  22	branch	[length = 1]
+ 126:bertos/struct/fifobuf.h **** 		((fb->head == fb->begin) && (fb->tail == fb->end))
+ 692               		.loc 2 126 0
+ 693 0042 21A5      		ldd r18,Z+41	 ;  24	*movhi/2	[length = 2]
+ 694 0044 32A5      		ldd r19,Z+42
+ 695 0046 85A5      		ldd r24,Z+45	 ;  25	*movhi/2	[length = 2]
+ 696 0048 96A5      		ldd r25,Z+46
+ 697 004a 2817      		cp r18,r24	 ;  26	*cmphi/3	[length = 2]
+ 698 004c 3907      		cpc r19,r25
+ 699 004e 01F0      		breq .L25	 ;  27	branch	[length = 1]
+ 700               	.L24:
+ 127:bertos/struct/fifobuf.h **** 		|| (fb->tail == fb->head - 1);
+ 701               		.loc 2 127 0
+ 702 0050 21A5      		ldd r18,Z+41	 ;  30	*movhi/2	[length = 2]
+ 703 0052 32A5      		ldd r19,Z+42
+ 704 0054 87A1      		ldd r24,Z+39	 ;  31	*movhi/2	[length = 2]
+ 705 0056 90A5      		ldd r25,Z+40
+ 706 0058 0197      		sbiw r24,1	 ;  32	*addhi3/3	[length = 1]
+ 707 005a 2817      		cp r18,r24	 ;  33	*cmphi/3	[length = 2]
+ 708 005c 3907      		cpc r19,r25
+ 709 005e 01F4      		brne .L26	 ;  34	branch	[length = 1]
+ 710               	.L25:
+ 711               	.LBE37:
+ 712               	.LBE36:
+ 848:bertos/cpu/avr/drv/ser_avr.c **** 	struct FIFOBuffer * const rxfifo = &ser_handles[SER_UART0]->rxfifo;
+ 849:bertos/cpu/avr/drv/ser_avr.c **** 
+ 850:bertos/cpu/avr/drv/ser_avr.c **** 	if (fifo_isfull(rxfifo))
+ 851:bertos/cpu/avr/drv/ser_avr.c **** 		ser_handles[SER_UART0]->status |= SERRF_RXFIFOOVERRUN;
+ 713               		.loc 1 851 0
+ 714 0060 87A5      		ldd r24,Z+47	 ;  37	*movqi/4	[length = 1]
+ 715 0062 8160      		ori r24,lo8(1)	 ;  38	iorqi3/2	[length = 1]
+ 716 0064 87A7      		std Z+47,r24	 ;  39	*movqi/3	[length = 1]
+ 717 0066 00C0      		rjmp .L23	 ;  120	jump	[length = 1]
+ 718               	.LVL41:
+ 719               	.L32:
+ 720               	.LBB38:
+ 721               	.LBB39:
+ 157:bertos/struct/fifobuf.h **** 		fb->tail = fb->begin;
+ 722               		.loc 2 157 0
+ 723 0068 83A5      		ldd r24,Z+43	 ;  43	*movhi/2	[length = 2]
+ 724 006a 94A5      		ldd r25,Z+44
+ 725 006c 00C0      		rjmp .L31	 ;  122	jump	[length = 1]
+ 726               	.L30:
+ 160:bertos/struct/fifobuf.h **** 		fb->tail++;
+ 727               		.loc 2 160 0
+ 728 006e 81A5      		ldd r24,Z+41	 ;  48	*movhi/2	[length = 2]
+ 729 0070 92A5      		ldd r25,Z+42
+ 730 0072 0196      		adiw r24,1	 ;  49	*addhi3/2	[length = 1]
+ 731               	.L31:
+ 732 0074 92A7      		std Z+42,r25	 ;  50	*movhi/3	[length = 2]
+ 733 0076 81A7      		std Z+41,r24
+ 734 0078 00C0      		rjmp .L23	 ;  124	jump	[length = 1]
+ 735               	.LVL42:
+ 736               	.L26:
+ 153:bertos/struct/fifobuf.h **** 	*(fb->tail) = c;
+ 737               		.loc 2 153 0
+ 738 007a A1A5      		ldd r26,Z+41	 ;  59	*movhi/2	[length = 2]
+ 739 007c B2A5      		ldd r27,Z+42
+ 740 007e 4C93      		st X,r20	 ;  60	*movqi/3	[length = 1]
+ 155:bertos/struct/fifobuf.h **** 	if (UNLIKELY(fb->tail == fb->end))
+ 741               		.loc 2 155 0
+ 742 0080 21A5      		ldd r18,Z+41	 ;  61	*movhi/2	[length = 2]
+ 743 0082 32A5      		ldd r19,Z+42
+ 744 0084 85A5      		ldd r24,Z+45	 ;  63	*movhi/2	[length = 2]
+ 745 0086 96A5      		ldd r25,Z+46
+ 746 0088 2817      		cp r18,r24	 ;  64	*cmphi/3	[length = 2]
+ 747 008a 3907      		cpc r19,r25
+ 748 008c 01F4      		brne .L30	 ;  65	branch	[length = 1]
+ 749 008e 00C0      		rjmp .L32	 ;  128	jump	[length = 1]
+ 750               	.LVL43:
+ 751               	.L23:
+ 752               	/* epilogue start */
+ 753               	.LBE39:
+ 754               	.LBE38:
+ 852:bertos/cpu/avr/drv/ser_avr.c **** 	else
+ 853:bertos/cpu/avr/drv/ser_avr.c **** 	{
+ 854:bertos/cpu/avr/drv/ser_avr.c **** 		fifo_push(rxfifo, c);
+ 855:bertos/cpu/avr/drv/ser_avr.c **** #if CONFIG_SER_HWHANDSHAKE
+ 856:bertos/cpu/avr/drv/ser_avr.c **** 		if (fifo_isfull(rxfifo))
+ 857:bertos/cpu/avr/drv/ser_avr.c **** 			RTS_OFF;
+ 858:bertos/cpu/avr/drv/ser_avr.c **** #endif
+ 859:bertos/cpu/avr/drv/ser_avr.c **** 	}
+ 860:bertos/cpu/avr/drv/ser_avr.c **** 
+ 861:bertos/cpu/avr/drv/ser_avr.c **** 	/* Reenable receive complete int */
+ 862:bertos/cpu/avr/drv/ser_avr.c **** 	//IRQ_DISABLE;
+ 863:bertos/cpu/avr/drv/ser_avr.c **** 	//UCSR0B |= BV(RXCIE);
+ 864:bertos/cpu/avr/drv/ser_avr.c **** 
+ 865:bertos/cpu/avr/drv/ser_avr.c **** 	SER_STROBE_OFF;
+ 866:bertos/cpu/avr/drv/ser_avr.c **** }
+ 755               		.loc 1 866 0
+ 756 0090 FF91      		pop r31	 ;  100	popqi	[length = 1]
+ 757 0092 EF91      		pop r30	 ;  101	popqi	[length = 1]
+ 758 0094 BF91      		pop r27	 ;  102	popqi	[length = 1]
+ 759 0096 AF91      		pop r26	 ;  103	popqi	[length = 1]
+ 760 0098 9F91      		pop r25	 ;  104	popqi	[length = 1]
+ 761 009a 8F91      		pop r24	 ;  105	popqi	[length = 1]
+ 762 009c 4F91      		pop r20	 ;  106	popqi	[length = 1]
+ 763               	.LVL44:
+ 764 009e 3F91      		pop r19	 ;  107	popqi	[length = 1]
+ 765 00a0 2F91      		pop r18	 ;  108	popqi	[length = 1]
+ 766 00a2 0F90      		pop r0	 ;  109	popqi	[length = 1]
+ 767 00a4 0FBE      		out __SREG__,r0	 ;  110	*movqi/3	[length = 1]
+ 768 00a6 0F90      		pop r0	 ;  111	popqi	[length = 1]
+ 769 00a8 1F90      		pop r1	 ;  112	popqi	[length = 1]
+ 770 00aa 1895      		reti	 ;  113	return_from_interrupt_epilogue	[length = 1]
+ 771               		.cfi_endproc
+ 772               	.LFE57:
+ 774               		.section	.text.__vector_17,"ax",@progbits
+ 775               	.global	__vector_17
+ 777               	__vector_17:
+ 778               	.LFB58:
+ 867:bertos/cpu/avr/drv/ser_avr.c **** 
+ 868:bertos/cpu/avr/drv/ser_avr.c **** 
+ 869:bertos/cpu/avr/drv/ser_avr.c **** #if AVR_HAS_UART1
+ 870:bertos/cpu/avr/drv/ser_avr.c **** 
+ 871:bertos/cpu/avr/drv/ser_avr.c **** /**
+ 872:bertos/cpu/avr/drv/ser_avr.c ****  * Serial 1 RX complete interrupt handler.
+ 873:bertos/cpu/avr/drv/ser_avr.c ****  *
+ 874:bertos/cpu/avr/drv/ser_avr.c ****  * This handler is interruptible.
+ 875:bertos/cpu/avr/drv/ser_avr.c ****  * Interrupt are reenabled as soon as recv complete interrupt is
+ 876:bertos/cpu/avr/drv/ser_avr.c ****  * disabled. Using INTERRUPT() is troublesome when the serial
+ 877:bertos/cpu/avr/drv/ser_avr.c ****  * is heavily loaded, because an interrupt could be retriggered
+ 878:bertos/cpu/avr/drv/ser_avr.c ****  * when executing the handler prologue before RXCIE is disabled.
+ 879:bertos/cpu/avr/drv/ser_avr.c ****  *
+ 880:bertos/cpu/avr/drv/ser_avr.c ****  * \see DECLARE_ISR(USART1_RX_vect)
+ 881:bertos/cpu/avr/drv/ser_avr.c ****  */
+ 882:bertos/cpu/avr/drv/ser_avr.c **** DECLARE_ISR(USART1_RX_vect)
+ 883:bertos/cpu/avr/drv/ser_avr.c **** {
+ 884:bertos/cpu/avr/drv/ser_avr.c **** 	SER_STROBE_ON;
+ 885:bertos/cpu/avr/drv/ser_avr.c **** 
+ 886:bertos/cpu/avr/drv/ser_avr.c **** 	/* Disable Recv complete IRQ */
+ 887:bertos/cpu/avr/drv/ser_avr.c **** 	//UCSR1B &= ~BV(RXCIE);
+ 888:bertos/cpu/avr/drv/ser_avr.c **** 	//IRQ_ENABLE;
+ 889:bertos/cpu/avr/drv/ser_avr.c **** 
+ 890:bertos/cpu/avr/drv/ser_avr.c **** 	/* Should be read before UDR */
+ 891:bertos/cpu/avr/drv/ser_avr.c **** 	ser_handles[SER_UART1]->status |= UCSR1A & (SERRF_RXSROVERRUN | SERRF_FRAMEERROR);
+ 892:bertos/cpu/avr/drv/ser_avr.c **** 
+ 893:bertos/cpu/avr/drv/ser_avr.c **** 	/* To avoid an IRQ storm, we must _always_ read the UDR even when we're
+ 894:bertos/cpu/avr/drv/ser_avr.c **** 	 * not going to accept the incoming data
+ 895:bertos/cpu/avr/drv/ser_avr.c **** 	 */
+ 896:bertos/cpu/avr/drv/ser_avr.c **** 	char c = UDR1;
+ 897:bertos/cpu/avr/drv/ser_avr.c **** 	struct FIFOBuffer * const rxfifo = &ser_handles[SER_UART1]->rxfifo;
+ 898:bertos/cpu/avr/drv/ser_avr.c **** 	//ASSERT_VALID_FIFO(rxfifo);
+ 899:bertos/cpu/avr/drv/ser_avr.c **** 
+ 900:bertos/cpu/avr/drv/ser_avr.c **** 	if (UNLIKELY(fifo_isfull(rxfifo)))
+ 901:bertos/cpu/avr/drv/ser_avr.c **** 		ser_handles[SER_UART1]->status |= SERRF_RXFIFOOVERRUN;
+ 902:bertos/cpu/avr/drv/ser_avr.c **** 	else
+ 903:bertos/cpu/avr/drv/ser_avr.c **** 	{
+ 904:bertos/cpu/avr/drv/ser_avr.c **** 		fifo_push(rxfifo, c);
+ 905:bertos/cpu/avr/drv/ser_avr.c **** #if CONFIG_SER_HWHANDSHAKE
+ 906:bertos/cpu/avr/drv/ser_avr.c **** 		if (fifo_isfull(rxfifo))
+ 907:bertos/cpu/avr/drv/ser_avr.c **** 			RTS_OFF;
+ 908:bertos/cpu/avr/drv/ser_avr.c **** #endif
+ 909:bertos/cpu/avr/drv/ser_avr.c **** 	}
+ 910:bertos/cpu/avr/drv/ser_avr.c **** 	/* Re-enable receive complete int */
+ 911:bertos/cpu/avr/drv/ser_avr.c **** 	//IRQ_DISABLE;
+ 912:bertos/cpu/avr/drv/ser_avr.c **** 	//UCSR1B |= BV(RXCIE);
+ 913:bertos/cpu/avr/drv/ser_avr.c **** 
+ 914:bertos/cpu/avr/drv/ser_avr.c **** 	SER_STROBE_OFF;
+ 915:bertos/cpu/avr/drv/ser_avr.c **** }
+ 916:bertos/cpu/avr/drv/ser_avr.c **** 
+ 917:bertos/cpu/avr/drv/ser_avr.c **** #endif // AVR_HAS_UART1
+ 918:bertos/cpu/avr/drv/ser_avr.c **** 
+ 919:bertos/cpu/avr/drv/ser_avr.c **** 
+ 920:bertos/cpu/avr/drv/ser_avr.c **** /**
+ 921:bertos/cpu/avr/drv/ser_avr.c ****  * SPI interrupt handler
+ 922:bertos/cpu/avr/drv/ser_avr.c ****  */
+ 923:bertos/cpu/avr/drv/ser_avr.c **** DECLARE_ISR(SPI_STC_vect)
+ 924:bertos/cpu/avr/drv/ser_avr.c **** {
+ 779               		.loc 1 924 0
+ 780               		.cfi_startproc
+ 781 0000 1F92      		push r1	 ;  115	*pushqi/1	[length = 1]
+ 782               	.LCFI23:
+ 783               		.cfi_def_cfa_offset 3
+ 784               		.cfi_offset 1, -2
+ 785 0002 0F92      		push r0	 ;  116	*pushqi/1	[length = 1]
+ 786               	.LCFI24:
+ 787               		.cfi_def_cfa_offset 4
+ 788               		.cfi_offset 0, -3
+ 789 0004 0FB6      		in r0,__SREG__	 ;  117	*movqi/4	[length = 1]
+ 790 0006 0F92      		push r0	 ;  118	*pushqi/1	[length = 1]
+ 791 0008 1124      		clr __zero_reg__	 ;  119	*movqi/7	[length = 1]
+ 792 000a 2F93      		push r18	 ;  121	*pushqi/1	[length = 1]
+ 793               	.LCFI25:
+ 794               		.cfi_def_cfa_offset 5
+ 795               		.cfi_offset 18, -4
+ 796 000c 3F93      		push r19	 ;  122	*pushqi/1	[length = 1]
+ 797               	.LCFI26:
+ 798               		.cfi_def_cfa_offset 6
+ 799               		.cfi_offset 19, -5
+ 800 000e 4F93      		push r20	 ;  123	*pushqi/1	[length = 1]
+ 801               	.LCFI27:
+ 802               		.cfi_def_cfa_offset 7
+ 803               		.cfi_offset 20, -6
+ 804 0010 5F93      		push r21	 ;  124	*pushqi/1	[length = 1]
+ 805               	.LCFI28:
+ 806               		.cfi_def_cfa_offset 8
+ 807               		.cfi_offset 21, -7
+ 808 0012 8F93      		push r24	 ;  125	*pushqi/1	[length = 1]
+ 809               	.LCFI29:
+ 810               		.cfi_def_cfa_offset 9
+ 811               		.cfi_offset 24, -8
+ 812 0014 9F93      		push r25	 ;  126	*pushqi/1	[length = 1]
+ 813               	.LCFI30:
+ 814               		.cfi_def_cfa_offset 10
+ 815               		.cfi_offset 25, -9
+ 816 0016 AF93      		push r26	 ;  127	*pushqi/1	[length = 1]
+ 817               	.LCFI31:
+ 818               		.cfi_def_cfa_offset 11
+ 819               		.cfi_offset 26, -10
+ 820 0018 BF93      		push r27	 ;  128	*pushqi/1	[length = 1]
+ 821               	.LCFI32:
+ 822               		.cfi_def_cfa_offset 12
+ 823               		.cfi_offset 27, -11
+ 824 001a EF93      		push r30	 ;  129	*pushqi/1	[length = 1]
+ 825               	.LCFI33:
+ 826               		.cfi_def_cfa_offset 13
+ 827               		.cfi_offset 30, -12
+ 828 001c FF93      		push r31	 ;  130	*pushqi/1	[length = 1]
+ 829               	.LCFI34:
+ 830               		.cfi_def_cfa_offset 14
+ 831               		.cfi_offset 31, -13
+ 832               	/* prologue: Signal */
+ 833               	/* frame size = 0 */
+ 834               	/* stack size = 13 */
+ 835               	.L__stack_usage = 13
+ 925:bertos/cpu/avr/drv/ser_avr.c **** 	SER_STROBE_ON;
+ 926:bertos/cpu/avr/drv/ser_avr.c **** 
+ 927:bertos/cpu/avr/drv/ser_avr.c **** 	/* Read incoming byte. */
+ 928:bertos/cpu/avr/drv/ser_avr.c **** 	if (!fifo_isfull(&ser_handles[SER_SPI]->rxfifo))
+ 836               		.loc 1 928 0
+ 837 001e E091 0000 		lds r30,ser_handles+2	 ;  7	*movhi/2	[length = 4]
+ 838 0022 F091 0000 		lds r31,ser_handles+2+1
+ 839               	.LVL45:
+ 840               	.LBB40:
+ 841               	.LBB41:
+ 126:bertos/struct/fifobuf.h **** 		((fb->head == fb->begin) && (fb->tail == fb->end))
+ 842               		.loc 2 126 0
+ 843 0026 27A1      		ldd r18,Z+39	 ;  10	*movhi/2	[length = 2]
+ 844 0028 30A5      		ldd r19,Z+40
+ 127:bertos/struct/fifobuf.h **** 		|| (fb->tail == fb->head - 1);
+ 845               		.loc 2 127 0
+ 846 002a 83A5      		ldd r24,Z+43	 ;  11	*movhi/2	[length = 2]
+ 847 002c 94A5      		ldd r25,Z+44
+ 848 002e 2817      		cp r18,r24	 ;  12	*cmphi/3	[length = 2]
+ 849 0030 3907      		cpc r19,r25
+ 850 0032 01F4      		brne .L34	 ;  13	branch	[length = 1]
+ 126:bertos/struct/fifobuf.h **** 		((fb->head == fb->begin) && (fb->tail == fb->end))
+ 851               		.loc 2 126 0
+ 852 0034 21A5      		ldd r18,Z+41	 ;  15	*movhi/2	[length = 2]
+ 853 0036 32A5      		ldd r19,Z+42
+ 854 0038 85A5      		ldd r24,Z+45	 ;  16	*movhi/2	[length = 2]
+ 855 003a 96A5      		ldd r25,Z+46
+ 856 003c 2817      		cp r18,r24	 ;  17	*cmphi/3	[length = 2]
+ 857 003e 3907      		cpc r19,r25
+ 858 0040 01F0      		breq .L43	 ;  18	branch	[length = 1]
+ 859               	.L34:
+ 127:bertos/struct/fifobuf.h **** 		|| (fb->tail == fb->head - 1);
+ 860               		.loc 2 127 0
+ 861 0042 41A5      		ldd r20,Z+41	 ;  21	*movhi/2	[length = 2]
+ 862 0044 52A5      		ldd r21,Z+42
+ 863 0046 27A1      		ldd r18,Z+39	 ;  22	*movhi/2	[length = 2]
+ 864 0048 30A5      		ldd r19,Z+40
+ 865 004a 2150      		subi r18,lo8(-(-1))	 ;  23	*addhi3/4	[length = 2]
+ 866 004c 3040      		sbci r19,hi8(-(-1))
+ 867 004e 81E0      		ldi r24,lo8(1)	 ;  24	*movhi/4	[length = 2]
+ 868 0050 90E0      		ldi r25,hi8(1)
+ 869 0052 4217      		cp r20,r18	 ;  25	*cmphi/3	[length = 2]
+ 870 0054 5307      		cpc r21,r19
+ 871 0056 01F0      		breq .L35	 ;  26	branch	[length = 1]
+ 872 0058 80E0      		ldi r24,lo8(0)	 ;  27	*movhi/4	[length = 2]
+ 873 005a 90E0      		ldi r25,hi8(0)
+ 874 005c 00C0      		rjmp .L35	 ;  154	jump	[length = 1]
+ 875               	.L43:
+ 876 005e 81E0      		ldi r24,lo8(1)	 ;  3	*movhi/4	[length = 2]
+ 877 0060 90E0      		ldi r25,hi8(1)
+ 878               	.L35:
+ 879               	.LBE41:
+ 880               	.LBE40:
+ 881               		.loc 1 928 0
+ 882 0062 0097      		sbiw r24,0	 ;  32	*cmphi/1	[length = 1]
+ 883 0064 01F4      		brne .L37	 ;  33	branch	[length = 1]
+ 929:bertos/cpu/avr/drv/ser_avr.c **** 		fifo_push(&ser_handles[SER_SPI]->rxfifo, SPDR);
+ 884               		.loc 1 929 0
+ 885 0066 8EB5      		in r24,78-32	 ;  37	*movqi/4	[length = 1]
+ 886               	.LVL46:
+ 887               	.LBB42:
+ 888               	.LBB43:
+ 153:bertos/struct/fifobuf.h **** 	*(fb->tail) = c;
+ 889               		.loc 2 153 0
+ 890 0068 A1A5      		ldd r26,Z+41	 ;  40	*movhi/2	[length = 2]
+ 891 006a B2A5      		ldd r27,Z+42
+ 892 006c 8C93      		st X,r24	 ;  41	*movqi/3	[length = 1]
+ 155:bertos/struct/fifobuf.h **** 	if (UNLIKELY(fb->tail == fb->end))
+ 893               		.loc 2 155 0
+ 894 006e 21A5      		ldd r18,Z+41	 ;  42	*movhi/2	[length = 2]
+ 895 0070 32A5      		ldd r19,Z+42
+ 896 0072 85A5      		ldd r24,Z+45	 ;  43	*movhi/2	[length = 2]
+ 897 0074 96A5      		ldd r25,Z+46
+ 898               	.LVL47:
+ 899 0076 2817      		cp r18,r24	 ;  44	*cmphi/3	[length = 2]
+ 900 0078 3907      		cpc r19,r25
+ 901 007a 01F4      		brne .L38	 ;  45	branch	[length = 1]
+ 157:bertos/struct/fifobuf.h **** 		fb->tail = fb->begin;
+ 902               		.loc 2 157 0
+ 903 007c 83A5      		ldd r24,Z+43	 ;  47	*movhi/2	[length = 2]
+ 904 007e 94A5      		ldd r25,Z+44
+ 905 0080 00C0      		rjmp .L44	 ;  156	jump	[length = 1]
+ 906               	.L38:
+ 160:bertos/struct/fifobuf.h **** 		fb->tail++;
+ 907               		.loc 2 160 0
+ 908 0082 81A5      		ldd r24,Z+41	 ;  53	*movhi/2	[length = 2]
+ 909 0084 92A5      		ldd r25,Z+42
+ 910 0086 0196      		adiw r24,1	 ;  54	*addhi3/2	[length = 1]
+ 911               	.L44:
+ 912 0088 92A7      		std Z+42,r25	 ;  55	*movhi/3	[length = 2]
+ 913 008a 81A7      		std Z+41,r24
+ 914               	.LVL48:
+ 915               	.L37:
+ 916               	.LBE43:
+ 917               	.LBE42:
+ 930:bertos/cpu/avr/drv/ser_avr.c **** 	/*
+ 931:bertos/cpu/avr/drv/ser_avr.c **** 	 * FIXME
+ 932:bertos/cpu/avr/drv/ser_avr.c **** 	else
+ 933:bertos/cpu/avr/drv/ser_avr.c **** 		ser_handles[SER_SPI]->status |= SERRF_RXFIFOOVERRUN;
+ 934:bertos/cpu/avr/drv/ser_avr.c **** 	*/
+ 935:bertos/cpu/avr/drv/ser_avr.c **** 
+ 936:bertos/cpu/avr/drv/ser_avr.c **** 	/* Send */
+ 937:bertos/cpu/avr/drv/ser_avr.c **** 	if (!fifo_isempty(&ser_handles[SER_SPI]->txfifo))
+ 918               		.loc 1 937 0
+ 919 008c E091 0000 		lds r30,ser_handles+2	 ;  59	*movhi/2	[length = 4]
+ 920 0090 F091 0000 		lds r31,ser_handles+2+1
+ 921               	.LVL49:
+ 922               	.LBB44:
+ 923               	.LBB45:
+ 105:bertos/struct/fifobuf.h **** 	return fb->head == fb->tail;
+ 924               		.loc 2 105 0
+ 925 0094 278D      		ldd r18,Z+31	 ;  62	*movhi/2	[length = 2]
+ 926 0096 30A1      		ldd r19,Z+32
+ 927 0098 81A1      		ldd r24,Z+33	 ;  63	*movhi/2	[length = 2]
+ 928 009a 92A1      		ldd r25,Z+34
+ 929               	.LBE45:
+ 930               	.LBE44:
+ 931               		.loc 1 937 0
+ 932 009c 2817      		cp r18,r24	 ;  64	*cmphi/3	[length = 2]
+ 933 009e 3907      		cpc r19,r25
+ 934 00a0 01F0      		breq .L39	 ;  65	branch	[length = 1]
+ 935               	.LVL50:
+ 936               	.LBB46:
+ 937               	.LBB47:
+ 181:bertos/struct/fifobuf.h **** 	if (UNLIKELY(fb->head == fb->end))
+ 938               		.loc 2 181 0
+ 939 00a2 A78D      		ldd r26,Z+31	 ;  69	*movhi/2	[length = 2]
+ 940 00a4 B0A1      		ldd r27,Z+32
+ 941 00a6 85A1      		ldd r24,Z+37	 ;  70	*movhi/2	[length = 2]
+ 942 00a8 96A1      		ldd r25,Z+38
+ 943 00aa A817      		cp r26,r24	 ;  71	*cmphi/3	[length = 2]
+ 944 00ac B907      		cpc r27,r25
+ 945 00ae 01F4      		brne .L40	 ;  72	branch	[length = 1]
+ 184:bertos/struct/fifobuf.h **** 		fb->head = fb->begin;
+ 946               		.loc 2 184 0
+ 947 00b0 83A1      		ldd r24,Z+35	 ;  74	*movhi/2	[length = 2]
+ 948 00b2 94A1      		ldd r25,Z+36
+ 949 00b4 90A3      		std Z+32,r25	 ;  75	*movhi/3	[length = 2]
+ 950 00b6 878F      		std Z+31,r24
+ 185:bertos/struct/fifobuf.h **** 		return *(fb->end);
+ 951               		.loc 2 185 0
+ 952 00b8 8C91      		ld r24,X	 ;  76	*movqi/4	[length = 1]
+ 953 00ba 00C0      		rjmp .L41	 ;  158	jump	[length = 1]
+ 954               	.L40:
+ 955               		.loc 2 189 0
+ 956 00bc A78D      		ldd r26,Z+31	 ;  81	*movhi/2	[length = 2]
+ 957 00be B0A1      		ldd r27,Z+32
+ 958 00c0 8D91      		ld r24,X+	 ;  82	*movqi/4	[length = 1]
+ 959 00c2 B0A3      		std Z+32,r27	 ;  84	*movhi/3	[length = 2]
+ 960 00c4 A78F      		std Z+31,r26
+ 961               	.L41:
+ 962               	.LBE47:
+ 963               	.LBE46:
+ 938:bertos/cpu/avr/drv/ser_avr.c **** 		SPDR = fifo_pop(&ser_handles[SER_SPI]->txfifo);
+ 964               		.loc 1 938 0
+ 965 00c6 8EBD      		out 78-32,r24	 ;  88	*movqi/3	[length = 1]
+ 966 00c8 00C0      		rjmp .L33	 ;  160	jump	[length = 1]
+ 967               	.LVL51:
+ 968               	.L39:
+ 939:bertos/cpu/avr/drv/ser_avr.c **** 	else
+ 940:bertos/cpu/avr/drv/ser_avr.c **** 		UARTDescs[SER_SPI].sending = false;
+ 969               		.loc 1 940 0
+ 970 00ca 1092 0000 		sts UARTDescs+21,__zero_reg__	 ;  94	*movqi/3	[length = 2]
+ 971               	.L33:
+ 972               	/* epilogue start */
+ 941:bertos/cpu/avr/drv/ser_avr.c **** 
+ 942:bertos/cpu/avr/drv/ser_avr.c **** 	SER_STROBE_OFF;
+ 943:bertos/cpu/avr/drv/ser_avr.c **** }
+ 973               		.loc 1 943 0
+ 974 00ce FF91      		pop r31	 ;  133	popqi	[length = 1]
+ 975 00d0 EF91      		pop r30	 ;  134	popqi	[length = 1]
+ 976 00d2 BF91      		pop r27	 ;  135	popqi	[length = 1]
+ 977 00d4 AF91      		pop r26	 ;  136	popqi	[length = 1]
+ 978 00d6 9F91      		pop r25	 ;  137	popqi	[length = 1]
+ 979 00d8 8F91      		pop r24	 ;  138	popqi	[length = 1]
+ 980 00da 5F91      		pop r21	 ;  139	popqi	[length = 1]
+ 981 00dc 4F91      		pop r20	 ;  140	popqi	[length = 1]
+ 982 00de 3F91      		pop r19	 ;  141	popqi	[length = 1]
+ 983 00e0 2F91      		pop r18	 ;  142	popqi	[length = 1]
+ 984 00e2 0F90      		pop r0	 ;  143	popqi	[length = 1]
+ 985 00e4 0FBE      		out __SREG__,r0	 ;  144	*movqi/3	[length = 1]
+ 986 00e6 0F90      		pop r0	 ;  145	popqi	[length = 1]
+ 987 00e8 1F90      		pop r1	 ;  146	popqi	[length = 1]
+ 988 00ea 1895      		reti	 ;  147	return_from_interrupt_epilogue	[length = 1]
+ 989               		.cfi_endproc
+ 990               	.LFE58:
+ 992               		.section	.progmem.data,"a",@progbits
+ 995               	__c.1878:
+ 996 0000 756E 6974 		.string	"unit < SER_CNT"
+ 996      203C 2053 
+ 996      4552 5F43 
+ 996      4E54 00
+ 999               	__c.1880:
+ 1000 000f 6265 7274 		.string	"bertos/cpu/avr/drv/ser_avr.c"
+ 1000      6F73 2F63 
+ 1000      7075 2F61 
+ 1000      7672 2F64 
+ 1000      7276 2F73 
+ 1001               		.section	.data.UARTDescs,"aw",@progbits
+ 1004               	UARTDescs:
+ 1005 0000 0000      		.word	UART0_VT
+ 1006 0002 0000      		.word	uart0_txbuffer
+ 1007 0004 0000      		.word	uart0_rxbuffer
+ 1008 0006 2000      		.word	32
+ 1009 0008 2000      		.word	32
+ 1010 000a 00        		.byte	0
+ 1011 000b 0000      		.word	SPI_VT
+ 1012 000d 0000      		.word	spi_txbuffer
+ 1013 000f 0000      		.word	spi_rxbuffer
+ 1014 0011 2000      		.word	32
+ 1015 0013 2000      		.word	32
+ 1016 0015 00        		.byte	0
+ 1017               		.section	.rodata.UART0_VT,"a",@progbits
+ 1020               	UART0_VT:
+ 1021 0000 0000      		.word	gs(uart0_init)
+ 1022 0002 0000      		.word	gs(uart0_cleanup)
+ 1023 0004 0000      		.word	gs(uart0_setbaudrate)
+ 1024 0006 0000      		.word	gs(uart0_setparity)
+ 1025 0008 0000      		.word	gs(uart0_enabletxirq)
+ 1026 000a 0000      		.word	gs(tx_sending)
+ 1027               		.section	.bss.uart0_txbuffer,"aw",@nobits
+ 1030               	uart0_txbuffer:
+ 1031 0000 0000 0000 		.skip 32,0
+ 1031      0000 0000 
+ 1031      0000 0000 
+ 1031      0000 0000 
+ 1031      0000 0000 
+ 1032               		.section	.bss.uart0_rxbuffer,"aw",@nobits
+ 1035               	uart0_rxbuffer:
+ 1036 0000 0000 0000 		.skip 32,0
+ 1036      0000 0000 
+ 1036      0000 0000 
+ 1036      0000 0000 
+ 1036      0000 0000 
+ 1037               		.section	.rodata.SPI_VT,"a",@progbits
+ 1040               	SPI_VT:
+ 1041 0000 0000      		.word	gs(spi_init)
+ 1042 0002 0000      		.word	gs(spi_cleanup)
+ 1043 0004 0000      		.word	gs(spi_setbaudrate)
+ 1044 0006 0000      		.word	gs(spi_setparity)
+ 1045 0008 0000      		.word	gs(spi_starttx)
+ 1046 000a 0000      		.word	gs(tx_sending)
+ 1047               		.section	.bss.spi_txbuffer,"aw",@nobits
+ 1050               	spi_txbuffer:
+ 1051 0000 0000 0000 		.skip 32,0
+ 1051      0000 0000 
+ 1051      0000 0000 
+ 1051      0000 0000 
+ 1051      0000 0000 
+ 1052               		.section	.bss.spi_rxbuffer,"aw",@nobits
+ 1055               	spi_rxbuffer:
+ 1056 0000 0000 0000 		.skip 32,0
+ 1056      0000 0000 
+ 1056      0000 0000 
+ 1056      0000 0000 
+ 1056      0000 0000 
+ 1057               		.text
+ 1058               	.Letext0:
+ 1059               		.file 3 "/usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/include/stddef.h"
+ 1060               		.file 4 "/usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/include/stdint.h"
+ 1061               		.file 5 "bertos/cfg/compiler.h"
+ 1062               		.file 6 "bertos/cfg/macros.h"
+ 1063               		.file 7 "bertos/cpu/types.h"
+ 1064               		.file 8 "bertos/kern/kfile.h"
+ 1065               		.file 9 "bertos/struct/list.h"
+ 1066               		.file 10 "bertos/kern/proc.h"
+ 1067               		.file 11 "bertos/cpu/avr/drv/ser_avr.h"
+ 1068               		.file 12 "bertos/drv/ser.h"
+ 1069               		.file 13 "bertos/drv/ser_p.h"
+ 1070               		.file 14 "bertos/drv/timer.h"
 DEFINED SYMBOLS
                             *ABS*:00000000 ser_avr.c
-C:\DOCUME~1\develer\IMPOST~1\Temp/ccNSc4dc.s:2      *ABS*:0000003f __SREG__
-C:\DOCUME~1\develer\IMPOST~1\Temp/ccNSc4dc.s:3      *ABS*:0000003e __SP_H__
-C:\DOCUME~1\develer\IMPOST~1\Temp/ccNSc4dc.s:4      *ABS*:0000003d __SP_L__
-C:\DOCUME~1\develer\IMPOST~1\Temp/ccNSc4dc.s:5      *ABS*:00000034 __CCP__
-C:\DOCUME~1\develer\IMPOST~1\Temp/ccNSc4dc.s:6      *ABS*:00000000 __tmp_reg__
-C:\DOCUME~1\develer\IMPOST~1\Temp/ccNSc4dc.s:7      *ABS*:00000001 __zero_reg__
-C:\DOCUME~1\develer\IMPOST~1\Temp/ccNSc4dc.s:18     .text.uart0_init:00000000 uart0_init
-C:\DOCUME~1\develer\IMPOST~1\Temp/ccNSc4dc.s:35     .text.uart0_cleanup:00000000 uart0_cleanup
-C:\DOCUME~1\develer\IMPOST~1\Temp/ccNSc4dc.s:50     .text.uart0_enabletxirq:00000000 uart0_enabletxirq
-C:\DOCUME~1\develer\IMPOST~1\Temp/ccNSc4dc.s:76     .text.uart0_setbaudrate:00000000 uart0_setbaudrate
-C:\DOCUME~1\develer\IMPOST~1\Temp/ccNSc4dc.s:111    .text.uart0_setparity:00000000 uart0_setparity
-C:\DOCUME~1\develer\IMPOST~1\Temp/ccNSc4dc.s:138    .text.spi_init:00000000 spi_init
-C:\DOCUME~1\develer\IMPOST~1\Temp/ccNSc4dc.s:214    .text.spi_cleanup:00000000 spi_cleanup
-C:\DOCUME~1\develer\IMPOST~1\Temp/ccNSc4dc.s:248    .text.spi_starttx:00000000 spi_starttx
-C:\DOCUME~1\develer\IMPOST~1\Temp/ccNSc4dc.s:350    .text.spi_setbaudrate:00000000 spi_setbaudrate
-C:\DOCUME~1\develer\IMPOST~1\Temp/ccNSc4dc.s:363    .text.spi_setparity:00000000 spi_setparity
-C:\DOCUME~1\develer\IMPOST~1\Temp/ccNSc4dc.s:376    .text.tx_sending:00000000 tx_sending
-C:\DOCUME~1\develer\IMPOST~1\Temp/ccNSc4dc.s:396    .text.__vector_19:00000000 __vector_19
-C:\DOCUME~1\develer\IMPOST~1\Temp/ccNSc4dc.s:891    .data.UARTDescs:00000000 UARTDescs
-C:\DOCUME~1\develer\IMPOST~1\Temp/ccNSc4dc.s:506    .text.__vector_18:00000000 __vector_18
-C:\DOCUME~1\develer\IMPOST~1\Temp/ccNSc4dc.s:654    .text.__vector_17:00000000 __vector_17
-C:\DOCUME~1\develer\IMPOST~1\Temp/ccNSc4dc.s:845    .text.ser_hw_getdesc:00000000 ser_hw_getdesc
-C:\DOCUME~1\develer\IMPOST~1\Temp/ccNSc4dc.s:911    .progmem.data:0000001d __c.2026
-C:\DOCUME~1\develer\IMPOST~1\Temp/ccNSc4dc.s:907    .progmem.data:00000000 __c.2028
-C:\DOCUME~1\develer\IMPOST~1\Temp/ccNSc4dc.s:916    .rodata.UART0_VT:00000000 UART0_VT
-C:\DOCUME~1\develer\IMPOST~1\Temp/ccNSc4dc.s:926    .bss.uart0_txbuffer:00000000 uart0_txbuffer
-C:\DOCUME~1\develer\IMPOST~1\Temp/ccNSc4dc.s:931    .bss.uart0_rxbuffer:00000000 uart0_rxbuffer
-C:\DOCUME~1\develer\IMPOST~1\Temp/ccNSc4dc.s:936    .rodata.SPI_VT:00000000 SPI_VT
-C:\DOCUME~1\develer\IMPOST~1\Temp/ccNSc4dc.s:946    .bss.spi_txbuffer:00000000 spi_txbuffer
-C:\DOCUME~1\develer\IMPOST~1\Temp/ccNSc4dc.s:951    .bss.spi_rxbuffer:00000000 spi_rxbuffer
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccbtXCqW.s:2      *ABS*:0000003f __SREG__
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccbtXCqW.s:3      *ABS*:0000003e __SP_H__
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccbtXCqW.s:4      *ABS*:0000003d __SP_L__
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccbtXCqW.s:5      *ABS*:00000034 __CCP__
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccbtXCqW.s:6      *ABS*:00000000 __tmp_reg__
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccbtXCqW.s:7      *ABS*:00000001 __zero_reg__
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccbtXCqW.s:15     .text.uart0_init:00000000 uart0_init
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccbtXCqW.s:37     .text.uart0_cleanup:00000000 uart0_cleanup
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccbtXCqW.s:56     .text.uart0_enabletxirq:00000000 uart0_enabletxirq
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccbtXCqW.s:86     .text.uart0_setbaudrate:00000000 uart0_setbaudrate
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccbtXCqW.s:127    .text.uart0_setparity:00000000 uart0_setparity
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccbtXCqW.s:158    .text.spi_init:00000000 spi_init
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccbtXCqW.s:237    .text.spi_cleanup:00000000 spi_cleanup
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccbtXCqW.s:275    .text.spi_setbaudrate:00000000 spi_setbaudrate
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccbtXCqW.s:292    .text.spi_setparity:00000000 spi_setparity
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccbtXCqW.s:309    .text.tx_sending:00000000 tx_sending
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccbtXCqW.s:330    .text.spi_starttx:00000000 spi_starttx
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccbtXCqW.s:427    .text.ser_hw_getdesc:00000000 ser_hw_getdesc
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccbtXCqW.s:995    .progmem.data:00000000 __c.1878
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccbtXCqW.s:999    .progmem.data:0000000f __c.1880
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccbtXCqW.s:1004   .data.UARTDescs:00000000 UARTDescs
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccbtXCqW.s:483    .text.__vector_19:00000000 __vector_19
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccbtXCqW.s:615    .text.__vector_18:00000000 __vector_18
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccbtXCqW.s:777    .text.__vector_17:00000000 __vector_17
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccbtXCqW.s:1020   .rodata.UART0_VT:00000000 UART0_VT
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccbtXCqW.s:1030   .bss.uart0_txbuffer:00000000 uart0_txbuffer
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccbtXCqW.s:1035   .bss.uart0_rxbuffer:00000000 uart0_rxbuffer
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccbtXCqW.s:1040   .rodata.SPI_VT:00000000 SPI_VT
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccbtXCqW.s:1050   .bss.spi_txbuffer:00000000 spi_txbuffer
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccbtXCqW.s:1055   .bss.spi_rxbuffer:00000000 spi_rxbuffer
 
 UNDEFINED SYMBOLS
+__do_copy_data
+__do_clear_bss
 __udivmodsi4
 ser_handles
 __bassert_P
-__do_copy_data
-__do_clear_bss

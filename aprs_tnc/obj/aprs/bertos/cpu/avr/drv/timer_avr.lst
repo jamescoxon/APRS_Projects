@@ -2,75 +2,240 @@
    2               	__SREG__ = 0x3f
    3               	__SP_H__ = 0x3e
    4               	__SP_L__ = 0x3d
-   5               	__CCP__  = 0x34
+   5               	__CCP__ = 0x34
    6               	__tmp_reg__ = 0
    7               	__zero_reg__ = 1
-  15               	.Ltext0:
-  16               		.section	.text.timer_hw_init,"ax",@progbits
-  17               	.global	timer_hw_init
-  19               	timer_hw_init:
-  20               	.LFB10:
-  21               	.LSM0:
-  22               	/* prologue: function */
-  23               	/* frame size = 0 */
-  24               	.LSM1:
-  25               	/* #APP */
-  26               	 ;  122 "bertos/cpu/avr/drv/timer_avr.c" 1
-  27 0000 9FB7      		in r25,__SREG__
-  28 0002 F894      		cli
-  29               	 ;  0 "" 2
-  30               	.LVL0:
-  31               	.LSM2:
-  32               	/* #NOAPP */
-  33 0004 83E0      		ldi r24,lo8(3)	 ;  7	*movqi/2	[length = 1]
-  34 0006 85BB      		out 53-32,r24	 ;  8	*movqi/3	[length = 1]
-  35               	.LSM3:
-  36 0008 1092 B600 		sts 182,__zero_reg__	 ;  10	*movqi/3	[length = 2]
-  37               	.LSM4:
-  38 000c 14BC      		out 68-32,__zero_reg__	 ;  12	*movqi/3	[length = 1]
-  39               	.LSM5:
-  40 000e 15BC      		out 69-32,__zero_reg__	 ;  14	*movqi/3	[length = 1]
-  41               	.LSM6:
-  42 0010 82E0      		ldi r24,lo8(2)	 ;  16	*movqi/2	[length = 1]
-  43 0012 84BD      		out 68-32,r24	 ;  17	*movqi/3	[length = 1]
-  44               	.LSM7:
-  45 0014 85B5      		in r24,69-32	 ;  19	*movqi/4	[length = 1]
-  46 0016 8360      		ori r24,lo8(3)	 ;  20	iorqi3/2	[length = 1]
-  47 0018 85BD      		out 69-32,r24	 ;  22	*movqi/3	[length = 1]
-  48               	.LSM8:
-  49 001a 16BC      		out 70-32,__zero_reg__	 ;  24	*movqi/3	[length = 1]
-  50               	.LSM9:
-  51 001c 89EF      		ldi r24,lo8(-7)	 ;  26	*movqi/2	[length = 1]
-  52 001e 87BD      		out 71-32,r24	 ;  27	*movqi/3	[length = 1]
-  53               	.LSM10:
-  54 0020 EEE6      		ldi r30,lo8(110)	 ;  28	*movhi/4	[length = 2]
-  55 0022 F0E0      		ldi r31,hi8(110)
-  56 0024 8081      		ld r24,Z	 ;  29	*movqi/4	[length = 1]
-  57 0026 8E7F      		andi r24,lo8(-2)	 ;  30	andqi3/2	[length = 1]
-  58 0028 8083      		st Z,r24	 ;  32	*movqi/3	[length = 1]
-  59               	.LSM11:
-  60 002a 8081      		ld r24,Z	 ;  34	*movqi/4	[length = 1]
-  61 002c 8260      		ori r24,lo8(2)	 ;  35	iorqi3/2	[length = 1]
-  62 002e 8083      		st Z,r24	 ;  37	*movqi/3	[length = 1]
-  63               	.LSM12:
-  64               	/* #APP */
-  65               	 ;  147 "bertos/cpu/avr/drv/timer_avr.c" 1
-  66 0030 9FBF      		out __SREG__,r25
-  67               	 ;  0 "" 2
-  68               	/* epilogue start */
-  69               	.LSM13:
-  70               	/* #NOAPP */
-  71 0032 0895      		ret	 ;  49	return	[length = 1]
-  72               	.LFE10:
-  98               	.Letext0:
+   8               		.global __do_copy_data
+   9               		.global __do_clear_bss
+  10               		.text
+  11               	.Ltext0:
+  12               		.cfi_sections	.debug_frame
+  13               		.section	.text.timer_hw_init,"ax",@progbits
+  14               	.global	timer_hw_init
+  16               	timer_hw_init:
+  17               	.LFB8:
+  18               		.file 1 "bertos/cpu/avr/drv/timer_avr.c"
+   1:bertos/cpu/avr/drv/timer_avr.c **** /**
+   2:bertos/cpu/avr/drv/timer_avr.c ****  * \file
+   3:bertos/cpu/avr/drv/timer_avr.c ****  * <!--
+   4:bertos/cpu/avr/drv/timer_avr.c ****  * This file is part of BeRTOS.
+   5:bertos/cpu/avr/drv/timer_avr.c ****  *
+   6:bertos/cpu/avr/drv/timer_avr.c ****  * Bertos is free software; you can redistribute it and/or modify
+   7:bertos/cpu/avr/drv/timer_avr.c ****  * it under the terms of the GNU General Public License as published by
+   8:bertos/cpu/avr/drv/timer_avr.c ****  * the Free Software Foundation; either version 2 of the License, or
+   9:bertos/cpu/avr/drv/timer_avr.c ****  * (at your option) any later version.
+  10:bertos/cpu/avr/drv/timer_avr.c ****  *
+  11:bertos/cpu/avr/drv/timer_avr.c ****  * This program is distributed in the hope that it will be useful,
+  12:bertos/cpu/avr/drv/timer_avr.c ****  * but WITHOUT ANY WARRANTY; without even the implied warranty of
+  13:bertos/cpu/avr/drv/timer_avr.c ****  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  14:bertos/cpu/avr/drv/timer_avr.c ****  * GNU General Public License for more details.
+  15:bertos/cpu/avr/drv/timer_avr.c ****  *
+  16:bertos/cpu/avr/drv/timer_avr.c ****  * You should have received a copy of the GNU General Public License
+  17:bertos/cpu/avr/drv/timer_avr.c ****  * along with this program; if not, write to the Free Software
+  18:bertos/cpu/avr/drv/timer_avr.c ****  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+  19:bertos/cpu/avr/drv/timer_avr.c ****  *
+  20:bertos/cpu/avr/drv/timer_avr.c ****  * As a special exception, you may use this file as part of a free software
+  21:bertos/cpu/avr/drv/timer_avr.c ****  * library without restriction.  Specifically, if other files instantiate
+  22:bertos/cpu/avr/drv/timer_avr.c ****  * templates or use macros or inline functions from this file, or you compile
+  23:bertos/cpu/avr/drv/timer_avr.c ****  * this file and link it with other files to produce an executable, this
+  24:bertos/cpu/avr/drv/timer_avr.c ****  * file does not by itself cause the resulting executable to be covered by
+  25:bertos/cpu/avr/drv/timer_avr.c ****  * the GNU General Public License.  This exception does not however
+  26:bertos/cpu/avr/drv/timer_avr.c ****  * invalidate any other reasons why the executable file might be covered by
+  27:bertos/cpu/avr/drv/timer_avr.c ****  * the GNU General Public License.
+  28:bertos/cpu/avr/drv/timer_avr.c ****  *
+  29:bertos/cpu/avr/drv/timer_avr.c ****  * Copyright 2005, 2010 Develer S.r.l. (http://www.develer.com/)
+  30:bertos/cpu/avr/drv/timer_avr.c ****  *
+  31:bertos/cpu/avr/drv/timer_avr.c ****  * -->
+  32:bertos/cpu/avr/drv/timer_avr.c ****  *
+  33:bertos/cpu/avr/drv/timer_avr.c ****  * \author Bernie Innocenti <bernie@codewiz.org>
+  34:bertos/cpu/avr/drv/timer_avr.c ****  * \author Francesco Sacchi <batt@develer.com>
+  35:bertos/cpu/avr/drv/timer_avr.c ****  * \author Luca Ottaviano <lottaviano@develer.com>
+  36:bertos/cpu/avr/drv/timer_avr.c ****  *
+  37:bertos/cpu/avr/drv/timer_avr.c ****  * \brief Low-level timer module for AVR (implementation).
+  38:bertos/cpu/avr/drv/timer_avr.c ****  *
+  39:bertos/cpu/avr/drv/timer_avr.c ****  * This module is automatically included so no need to include
+  40:bertos/cpu/avr/drv/timer_avr.c ****  * in test list.
+  41:bertos/cpu/avr/drv/timer_avr.c ****  * notest: avr
+  42:bertos/cpu/avr/drv/timer_avr.c ****  */
+  43:bertos/cpu/avr/drv/timer_avr.c **** 
+  44:bertos/cpu/avr/drv/timer_avr.c **** #include <drv/timer_avr.h>
+  45:bertos/cpu/avr/drv/timer_avr.c **** #include <cfg/macros.h> // BV()
+  46:bertos/cpu/avr/drv/timer_avr.c **** 
+  47:bertos/cpu/avr/drv/timer_avr.c **** #include <cpu/types.h>
+  48:bertos/cpu/avr/drv/timer_avr.c **** #include <cpu/irq.h>
+  49:bertos/cpu/avr/drv/timer_avr.c **** 
+  50:bertos/cpu/avr/drv/timer_avr.c **** #include <avr/io.h>
+  51:bertos/cpu/avr/drv/timer_avr.c **** 
+  52:bertos/cpu/avr/drv/timer_avr.c **** #if CPU_AVR_ATMEGA1281 || CPU_AVR_ATMEGA168 || CPU_AVR_ATMEGA328P
+  53:bertos/cpu/avr/drv/timer_avr.c **** 	#define REG_TIFR0 TIFR0
+  54:bertos/cpu/avr/drv/timer_avr.c **** 	#define REG_TIFR1 TIFR1
+  55:bertos/cpu/avr/drv/timer_avr.c **** 	#define REG_TIFR2 TIFR2
+  56:bertos/cpu/avr/drv/timer_avr.c **** 	#if CPU_AVR_ATMEGA1281
+  57:bertos/cpu/avr/drv/timer_avr.c **** 		#define REG_TIFR3 TIFR3
+  58:bertos/cpu/avr/drv/timer_avr.c **** 	#endif
+  59:bertos/cpu/avr/drv/timer_avr.c **** 
+  60:bertos/cpu/avr/drv/timer_avr.c **** 	#define REG_TIMSK0 TIMSK0
+  61:bertos/cpu/avr/drv/timer_avr.c **** 	#define REG_TIMSK1 TIMSK1
+  62:bertos/cpu/avr/drv/timer_avr.c **** 	#define REG_TIMSK2 TIMSK2
+  63:bertos/cpu/avr/drv/timer_avr.c **** 	#if CPU_AVR_ATMEGA1281
+  64:bertos/cpu/avr/drv/timer_avr.c **** 		#define REG_TIMSK3 TIMSK3
+  65:bertos/cpu/avr/drv/timer_avr.c **** 	#endif
+  66:bertos/cpu/avr/drv/timer_avr.c **** 
+  67:bertos/cpu/avr/drv/timer_avr.c **** 	#define REG_TCCR0A TCCR0A
+  68:bertos/cpu/avr/drv/timer_avr.c **** 	#define REG_TCCR0B TCCR0B
+  69:bertos/cpu/avr/drv/timer_avr.c **** 
+  70:bertos/cpu/avr/drv/timer_avr.c **** 	#define REG_TCCR2A TCCR2A
+  71:bertos/cpu/avr/drv/timer_avr.c **** 	#define REG_TCCR2B TCCR2B
+  72:bertos/cpu/avr/drv/timer_avr.c **** 
+  73:bertos/cpu/avr/drv/timer_avr.c **** 	#define REG_OCR0A  OCR0A
+  74:bertos/cpu/avr/drv/timer_avr.c **** 	#define REG_OCR2A  OCR2A
+  75:bertos/cpu/avr/drv/timer_avr.c **** 
+  76:bertos/cpu/avr/drv/timer_avr.c **** 	#define BIT_OCF0A  OCF0A
+  77:bertos/cpu/avr/drv/timer_avr.c **** 	#define BIT_OCF2A  OCF2A
+  78:bertos/cpu/avr/drv/timer_avr.c **** 
+  79:bertos/cpu/avr/drv/timer_avr.c **** 	#define BIT_OCIE0A OCIE0A
+  80:bertos/cpu/avr/drv/timer_avr.c **** 	#define BIT_OCIE2A OCIE2A
+  81:bertos/cpu/avr/drv/timer_avr.c **** #else
+  82:bertos/cpu/avr/drv/timer_avr.c **** 	#define REG_TIFR0 TIFR
+  83:bertos/cpu/avr/drv/timer_avr.c **** 	#define REG_TIFR1 TIFR
+  84:bertos/cpu/avr/drv/timer_avr.c **** 	#define REG_TIFR2 TIFR
+  85:bertos/cpu/avr/drv/timer_avr.c **** 
+  86:bertos/cpu/avr/drv/timer_avr.c **** 	#define REG_TIMSK0 TIMSK
+  87:bertos/cpu/avr/drv/timer_avr.c **** 	#define REG_TIMSK1 TIMSK
+  88:bertos/cpu/avr/drv/timer_avr.c **** 	#define REG_TIMSK2 TIMSK
+  89:bertos/cpu/avr/drv/timer_avr.c **** 	#define REG_TIMSK3 ETIMSK
+  90:bertos/cpu/avr/drv/timer_avr.c **** 
+  91:bertos/cpu/avr/drv/timer_avr.c **** 	#define REG_TCCR0A TCCR0
+  92:bertos/cpu/avr/drv/timer_avr.c **** 	#define REG_TCCR0B TCCR0
+  93:bertos/cpu/avr/drv/timer_avr.c **** 
+  94:bertos/cpu/avr/drv/timer_avr.c **** 	#define REG_TCCR2A TCCR2
+  95:bertos/cpu/avr/drv/timer_avr.c **** 	#define REG_TCCR2B TCCR2
+  96:bertos/cpu/avr/drv/timer_avr.c **** 
+  97:bertos/cpu/avr/drv/timer_avr.c **** 	#define REG_OCR0A  OCR0
+  98:bertos/cpu/avr/drv/timer_avr.c **** 	#define REG_OCR2A  OCR2
+  99:bertos/cpu/avr/drv/timer_avr.c **** 
+ 100:bertos/cpu/avr/drv/timer_avr.c **** 	#define BIT_OCF0A  OCF0
+ 101:bertos/cpu/avr/drv/timer_avr.c **** 	#define BIT_OCF2A  OCF2
+ 102:bertos/cpu/avr/drv/timer_avr.c **** 
+ 103:bertos/cpu/avr/drv/timer_avr.c **** 	#define BIT_OCIE0A OCIE0
+ 104:bertos/cpu/avr/drv/timer_avr.c **** 	#define BIT_OCIE2A OCIE2
+ 105:bertos/cpu/avr/drv/timer_avr.c **** #endif
+ 106:bertos/cpu/avr/drv/timer_avr.c **** 
+ 107:bertos/cpu/avr/drv/timer_avr.c **** #if CPU_AVR_ATMEGA128 || CPU_AVR_ATMEGA64 || CPU_AVR_ATMEGA103
+ 108:bertos/cpu/avr/drv/timer_avr.c ****     /* These ATMega have different prescaler options. */
+ 109:bertos/cpu/avr/drv/timer_avr.c ****     #define TIMER0_PRESCALER_64 BV(CS02)
+ 110:bertos/cpu/avr/drv/timer_avr.c ****     #define TIMER2_PRESCALER_64 (BV(CS21) | BV(CS20))
+ 111:bertos/cpu/avr/drv/timer_avr.c **** #else
+ 112:bertos/cpu/avr/drv/timer_avr.c ****     #define TIMER0_PRESCALER_64 (BV(CS01) | BV(CS00))
+ 113:bertos/cpu/avr/drv/timer_avr.c ****     #define TIMER2_PRESCALER_64 BV(CS22)
+ 114:bertos/cpu/avr/drv/timer_avr.c **** #endif
+ 115:bertos/cpu/avr/drv/timer_avr.c **** 
+ 116:bertos/cpu/avr/drv/timer_avr.c **** /** HW dependent timer initialization  */
+ 117:bertos/cpu/avr/drv/timer_avr.c **** #if (CONFIG_TIMER == TIMER_ON_OUTPUT_COMPARE0)
+ 118:bertos/cpu/avr/drv/timer_avr.c **** 
+ 119:bertos/cpu/avr/drv/timer_avr.c **** 	void timer_hw_init(void)
+ 120:bertos/cpu/avr/drv/timer_avr.c **** 	{
+  19               		.loc 1 120 0
+  20               		.cfi_startproc
+  21               	/* prologue: function */
+  22               	/* frame size = 0 */
+  23               	/* stack size = 0 */
+  24               	.L__stack_usage = 0
+ 121:bertos/cpu/avr/drv/timer_avr.c **** 		cpu_flags_t flags;
+ 122:bertos/cpu/avr/drv/timer_avr.c **** 		IRQ_SAVE_DISABLE(flags);
+  25               		.loc 1 122 0
+  26               	/* #APP */
+  27               	 ;  122 "bertos/cpu/avr/drv/timer_avr.c" 1
+  28 0000 9FB7      		in r25,__SREG__
+  29 0002 F894      		cli
+  30               	 ;  0 "" 2
+  31               	.LVL0:
+ 123:bertos/cpu/avr/drv/timer_avr.c **** 
+ 124:bertos/cpu/avr/drv/timer_avr.c **** 		/* Reset Timer flags */
+ 125:bertos/cpu/avr/drv/timer_avr.c **** 		REG_TIFR0 = BV(BIT_OCF0A) | BV(TOV0);
+  32               		.loc 1 125 0
+  33               	/* #NOAPP */
+  34 0004 83E0      		ldi r24,lo8(3)	 ;  9	*movqi/2	[length = 1]
+  35 0006 85BB      		out 53-32,r24	 ;  10	*movqi/3	[length = 1]
+ 126:bertos/cpu/avr/drv/timer_avr.c **** 
+ 127:bertos/cpu/avr/drv/timer_avr.c **** 		/* Setup Timer/Counter interrupt */
+ 128:bertos/cpu/avr/drv/timer_avr.c **** 		ASSR = 0x00;                  /* Internal system clock */
+  36               		.loc 1 128 0
+  37 0008 1092 B600 		sts 182,__zero_reg__	 ;  12	*movqi/3	[length = 2]
+ 129:bertos/cpu/avr/drv/timer_avr.c **** 
+ 130:bertos/cpu/avr/drv/timer_avr.c **** 		REG_TCCR0A = 0;	// TCCR2 reg could be separate or a unique register with both A & B values, this 
+  38               		.loc 1 130 0
+  39 000c 14BC      		out 68-32,__zero_reg__	 ;  14	*movqi/3	[length = 1]
+ 131:bertos/cpu/avr/drv/timer_avr.c **** 		REG_TCCR0B = 0;
+  40               		.loc 1 131 0
+  41 000e 15BC      		out 69-32,__zero_reg__	 ;  16	*movqi/3	[length = 1]
+ 132:bertos/cpu/avr/drv/timer_avr.c **** 
+ 133:bertos/cpu/avr/drv/timer_avr.c **** 		REG_TCCR0A = BV(WGM01);             /* Clear on Compare match */
+  42               		.loc 1 133 0
+  43 0010 82E0      		ldi r24,lo8(2)	 ;  18	*movqi/2	[length = 1]
+  44 0012 84BD      		out 68-32,r24	 ;  19	*movqi/3	[length = 1]
+ 134:bertos/cpu/avr/drv/timer_avr.c **** 			#if TIMER_PRESCALER == 64
+ 135:bertos/cpu/avr/drv/timer_avr.c **** 			REG_TCCR0B |= TIMER0_PRESCALER_64;
+  45               		.loc 1 135 0
+  46 0014 85B5      		in r24,69-32	 ;  21	*movqi/4	[length = 1]
+  47 0016 8360      		ori r24,lo8(3)	 ;  22	iorqi3/2	[length = 1]
+  48 0018 85BD      		out 69-32,r24	 ;  24	*movqi/3	[length = 1]
+ 136:bertos/cpu/avr/drv/timer_avr.c **** 			#else
+ 137:bertos/cpu/avr/drv/timer_avr.c **** 				#error Unsupported value of TIMER_PRESCALER
+ 138:bertos/cpu/avr/drv/timer_avr.c **** 			#endif
+ 139:bertos/cpu/avr/drv/timer_avr.c **** 
+ 140:bertos/cpu/avr/drv/timer_avr.c **** 		TCNT0 = 0x00;                 /* Initialization of Timer/Counter */
+  49               		.loc 1 140 0
+  50 001a 16BC      		out 70-32,__zero_reg__	 ;  26	*movqi/3	[length = 1]
+ 141:bertos/cpu/avr/drv/timer_avr.c **** 		REG_OCR0A = OCR_DIVISOR;           /* Timer/Counter Output Compare Register */
+  51               		.loc 1 141 0
+  52 001c 8CE7      		ldi r24,lo8(124)	 ;  28	*movqi/2	[length = 1]
+  53 001e 87BD      		out 71-32,r24	 ;  29	*movqi/3	[length = 1]
+ 142:bertos/cpu/avr/drv/timer_avr.c **** 
+ 143:bertos/cpu/avr/drv/timer_avr.c **** 		/* Enable timer interrupts: Timer/Counter2 Output Compare (OCIE2) */
+ 144:bertos/cpu/avr/drv/timer_avr.c **** 		REG_TIMSK0 &= ~BV(TOIE0);
+  54               		.loc 1 144 0
+  55 0020 EEE6      		ldi r30,lo8(110)	 ;  30	*movhi/4	[length = 2]
+  56 0022 F0E0      		ldi r31,hi8(110)
+  57 0024 8081      		ld r24,Z	 ;  31	*movqi/4	[length = 1]
+  58 0026 8E7F      		andi r24,lo8(-2)	 ;  32	andqi3/2	[length = 1]
+  59 0028 8083      		st Z,r24	 ;  34	*movqi/3	[length = 1]
+ 145:bertos/cpu/avr/drv/timer_avr.c **** 		REG_TIMSK0 |= BV(BIT_OCIE0A);
+  60               		.loc 1 145 0
+  61 002a 8081      		ld r24,Z	 ;  36	*movqi/4	[length = 1]
+  62 002c 8260      		ori r24,lo8(2)	 ;  37	iorqi3/2	[length = 1]
+  63 002e 8083      		st Z,r24	 ;  39	*movqi/3	[length = 1]
+ 146:bertos/cpu/avr/drv/timer_avr.c **** 
+ 147:bertos/cpu/avr/drv/timer_avr.c **** 		IRQ_RESTORE(flags);
+  64               		.loc 1 147 0
+  65               	/* #APP */
+  66               	 ;  147 "bertos/cpu/avr/drv/timer_avr.c" 1
+  67 0030 9FBF      		out __SREG__,r25
+  68               	 ;  0 "" 2
+  69               	/* epilogue start */
+ 148:bertos/cpu/avr/drv/timer_avr.c **** 	}
+  70               		.loc 1 148 0
+  71               	/* #NOAPP */
+  72 0032 0895      		ret	 ;  46	return	[length = 1]
+  73               		.cfi_endproc
+  74               	.LFE8:
+  76               		.text
+  77               	.Letext0:
+  78               		.file 2 "/usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/include/stdint.h"
+  79               		.file 3 "bertos/cfg/compiler.h"
+  80               		.file 4 "bertos/cpu/types.h"
+  81               		.file 5 "bertos/struct/list.h"
+  82               		.file 6 "bertos/kern/proc.h"
 DEFINED SYMBOLS
                             *ABS*:00000000 timer_avr.c
-C:\DOCUME~1\develer\IMPOST~1\Temp/cckyvhzW.s:2      *ABS*:0000003f __SREG__
-C:\DOCUME~1\develer\IMPOST~1\Temp/cckyvhzW.s:3      *ABS*:0000003e __SP_H__
-C:\DOCUME~1\develer\IMPOST~1\Temp/cckyvhzW.s:4      *ABS*:0000003d __SP_L__
-C:\DOCUME~1\develer\IMPOST~1\Temp/cckyvhzW.s:5      *ABS*:00000034 __CCP__
-C:\DOCUME~1\develer\IMPOST~1\Temp/cckyvhzW.s:6      *ABS*:00000000 __tmp_reg__
-C:\DOCUME~1\develer\IMPOST~1\Temp/cckyvhzW.s:7      *ABS*:00000001 __zero_reg__
-C:\DOCUME~1\develer\IMPOST~1\Temp/cckyvhzW.s:19     .text.timer_hw_init:00000000 timer_hw_init
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccAzJ3PJ.s:2      *ABS*:0000003f __SREG__
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccAzJ3PJ.s:3      *ABS*:0000003e __SP_H__
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccAzJ3PJ.s:4      *ABS*:0000003d __SP_L__
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccAzJ3PJ.s:5      *ABS*:00000034 __CCP__
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccAzJ3PJ.s:6      *ABS*:00000000 __tmp_reg__
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccAzJ3PJ.s:7      *ABS*:00000001 __zero_reg__
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccAzJ3PJ.s:16     .text.timer_hw_init:00000000 timer_hw_init
 
-NO UNDEFINED SYMBOLS
+UNDEFINED SYMBOLS
+__do_copy_data
+__do_clear_bss

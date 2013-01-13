@@ -2,60 +2,66 @@
    2               	__SREG__ = 0x3f
    3               	__SP_H__ = 0x3e
    4               	__SP_L__ = 0x3d
-   5               	__CCP__  = 0x34
+   5               	__CCP__ = 0x34
    6               	__tmp_reg__ = 0
    7               	__zero_reg__ = 1
-  15               	.Ltext0:
-  16               	.global	hex_tab
-  17               		.section	.rodata.hex_tab,"a",@progbits
-  20               	hex_tab:
-  21 0000 30        		.byte	48
-  22 0001 31        		.byte	49
-  23 0002 32        		.byte	50
-  24 0003 33        		.byte	51
-  25 0004 34        		.byte	52
-  26 0005 35        		.byte	53
-  27 0006 36        		.byte	54
-  28 0007 37        		.byte	55
-  29 0008 38        		.byte	56
-  30 0009 39        		.byte	57
-  31 000a 61        		.byte	97
-  32 000b 62        		.byte	98
-  33 000c 63        		.byte	99
-  34 000d 64        		.byte	100
-  35 000e 65        		.byte	101
-  36 000f 66        		.byte	102
-  37               	.global	HEX_tab
-  38               		.section	.rodata.HEX_tab,"a",@progbits
-  41               	HEX_tab:
-  42 0000 30        		.byte	48
-  43 0001 31        		.byte	49
-  44 0002 32        		.byte	50
-  45 0003 33        		.byte	51
-  46 0004 34        		.byte	52
-  47 0005 35        		.byte	53
-  48 0006 36        		.byte	54
-  49 0007 37        		.byte	55
-  50 0008 38        		.byte	56
-  51 0009 39        		.byte	57
-  52 000a 41        		.byte	65
-  53 000b 42        		.byte	66
-  54 000c 43        		.byte	67
-  55 000d 44        		.byte	68
-  56 000e 45        		.byte	69
-  57 000f 46        		.byte	70
-  58               		.text
-  59               	.Letext0:
+   8               		.global __do_copy_data
+   9               		.global __do_clear_bss
+  10               		.text
+  11               	.Ltext0:
+  12               		.cfi_sections	.debug_frame
+  13               	.global	HEX_tab
+  14               		.section	.rodata.HEX_tab,"a",@progbits
+  17               	HEX_tab:
+  18 0000 30        		.byte	48
+  19 0001 31        		.byte	49
+  20 0002 32        		.byte	50
+  21 0003 33        		.byte	51
+  22 0004 34        		.byte	52
+  23 0005 35        		.byte	53
+  24 0006 36        		.byte	54
+  25 0007 37        		.byte	55
+  26 0008 38        		.byte	56
+  27 0009 39        		.byte	57
+  28 000a 41        		.byte	65
+  29 000b 42        		.byte	66
+  30 000c 43        		.byte	67
+  31 000d 44        		.byte	68
+  32 000e 45        		.byte	69
+  33 000f 46        		.byte	70
+  34               	.global	hex_tab
+  35               		.section	.rodata.hex_tab,"a",@progbits
+  38               	hex_tab:
+  39 0000 30        		.byte	48
+  40 0001 31        		.byte	49
+  41 0002 32        		.byte	50
+  42 0003 33        		.byte	51
+  43 0004 34        		.byte	52
+  44 0005 35        		.byte	53
+  45 0006 36        		.byte	54
+  46 0007 37        		.byte	55
+  47 0008 38        		.byte	56
+  48 0009 39        		.byte	57
+  49 000a 61        		.byte	97
+  50 000b 62        		.byte	98
+  51 000c 63        		.byte	99
+  52 000d 64        		.byte	100
+  53 000e 65        		.byte	101
+  54 000f 66        		.byte	102
+  55               		.text
+  56               	.Letext0:
+  57               		.file 1 "bertos/mware/hex.c"
 DEFINED SYMBOLS
                             *ABS*:00000000 hex.c
-C:\DOCUME~1\develer\IMPOST~1\Temp/cccsnGRl.s:2      *ABS*:0000003f __SREG__
-C:\DOCUME~1\develer\IMPOST~1\Temp/cccsnGRl.s:3      *ABS*:0000003e __SP_H__
-C:\DOCUME~1\develer\IMPOST~1\Temp/cccsnGRl.s:4      *ABS*:0000003d __SP_L__
-C:\DOCUME~1\develer\IMPOST~1\Temp/cccsnGRl.s:5      *ABS*:00000034 __CCP__
-C:\DOCUME~1\develer\IMPOST~1\Temp/cccsnGRl.s:6      *ABS*:00000000 __tmp_reg__
-C:\DOCUME~1\develer\IMPOST~1\Temp/cccsnGRl.s:7      *ABS*:00000001 __zero_reg__
-C:\DOCUME~1\develer\IMPOST~1\Temp/cccsnGRl.s:20     .rodata.hex_tab:00000000 hex_tab
-C:\DOCUME~1\develer\IMPOST~1\Temp/cccsnGRl.s:41     .rodata.HEX_tab:00000000 HEX_tab
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccuTDdXh.s:2      *ABS*:0000003f __SREG__
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccuTDdXh.s:3      *ABS*:0000003e __SP_H__
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccuTDdXh.s:4      *ABS*:0000003d __SP_L__
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccuTDdXh.s:5      *ABS*:00000034 __CCP__
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccuTDdXh.s:6      *ABS*:00000000 __tmp_reg__
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccuTDdXh.s:7      *ABS*:00000001 __zero_reg__
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccuTDdXh.s:17     .rodata.HEX_tab:00000000 HEX_tab
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccuTDdXh.s:38     .rodata.hex_tab:00000000 hex_tab
 
 UNDEFINED SYMBOLS
 __do_copy_data
+__do_clear_bss
