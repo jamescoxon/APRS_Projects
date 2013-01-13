@@ -76,7 +76,17 @@ static void ax25_decode(AX25Ctx *ctx)
 		{
 			DECODE_CALL(buf, msg.rpt_lst[msg.rpt_cnt].call);
 			msg.rpt_lst[msg.rpt_cnt].ssid = (*buf >> 1) & 0x0F;
-			LOG_INFO("RPT%d[%.6s-%d]\n", msg.rpt_cnt, msg.rpt_lst[msg.rpt_cnt].call, msg.rpt_lst[msg.rpt_cnt].ssid);
+
+                        // 20101123 Robert Marshall KI4MCW
+                        // high bit on SSID of digis indicates that this packet 
+                        // has already passed that digi. save this to "rpt_used" flag
+                        msg.rpt_used[msg.rpt_cnt] = (( *buf & 0x80 ) == 0x80 ) ? 1 : 0 ;
+
+		        LOG_INFO("RPT%d[%.6s-%d][used=%01d]\n", 
+                             msg.rpt_cnt, 
+                             msg.rpt_lst[msg.rpt_cnt].call,
+                             msg.rpt_lst[msg.rpt_cnt].ssid,
+                             (uint8_t)msg.rpt_used[msg.rpt_cnt] );
 		}
 	#else
 		while (!(*buf++ & 0x01))

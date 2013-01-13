@@ -3004,47 +3004,47 @@
  1939               		.file 15 "bertos/cpu/power.h"
 DEFINED SYMBOLS
                             *ABS*:00000000 ser.c
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cckgjIPc.s:2      *ABS*:0000003f __SREG__
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cckgjIPc.s:3      *ABS*:0000003e __SP_H__
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cckgjIPc.s:4      *ABS*:0000003d __SP_L__
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cckgjIPc.s:5      *ABS*:00000034 __CCP__
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cckgjIPc.s:6      *ABS*:00000000 __tmp_reg__
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cckgjIPc.s:7      *ABS*:00000001 __zero_reg__
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cckgjIPc.s:15     .text.ser_putchar:00000000 ser_putchar
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cckgjIPc.s:197    .text.ser_getchar:00000000 ser_getchar
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cckgjIPc.s:350    .text.ser_read:00000000 ser_read
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cckgjIPc.s:1872   .progmem.data:00000000 __c.1642
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cckgjIPc.s:1876   .progmem.data:00000018 __c.1644
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cckgjIPc.s:476    .text.ser_write:00000000 ser_write
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cckgjIPc.s:601    .text.ser_error:00000000 ser_error
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cckgjIPc.s:660    .text.ser_clearerr:00000000 ser_clearerr
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cckgjIPc.s:719    .text.ser_flush:00000000 ser_flush
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cckgjIPc.s:803    .text.ser_open:00000000 ser_open
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cckgjIPc.s:1888   .progmem.data:00000048 __c.2050
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cckgjIPc.s:1892   .progmem.data:00000064 __c.2052
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cceC1ZXR.s:2      *ABS*:0000003f __SREG__
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cceC1ZXR.s:3      *ABS*:0000003e __SP_H__
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cceC1ZXR.s:4      *ABS*:0000003d __SP_L__
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cceC1ZXR.s:5      *ABS*:00000034 __CCP__
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cceC1ZXR.s:6      *ABS*:00000000 __tmp_reg__
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cceC1ZXR.s:7      *ABS*:00000001 __zero_reg__
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cceC1ZXR.s:15     .text.ser_putchar:00000000 ser_putchar
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cceC1ZXR.s:197    .text.ser_getchar:00000000 ser_getchar
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cceC1ZXR.s:350    .text.ser_read:00000000 ser_read
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cceC1ZXR.s:1872   .progmem.data:00000000 __c.1642
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cceC1ZXR.s:1876   .progmem.data:00000018 __c.1644
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cceC1ZXR.s:476    .text.ser_write:00000000 ser_write
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cceC1ZXR.s:601    .text.ser_error:00000000 ser_error
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cceC1ZXR.s:660    .text.ser_clearerr:00000000 ser_clearerr
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cceC1ZXR.s:719    .text.ser_flush:00000000 ser_flush
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cceC1ZXR.s:803    .text.ser_open:00000000 ser_open
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cceC1ZXR.s:1888   .progmem.data:00000048 __c.2050
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cceC1ZXR.s:1892   .progmem.data:00000064 __c.2052
                             *COM*:00000004 ser_handles
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cckgjIPc.s:1896   .progmem.data:00000075 __c.2054
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cckgjIPc.s:1900   .progmem.data:00000082 __c.2056
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cckgjIPc.s:1904   .progmem.data:00000093 __c.2058
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cckgjIPc.s:1908   .progmem.data:000000a4 __c.2060
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cckgjIPc.s:1912   .progmem.data:000000b5 __c.2062
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cckgjIPc.s:1916   .progmem.data:000000c6 __c.2064
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cckgjIPc.s:1920   .progmem.data:000000d7 __c.1616
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cckgjIPc.s:1924   .progmem.data:000000e0 __c.1618
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cckgjIPc.s:1055   .text.ser_getchar_nowait:00000000 ser_getchar_nowait
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cckgjIPc.s:1165   .text.ser_setbaudrate:00000000 ser_setbaudrate
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cckgjIPc.s:1199   .text.ser_setparity:00000000 ser_setparity
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cckgjIPc.s:1233   .text.ser_purgeRx:00000000 ser_purgeRx
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cckgjIPc.s:1280   .text.spimaster_write:00000000 spimaster_write
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cckgjIPc.s:1370   .text.spimaster_read:00000000 spimaster_read
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cckgjIPc.s:1511   .text.ser_purgeTx:00000000 ser_purgeTx
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cckgjIPc.s:1559   .text.ser_purge:00000000 ser_purge
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cckgjIPc.s:1594   .text.ser_close:00000000 ser_close
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cckgjIPc.s:1880   .progmem.data:00000029 __c.2071
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cckgjIPc.s:1884   .progmem.data:00000037 __c.2073
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cckgjIPc.s:1687   .text.ser_reopen:00000000 ser_reopen
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cckgjIPc.s:1754   .text.ser_init:00000000 ser_init
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cckgjIPc.s:1828   .text.spimaster_init:00000000 spimaster_init
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cceC1ZXR.s:1896   .progmem.data:00000075 __c.2054
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cceC1ZXR.s:1900   .progmem.data:00000082 __c.2056
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cceC1ZXR.s:1904   .progmem.data:00000093 __c.2058
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cceC1ZXR.s:1908   .progmem.data:000000a4 __c.2060
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cceC1ZXR.s:1912   .progmem.data:000000b5 __c.2062
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cceC1ZXR.s:1916   .progmem.data:000000c6 __c.2064
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cceC1ZXR.s:1920   .progmem.data:000000d7 __c.1616
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cceC1ZXR.s:1924   .progmem.data:000000e0 __c.1618
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cceC1ZXR.s:1055   .text.ser_getchar_nowait:00000000 ser_getchar_nowait
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cceC1ZXR.s:1165   .text.ser_setbaudrate:00000000 ser_setbaudrate
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cceC1ZXR.s:1199   .text.ser_setparity:00000000 ser_setparity
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cceC1ZXR.s:1233   .text.ser_purgeRx:00000000 ser_purgeRx
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cceC1ZXR.s:1280   .text.spimaster_write:00000000 spimaster_write
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cceC1ZXR.s:1370   .text.spimaster_read:00000000 spimaster_read
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cceC1ZXR.s:1511   .text.ser_purgeTx:00000000 ser_purgeTx
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cceC1ZXR.s:1559   .text.ser_purge:00000000 ser_purge
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cceC1ZXR.s:1594   .text.ser_close:00000000 ser_close
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cceC1ZXR.s:1880   .progmem.data:00000029 __c.2071
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cceC1ZXR.s:1884   .progmem.data:00000037 __c.2073
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cceC1ZXR.s:1687   .text.ser_reopen:00000000 ser_reopen
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cceC1ZXR.s:1754   .text.ser_init:00000000 ser_init
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cceC1ZXR.s:1828   .text.spimaster_init:00000000 spimaster_init
 
 UNDEFINED SYMBOLS
 __do_copy_data

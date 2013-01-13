@@ -1627,37 +1627,37 @@
  1095               		.file 6 "bertos/cpu/types.h"
 DEFINED SYMBOLS
                             *ABS*:00000000 kdebug.c
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cc36zQ9H.s:2      *ABS*:0000003f __SREG__
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cc36zQ9H.s:3      *ABS*:0000003e __SP_H__
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cc36zQ9H.s:4      *ABS*:0000003d __SP_L__
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cc36zQ9H.s:5      *ABS*:00000034 __CCP__
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cc36zQ9H.s:6      *ABS*:00000000 __tmp_reg__
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cc36zQ9H.s:7      *ABS*:00000001 __zero_reg__
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cc36zQ9H.s:15     .text.__kputchar:00000000 __kputchar
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cc36zQ9H.s:58     .text.kvprintf_P:00000000 kvprintf_P
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cc36zQ9H.s:107    .text.kputchar:00000000 kputchar
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cc36zQ9H.s:152    .text.kprintf_P:00000000 kprintf_P
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cc36zQ9H.s:191    .text.kputs_P:00000000 kputs_P
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cc36zQ9H.s:271    .text.kdbg_init:00000000 kdbg_init
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cc36zQ9H.s:1052   .progmem.data:00000000 __c.1374
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cc36zQ9H.s:306    .text.kputnum:00000000 kputnum
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cc36zQ9H.s:434    .text.klocation:00000000 klocation
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cc36zQ9H.s:1060   .progmem.data:0000002f __c.1426
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cc36zQ9H.s:477    .text.__bassert_P:00000000 __bassert_P
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cc36zQ9H.s:1056   .progmem.data:0000001c __c.1433
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cc36zQ9H.s:526    .text.__trace_P:00000000 __trace_P
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cc36zQ9H.s:1064   .progmem.data:00000032 __c.1438
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cc36zQ9H.s:566    .text.__tracemsg_P:00000000 __tracemsg_P
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cc36zQ9H.s:1068   .progmem.data:00000038 __c.1445
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cc36zQ9H.s:629    .text.__invalid_ptr_P:00000000 __invalid_ptr_P
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cc36zQ9H.s:1072   .progmem.data:0000003f __c.1453
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cc36zQ9H.s:1076   .progmem.data:0000004d __c.1455
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cc36zQ9H.s:709    .text.__init_wall:00000000 __init_wall
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cc36zQ9H.s:751    .text.__check_wall_P:00000000 __check_wall_P
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cc36zQ9H.s:1084   .progmem.data:00000064 __c.1475
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cc36zQ9H.s:1080   .progmem.data:00000056 __c.1473
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cc36zQ9H.s:951    .text.kdump:00000000 kdump
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cc36zQ9H.s:1088   .progmem.data:00000079 __c.1485
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cciAyvP1.s:2      *ABS*:0000003f __SREG__
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cciAyvP1.s:3      *ABS*:0000003e __SP_H__
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cciAyvP1.s:4      *ABS*:0000003d __SP_L__
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cciAyvP1.s:5      *ABS*:00000034 __CCP__
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cciAyvP1.s:6      *ABS*:00000000 __tmp_reg__
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cciAyvP1.s:7      *ABS*:00000001 __zero_reg__
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cciAyvP1.s:15     .text.__kputchar:00000000 __kputchar
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cciAyvP1.s:58     .text.kvprintf_P:00000000 kvprintf_P
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cciAyvP1.s:107    .text.kputchar:00000000 kputchar
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cciAyvP1.s:152    .text.kprintf_P:00000000 kprintf_P
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cciAyvP1.s:191    .text.kputs_P:00000000 kputs_P
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cciAyvP1.s:271    .text.kdbg_init:00000000 kdbg_init
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cciAyvP1.s:1052   .progmem.data:00000000 __c.1374
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cciAyvP1.s:306    .text.kputnum:00000000 kputnum
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cciAyvP1.s:434    .text.klocation:00000000 klocation
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cciAyvP1.s:1060   .progmem.data:0000002f __c.1426
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cciAyvP1.s:477    .text.__bassert_P:00000000 __bassert_P
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cciAyvP1.s:1056   .progmem.data:0000001c __c.1433
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cciAyvP1.s:526    .text.__trace_P:00000000 __trace_P
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cciAyvP1.s:1064   .progmem.data:00000032 __c.1438
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cciAyvP1.s:566    .text.__tracemsg_P:00000000 __tracemsg_P
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cciAyvP1.s:1068   .progmem.data:00000038 __c.1445
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cciAyvP1.s:629    .text.__invalid_ptr_P:00000000 __invalid_ptr_P
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cciAyvP1.s:1072   .progmem.data:0000003f __c.1453
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cciAyvP1.s:1076   .progmem.data:0000004d __c.1455
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cciAyvP1.s:709    .text.__init_wall:00000000 __init_wall
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cciAyvP1.s:751    .text.__check_wall_P:00000000 __check_wall_P
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cciAyvP1.s:1084   .progmem.data:00000064 __c.1475
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cciAyvP1.s:1080   .progmem.data:00000056 __c.1473
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cciAyvP1.s:951    .text.kdump:00000000 kdump
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cciAyvP1.s:1088   .progmem.data:00000079 __c.1485
 
 UNDEFINED SYMBOLS
 __do_copy_data

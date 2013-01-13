@@ -4166,17 +4166,17 @@
  2921               		.file 5 "bertos/mware/hex.h"
 DEFINED SYMBOLS
                             *ABS*:00000000 formatwr.c
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccySEcWo.s:2      *ABS*:0000003f __SREG__
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccySEcWo.s:3      *ABS*:0000003e __SP_H__
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccySEcWo.s:4      *ABS*:0000003d __SP_L__
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccySEcWo.s:5      *ABS*:00000034 __CCP__
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccySEcWo.s:6      *ABS*:00000000 __tmp_reg__
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccySEcWo.s:7      *ABS*:00000001 __zero_reg__
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccySEcWo.s:16     .text._formatted_write:00000000 _formatted_write
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccySEcWo.s:2900   .data.null_pointer.1419:00000000 null_pointer.1419
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccySEcWo.s:2905   .progmem.data:00000000 __c.1502
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccySEcWo.s:2909   .progmem.data:00000013 __c.1504
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccySEcWo.s:2914   .data.bad_conversion.1418:00000000 bad_conversion.1418
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccrYhyZq.s:2      *ABS*:0000003f __SREG__
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccrYhyZq.s:3      *ABS*:0000003e __SP_H__
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccrYhyZq.s:4      *ABS*:0000003d __SP_L__
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccrYhyZq.s:5      *ABS*:00000034 __CCP__
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccrYhyZq.s:6      *ABS*:00000000 __tmp_reg__
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccrYhyZq.s:7      *ABS*:00000001 __zero_reg__
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccrYhyZq.s:16     .text._formatted_write:00000000 _formatted_write
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccrYhyZq.s:2900   .data.null_pointer.1419:00000000 null_pointer.1419
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccrYhyZq.s:2905   .progmem.data:00000000 __c.1502
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccrYhyZq.s:2909   .progmem.data:00000013 __c.1504
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccrYhyZq.s:2914   .data.bad_conversion.1418:00000000 bad_conversion.1418
 
 UNDEFINED SYMBOLS
 __do_copy_data

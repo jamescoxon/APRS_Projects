@@ -118,6 +118,7 @@ typedef struct AX25Msg
 	AX25Call dst;  ///< Destination address
 	#if CONFIG_AX25_RPT_LST
 	AX25Call rpt_lst[AX25_MAX_RPT]; ///< List of repeaters
+        bool rpt_used[AX25_MAX_RPT]; ///< 20101123 RM - has packet already crossed this digi? 
 	uint8_t rpt_cnt; ///< Number of repeaters in this message
 	#endif
 	uint16_t ctrl; ///< AX25 control field

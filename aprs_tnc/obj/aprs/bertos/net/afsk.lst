@@ -3844,27 +3844,27 @@
  2469               		.file 14 "bertos/cpu/power.h"
 DEFINED SYMBOLS
                             *ABS*:00000000 afsk.c
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccvMUhD2.s:2      *ABS*:0000003f __SREG__
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccvMUhD2.s:3      *ABS*:0000003e __SP_H__
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccvMUhD2.s:4      *ABS*:0000003d __SP_L__
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccvMUhD2.s:5      *ABS*:00000034 __CCP__
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccvMUhD2.s:6      *ABS*:00000000 __tmp_reg__
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccvMUhD2.s:7      *ABS*:00000001 __zero_reg__
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccvMUhD2.s:15     .text.afsk_read:00000000 afsk_read
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccvMUhD2.s:2452   .progmem.data:000000c4 __c.1673
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccvMUhD2.s:2456   .progmem.data:000000da __c.1675
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccvMUhD2.s:318    .text.afsk_write:00000000 afsk_write
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccvMUhD2.s:726    .text.afsk_flush:00000000 afsk_flush
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccvMUhD2.s:792    .text.afsk_error:00000000 afsk_error
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccvMUhD2.s:868    .text.afsk_clearerr:00000000 afsk_clearerr
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccvMUhD2.s:944    .text.afsk_adc_isr:00000000 afsk_adc_isr
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccvMUhD2.s:1655   .text.afsk_dac_isr:00000000 afsk_dac_isr
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccvMUhD2.s:2305   .progmem.data:00000000 __c.1990
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccvMUhD2.s:2309   .progmem.data:0000000e __c.1992
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccvMUhD2.s:2313   .progmem.data:00000020 sin_table
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccvMUhD2.s:2062   .text.afsk_init:00000000 afsk_init
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccvMUhD2.s:2444   .progmem.data:000000a0 __c.2079
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccvMUhD2.s:2448   .progmem.data:000000b2 __c.2081
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccT30NEZ.s:2      *ABS*:0000003f __SREG__
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccT30NEZ.s:3      *ABS*:0000003e __SP_H__
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccT30NEZ.s:4      *ABS*:0000003d __SP_L__
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccT30NEZ.s:5      *ABS*:00000034 __CCP__
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccT30NEZ.s:6      *ABS*:00000000 __tmp_reg__
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccT30NEZ.s:7      *ABS*:00000001 __zero_reg__
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccT30NEZ.s:15     .text.afsk_read:00000000 afsk_read
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccT30NEZ.s:2452   .progmem.data:000000c4 __c.1673
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccT30NEZ.s:2456   .progmem.data:000000da __c.1675
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccT30NEZ.s:318    .text.afsk_write:00000000 afsk_write
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccT30NEZ.s:726    .text.afsk_flush:00000000 afsk_flush
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccT30NEZ.s:792    .text.afsk_error:00000000 afsk_error
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccT30NEZ.s:868    .text.afsk_clearerr:00000000 afsk_clearerr
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccT30NEZ.s:944    .text.afsk_adc_isr:00000000 afsk_adc_isr
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccT30NEZ.s:1655   .text.afsk_dac_isr:00000000 afsk_dac_isr
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccT30NEZ.s:2305   .progmem.data:00000000 __c.1990
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccT30NEZ.s:2309   .progmem.data:0000000e __c.1992
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccT30NEZ.s:2313   .progmem.data:00000020 sin_table
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccT30NEZ.s:2062   .text.afsk_init:00000000 afsk_init
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccT30NEZ.s:2444   .progmem.data:000000a0 __c.2079
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccT30NEZ.s:2448   .progmem.data:000000b2 __c.2081
 
 UNDEFINED SYMBOLS
 __do_copy_data

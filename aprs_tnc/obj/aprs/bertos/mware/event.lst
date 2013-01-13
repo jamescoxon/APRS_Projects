@@ -118,14 +118,14 @@
   65               		.file 2 "bertos/mware/event.h"
 DEFINED SYMBOLS
                             *ABS*:00000000 event.c
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccNAGZvi.s:2      *ABS*:0000003f __SREG__
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccNAGZvi.s:3      *ABS*:0000003e __SP_H__
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccNAGZvi.s:4      *ABS*:0000003d __SP_L__
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccNAGZvi.s:5      *ABS*:00000034 __CCP__
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccNAGZvi.s:6      *ABS*:00000000 __tmp_reg__
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccNAGZvi.s:7      *ABS*:00000001 __zero_reg__
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccNAGZvi.s:16     .text.event_hook_ignore:00000000 event_hook_ignore
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccNAGZvi.s:35     .text.event_hook_softint:00000000 event_hook_softint
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cceO27gS.s:2      *ABS*:0000003f __SREG__
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cceO27gS.s:3      *ABS*:0000003e __SP_H__
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cceO27gS.s:4      *ABS*:0000003d __SP_L__
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cceO27gS.s:5      *ABS*:00000034 __CCP__
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cceO27gS.s:6      *ABS*:00000000 __tmp_reg__
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cceO27gS.s:7      *ABS*:00000001 __zero_reg__
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cceO27gS.s:16     .text.event_hook_ignore:00000000 event_hook_ignore
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cceO27gS.s:35     .text.event_hook_softint:00000000 event_hook_softint
 
 UNDEFINED SYMBOLS
 __do_copy_data
