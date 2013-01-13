@@ -228,13 +228,13 @@
   82               		.file 6 "bertos/kern/proc.h"
 DEFINED SYMBOLS
                             *ABS*:00000000 timer_avr.c
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccYXWeI7.s:2      *ABS*:0000003f __SREG__
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccYXWeI7.s:3      *ABS*:0000003e __SP_H__
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccYXWeI7.s:4      *ABS*:0000003d __SP_L__
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccYXWeI7.s:5      *ABS*:00000034 __CCP__
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccYXWeI7.s:6      *ABS*:00000000 __tmp_reg__
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccYXWeI7.s:7      *ABS*:00000001 __zero_reg__
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccYXWeI7.s:16     .text.timer_hw_init:00000000 timer_hw_init
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccKFaDuK.s:2      *ABS*:0000003f __SREG__
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccKFaDuK.s:3      *ABS*:0000003e __SP_H__
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccKFaDuK.s:4      *ABS*:0000003d __SP_L__
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccKFaDuK.s:5      *ABS*:00000034 __CCP__
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccKFaDuK.s:6      *ABS*:00000000 __tmp_reg__
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccKFaDuK.s:7      *ABS*:00000001 __zero_reg__
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccKFaDuK.s:16     .text.timer_hw_init:00000000 timer_hw_init
 
 UNDEFINED SYMBOLS
 __do_copy_data

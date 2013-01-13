@@ -1616,36 +1616,36 @@
  892               		.file 11 "/usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/include/stdarg.h"
 DEFINED SYMBOLS
                             *ABS*:00000000 kfile.c
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cccOsQzV.s:2      *ABS*:0000003f __SREG__
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cccOsQzV.s:3      *ABS*:0000003e __SP_H__
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cccOsQzV.s:4      *ABS*:0000003d __SP_L__
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cccOsQzV.s:5      *ABS*:00000034 __CCP__
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cccOsQzV.s:6      *ABS*:00000000 __tmp_reg__
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cccOsQzV.s:7      *ABS*:00000001 __zero_reg__
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cccOsQzV.s:16     .text.kfile_genericClose:00000000 kfile_genericClose
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cccOsQzV.s:37     .text.kfile_generic:00000000 kfile_generic
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cccOsQzV.s:58     .text.kfile_putc:00000000 kfile_putc
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cccOsQzV.s:829    .progmem.data:00000000 __c.1425
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cccOsQzV.s:833    .progmem.data:0000000a __c.1427
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cccOsQzV.s:165    .text.kfile_genericReopen:00000000 kfile_genericReopen
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cccOsQzV.s:853    .progmem.data:00000051 __c.1455
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cccOsQzV.s:857    .progmem.data:0000005b __c.1457
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cccOsQzV.s:861    .progmem.data:0000006f __c.1448
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cccOsQzV.s:865    .progmem.data:00000078 __c.1450
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cccOsQzV.s:248    .text.kfile_genericSeek:00000000 kfile_genericSeek
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cccOsQzV.s:845    .progmem.data:0000003b __c.1871
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cccOsQzV.s:849    .progmem.data:0000003d __c.1873
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cccOsQzV.s:348    .text.kfile_getc:00000000 kfile_getc
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cccOsQzV.s:837    .progmem.data:0000001e __c.1416
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cccOsQzV.s:841    .progmem.data:00000027 __c.1418
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cccOsQzV.s:445    .text.kfile_printf:00000000 kfile_printf
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cccOsQzV.s:490    .text.kfile_print:00000000 kfile_print
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cccOsQzV.s:560    .text.kfile_resync:00000000 kfile_resync
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cccOsQzV.s:869    .progmem.data:0000008c __c.1469
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cccOsQzV.s:873    .progmem.data:00000099 __c.1471
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cccOsQzV.s:748    .text.kfile_init:00000000 kfile_init
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cccOsQzV.s:877    .progmem.data:000000ad __c.1894
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cccOsQzV.s:881    .progmem.data:000000b0 __c.1896
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccf0KqIT.s:2      *ABS*:0000003f __SREG__
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccf0KqIT.s:3      *ABS*:0000003e __SP_H__
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccf0KqIT.s:4      *ABS*:0000003d __SP_L__
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccf0KqIT.s:5      *ABS*:00000034 __CCP__
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccf0KqIT.s:6      *ABS*:00000000 __tmp_reg__
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccf0KqIT.s:7      *ABS*:00000001 __zero_reg__
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccf0KqIT.s:16     .text.kfile_genericClose:00000000 kfile_genericClose
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccf0KqIT.s:37     .text.kfile_generic:00000000 kfile_generic
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccf0KqIT.s:58     .text.kfile_putc:00000000 kfile_putc
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccf0KqIT.s:829    .progmem.data:00000000 __c.1425
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccf0KqIT.s:833    .progmem.data:0000000a __c.1427
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccf0KqIT.s:165    .text.kfile_genericReopen:00000000 kfile_genericReopen
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccf0KqIT.s:853    .progmem.data:00000051 __c.1455
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccf0KqIT.s:857    .progmem.data:0000005b __c.1457
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccf0KqIT.s:861    .progmem.data:0000006f __c.1448
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccf0KqIT.s:865    .progmem.data:00000078 __c.1450
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccf0KqIT.s:248    .text.kfile_genericSeek:00000000 kfile_genericSeek
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccf0KqIT.s:845    .progmem.data:0000003b __c.1871
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccf0KqIT.s:849    .progmem.data:0000003d __c.1873
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccf0KqIT.s:348    .text.kfile_getc:00000000 kfile_getc
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccf0KqIT.s:837    .progmem.data:0000001e __c.1416
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccf0KqIT.s:841    .progmem.data:00000027 __c.1418
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccf0KqIT.s:445    .text.kfile_printf:00000000 kfile_printf
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccf0KqIT.s:490    .text.kfile_print:00000000 kfile_print
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccf0KqIT.s:560    .text.kfile_resync:00000000 kfile_resync
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccf0KqIT.s:869    .progmem.data:0000008c __c.1469
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccf0KqIT.s:873    .progmem.data:00000099 __c.1471
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccf0KqIT.s:748    .text.kfile_init:00000000 kfile_init
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccf0KqIT.s:877    .progmem.data:000000ad __c.1894
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccf0KqIT.s:881    .progmem.data:000000b0 __c.1896
 
 UNDEFINED SYMBOLS
 __do_copy_data

@@ -347,17 +347,17 @@
  255               		.file 11 "bertos/net/afsk.h"
 DEFINED SYMBOLS
                             *ABS*:00000000 hw_afsk.c
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccixTzl9.s:2      *ABS*:0000003f __SREG__
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccixTzl9.s:3      *ABS*:0000003e __SP_H__
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccixTzl9.s:4      *ABS*:0000003d __SP_L__
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccixTzl9.s:5      *ABS*:00000034 __CCP__
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccixTzl9.s:6      *ABS*:00000000 __tmp_reg__
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccixTzl9.s:7      *ABS*:00000001 __zero_reg__
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccixTzl9.s:16     .text.hw_afsk_adcInit:00000000 hw_afsk_adcInit
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccixTzl9.s:233    .bss.ctx:00000000 ctx
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccixTzl9.s:238    .progmem.data:00000000 __c.1697
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccixTzl9.s:242    .progmem.data:00000008 __c.1699
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccixTzl9.s:111    .text.__vector_21:00000000 __vector_21
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cckYhks2.s:2      *ABS*:0000003f __SREG__
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cckYhks2.s:3      *ABS*:0000003e __SP_H__
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cckYhks2.s:4      *ABS*:0000003d __SP_L__
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cckYhks2.s:5      *ABS*:00000034 __CCP__
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cckYhks2.s:6      *ABS*:00000000 __tmp_reg__
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cckYhks2.s:7      *ABS*:00000001 __zero_reg__
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cckYhks2.s:16     .text.hw_afsk_adcInit:00000000 hw_afsk_adcInit
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cckYhks2.s:233    .bss.ctx:00000000 ctx
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cckYhks2.s:238    .progmem.data:00000000 __c.1697
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cckYhks2.s:242    .progmem.data:00000008 __c.1699
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cckYhks2.s:111    .text.__vector_21:00000000 __vector_21
                             *COM*:00000001 hw_afsk_dac_isr
 
 UNDEFINED SYMBOLS

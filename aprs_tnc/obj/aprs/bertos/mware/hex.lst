@@ -53,14 +53,14 @@
   57               		.file 1 "bertos/mware/hex.c"
 DEFINED SYMBOLS
                             *ABS*:00000000 hex.c
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccHuntDA.s:2      *ABS*:0000003f __SREG__
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccHuntDA.s:3      *ABS*:0000003e __SP_H__
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccHuntDA.s:4      *ABS*:0000003d __SP_L__
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccHuntDA.s:5      *ABS*:00000034 __CCP__
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccHuntDA.s:6      *ABS*:00000000 __tmp_reg__
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccHuntDA.s:7      *ABS*:00000001 __zero_reg__
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccHuntDA.s:17     .rodata.HEX_tab:00000000 HEX_tab
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccHuntDA.s:38     .rodata.hex_tab:00000000 hex_tab
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccGmdb9M.s:2      *ABS*:0000003f __SREG__
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccGmdb9M.s:3      *ABS*:0000003e __SP_H__
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccGmdb9M.s:4      *ABS*:0000003d __SP_L__
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccGmdb9M.s:5      *ABS*:00000034 __CCP__
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccGmdb9M.s:6      *ABS*:00000000 __tmp_reg__
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccGmdb9M.s:7      *ABS*:00000001 __zero_reg__
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccGmdb9M.s:17     .rodata.HEX_tab:00000000 HEX_tab
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccGmdb9M.s:38     .rodata.hex_tab:00000000 hex_tab
 
 UNDEFINED SYMBOLS
 __do_copy_data

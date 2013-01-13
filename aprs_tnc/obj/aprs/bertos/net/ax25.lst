@@ -92,117 +92,127 @@
   76:bertos/net/ax25.c **** 		{
   77:bertos/net/ax25.c **** 			DECODE_CALL(buf, msg.rpt_lst[msg.rpt_cnt].call);
   78:bertos/net/ax25.c **** 			msg.rpt_lst[msg.rpt_cnt].ssid = (*buf >> 1) & 0x0F;
-  79:bertos/net/ax25.c **** 			LOG_INFO("RPT%d[%.6s-%d]\n", msg.rpt_cnt, msg.rpt_lst[msg.rpt_cnt].call, msg.rpt_lst[msg.rpt_cnt
-  80:bertos/net/ax25.c **** 		}
-  81:bertos/net/ax25.c **** 	#else
-  82:bertos/net/ax25.c **** 		while (!(*buf++ & 0x01))
-  83:bertos/net/ax25.c **** 		{
-  84:bertos/net/ax25.c **** 			char rpt[6];
-  85:bertos/net/ax25.c **** 			uint8_t ssid;
-  86:bertos/net/ax25.c **** 			DECODE_CALL(buf, rpt);
-  87:bertos/net/ax25.c **** 			ssid = (*buf >> 1) & 0x0F;
-  88:bertos/net/ax25.c **** 			LOG_INFO("RPT[%.6s-%d]\n", rpt, ssid);
-  89:bertos/net/ax25.c **** 		}
-  90:bertos/net/ax25.c **** 	#endif
-  91:bertos/net/ax25.c **** 
-  92:bertos/net/ax25.c **** 	msg.ctrl = *buf++;
-  93:bertos/net/ax25.c **** 	if (msg.ctrl != AX25_CTRL_UI)
-  94:bertos/net/ax25.c **** 	{
-  95:bertos/net/ax25.c **** 		LOG_WARN("Only UI frames are handled, got [%02X]\n", msg.ctrl);
-  96:bertos/net/ax25.c **** 		return;
-  97:bertos/net/ax25.c **** 	}
-  98:bertos/net/ax25.c **** 
-  99:bertos/net/ax25.c **** 	msg.pid = *buf++;
- 100:bertos/net/ax25.c **** 	if (msg.pid != AX25_PID_NOLAYER3)
- 101:bertos/net/ax25.c **** 	{
- 102:bertos/net/ax25.c **** 		LOG_WARN("Only frames without layer3 protocol are handled, got [%02X]\n", msg.pid);
- 103:bertos/net/ax25.c **** 		return;
- 104:bertos/net/ax25.c **** 	}
- 105:bertos/net/ax25.c **** 
- 106:bertos/net/ax25.c **** 	msg.len = ctx->frm_len - 2 - (buf - ctx->buf);
- 107:bertos/net/ax25.c **** 	msg.info = buf;
- 108:bertos/net/ax25.c **** 	LOG_INFO("DATA: %.*s\n", msg.len, msg.info);
- 109:bertos/net/ax25.c **** 
- 110:bertos/net/ax25.c **** 	if (ctx->hook)
- 111:bertos/net/ax25.c **** 		ctx->hook(&msg);
- 112:bertos/net/ax25.c **** }
- 113:bertos/net/ax25.c **** 
- 114:bertos/net/ax25.c **** 
- 115:bertos/net/ax25.c **** /**
- 116:bertos/net/ax25.c ****  * Check if there are any AX25 messages to be processed.
- 117:bertos/net/ax25.c ****  * This function read available characters from the medium and search for
- 118:bertos/net/ax25.c ****  * any AX25 messages.
- 119:bertos/net/ax25.c ****  * If a message is found it is decoded and the linked callback executed.
- 120:bertos/net/ax25.c ****  * This function may be blocking if there are no available chars and the KFile
- 121:bertos/net/ax25.c ****  * used in \a ctx to access the medium is configured in blocking mode.
- 122:bertos/net/ax25.c ****  *
- 123:bertos/net/ax25.c ****  * \param ctx AX25 context to operate on.
- 124:bertos/net/ax25.c ****  */
- 125:bertos/net/ax25.c **** void ax25_poll(AX25Ctx *ctx)
- 126:bertos/net/ax25.c **** {
- 127:bertos/net/ax25.c **** 	int c;
- 128:bertos/net/ax25.c **** 
- 129:bertos/net/ax25.c **** 	while ((c = kfile_getc(ctx->ch)) != EOF)
- 130:bertos/net/ax25.c **** 	{
- 131:bertos/net/ax25.c **** 		if (!ctx->escape && c == HDLC_FLAG)
- 132:bertos/net/ax25.c **** 		{
- 133:bertos/net/ax25.c **** 			if (ctx->frm_len >= AX25_MIN_FRAME_LEN)
- 134:bertos/net/ax25.c **** 			{
- 135:bertos/net/ax25.c **** 				if (ctx->crc_in == AX25_CRC_CORRECT)
- 136:bertos/net/ax25.c **** 				{
- 137:bertos/net/ax25.c **** 					LOG_INFO("Frame found!\n");
- 138:bertos/net/ax25.c **** 					ax25_decode(ctx);
- 139:bertos/net/ax25.c **** 				}
- 140:bertos/net/ax25.c **** 				else
- 141:bertos/net/ax25.c **** 				{
- 142:bertos/net/ax25.c **** 					LOG_INFO("CRC error, computed [%04X]\n", ctx->crc_in);
- 143:bertos/net/ax25.c **** 				}
- 144:bertos/net/ax25.c **** 			}
- 145:bertos/net/ax25.c **** 			ctx->sync = true;
- 146:bertos/net/ax25.c **** 			ctx->crc_in = CRC_CCITT_INIT_VAL;
- 147:bertos/net/ax25.c **** 			ctx->frm_len = 0;
- 148:bertos/net/ax25.c **** 			continue;
- 149:bertos/net/ax25.c **** 		}
- 150:bertos/net/ax25.c **** 
- 151:bertos/net/ax25.c **** 		if (!ctx->escape && c == HDLC_RESET)
- 152:bertos/net/ax25.c **** 		{
- 153:bertos/net/ax25.c **** 			LOG_INFO("HDLC reset\n");
- 154:bertos/net/ax25.c **** 			ctx->sync = false;
- 155:bertos/net/ax25.c **** 			continue;
- 156:bertos/net/ax25.c **** 		}
- 157:bertos/net/ax25.c **** 
- 158:bertos/net/ax25.c **** 		if (!ctx->escape && c == AX25_ESC)
- 159:bertos/net/ax25.c **** 		{
- 160:bertos/net/ax25.c **** 			ctx->escape = true;
- 161:bertos/net/ax25.c **** 			continue;
- 162:bertos/net/ax25.c **** 		}
- 163:bertos/net/ax25.c **** 
- 164:bertos/net/ax25.c **** 		if (ctx->sync)
- 165:bertos/net/ax25.c **** 		{
- 166:bertos/net/ax25.c **** 			if (ctx->frm_len < CONFIG_AX25_FRAME_BUF_LEN)
- 167:bertos/net/ax25.c **** 			{
- 168:bertos/net/ax25.c **** 				ctx->buf[ctx->frm_len++] = c;
- 169:bertos/net/ax25.c **** 				ctx->crc_in = updcrc_ccitt(c, ctx->crc_in);
- 170:bertos/net/ax25.c **** 			}
- 171:bertos/net/ax25.c **** 			else
- 172:bertos/net/ax25.c **** 			{
- 173:bertos/net/ax25.c **** 				LOG_INFO("Buffer overrun");
- 174:bertos/net/ax25.c **** 				ctx->sync = false;
- 175:bertos/net/ax25.c **** 			}
- 176:bertos/net/ax25.c **** 		}
- 177:bertos/net/ax25.c **** 		ctx->escape = false;
- 178:bertos/net/ax25.c **** 	}
- 179:bertos/net/ax25.c **** 
- 180:bertos/net/ax25.c **** 	if (kfile_error(ctx->ch))
- 181:bertos/net/ax25.c **** 	{
- 182:bertos/net/ax25.c **** 		LOG_ERR("Channel error [%04x]\n", kfile_error(ctx->ch));
- 183:bertos/net/ax25.c **** 		kfile_clearerr(ctx->ch);
- 184:bertos/net/ax25.c **** 	}
- 185:bertos/net/ax25.c **** }
- 186:bertos/net/ax25.c **** 
- 187:bertos/net/ax25.c **** static void ax25_putchar(AX25Ctx *ctx, uint8_t c)
- 188:bertos/net/ax25.c **** {
-  18               		.loc 1 188 0
+  79:bertos/net/ax25.c **** 
+  80:bertos/net/ax25.c ****                         // 20101123 Robert Marshall KI4MCW
+  81:bertos/net/ax25.c ****                         // high bit on SSID of digis indicates that this packet 
+  82:bertos/net/ax25.c ****                         // has already passed that digi. save this to "rpt_used" flag
+  83:bertos/net/ax25.c ****                         msg.rpt_used[msg.rpt_cnt] = (( *buf & 0x80 ) == 0x80 ) ? 1 : 0 ;
+  84:bertos/net/ax25.c **** 
+  85:bertos/net/ax25.c **** 		        LOG_INFO("RPT%d[%.6s-%d][used=%01d]\n", 
+  86:bertos/net/ax25.c ****                              msg.rpt_cnt, 
+  87:bertos/net/ax25.c ****                              msg.rpt_lst[msg.rpt_cnt].call,
+  88:bertos/net/ax25.c ****                              msg.rpt_lst[msg.rpt_cnt].ssid,
+  89:bertos/net/ax25.c ****                              (uint8_t)msg.rpt_used[msg.rpt_cnt] );
+  90:bertos/net/ax25.c **** 		}
+  91:bertos/net/ax25.c **** 	#else
+  92:bertos/net/ax25.c **** 		while (!(*buf++ & 0x01))
+  93:bertos/net/ax25.c **** 		{
+  94:bertos/net/ax25.c **** 			char rpt[6];
+  95:bertos/net/ax25.c **** 			uint8_t ssid;
+  96:bertos/net/ax25.c **** 			DECODE_CALL(buf, rpt);
+  97:bertos/net/ax25.c **** 			ssid = (*buf >> 1) & 0x0F;
+  98:bertos/net/ax25.c **** 			LOG_INFO("RPT[%.6s-%d]\n", rpt, ssid);
+  99:bertos/net/ax25.c **** 		}
+ 100:bertos/net/ax25.c **** 	#endif
+ 101:bertos/net/ax25.c **** 
+ 102:bertos/net/ax25.c **** 	msg.ctrl = *buf++;
+ 103:bertos/net/ax25.c **** 	if (msg.ctrl != AX25_CTRL_UI)
+ 104:bertos/net/ax25.c **** 	{
+ 105:bertos/net/ax25.c **** 		LOG_WARN("Only UI frames are handled, got [%02X]\n", msg.ctrl);
+ 106:bertos/net/ax25.c **** 		return;
+ 107:bertos/net/ax25.c **** 	}
+ 108:bertos/net/ax25.c **** 
+ 109:bertos/net/ax25.c **** 	msg.pid = *buf++;
+ 110:bertos/net/ax25.c **** 	if (msg.pid != AX25_PID_NOLAYER3)
+ 111:bertos/net/ax25.c **** 	{
+ 112:bertos/net/ax25.c **** 		LOG_WARN("Only frames without layer3 protocol are handled, got [%02X]\n", msg.pid);
+ 113:bertos/net/ax25.c **** 		return;
+ 114:bertos/net/ax25.c **** 	}
+ 115:bertos/net/ax25.c **** 
+ 116:bertos/net/ax25.c **** 	msg.len = ctx->frm_len - 2 - (buf - ctx->buf);
+ 117:bertos/net/ax25.c **** 	msg.info = buf;
+ 118:bertos/net/ax25.c **** 	LOG_INFO("DATA: %.*s\n", msg.len, msg.info);
+ 119:bertos/net/ax25.c **** 
+ 120:bertos/net/ax25.c **** 	if (ctx->hook)
+ 121:bertos/net/ax25.c **** 		ctx->hook(&msg);
+ 122:bertos/net/ax25.c **** }
+ 123:bertos/net/ax25.c **** 
+ 124:bertos/net/ax25.c **** 
+ 125:bertos/net/ax25.c **** /**
+ 126:bertos/net/ax25.c ****  * Check if there are any AX25 messages to be processed.
+ 127:bertos/net/ax25.c ****  * This function read available characters from the medium and search for
+ 128:bertos/net/ax25.c ****  * any AX25 messages.
+ 129:bertos/net/ax25.c ****  * If a message is found it is decoded and the linked callback executed.
+ 130:bertos/net/ax25.c ****  * This function may be blocking if there are no available chars and the KFile
+ 131:bertos/net/ax25.c ****  * used in \a ctx to access the medium is configured in blocking mode.
+ 132:bertos/net/ax25.c ****  *
+ 133:bertos/net/ax25.c ****  * \param ctx AX25 context to operate on.
+ 134:bertos/net/ax25.c ****  */
+ 135:bertos/net/ax25.c **** void ax25_poll(AX25Ctx *ctx)
+ 136:bertos/net/ax25.c **** {
+ 137:bertos/net/ax25.c **** 	int c;
+ 138:bertos/net/ax25.c **** 
+ 139:bertos/net/ax25.c **** 	while ((c = kfile_getc(ctx->ch)) != EOF)
+ 140:bertos/net/ax25.c **** 	{
+ 141:bertos/net/ax25.c **** 		if (!ctx->escape && c == HDLC_FLAG)
+ 142:bertos/net/ax25.c **** 		{
+ 143:bertos/net/ax25.c **** 			if (ctx->frm_len >= AX25_MIN_FRAME_LEN)
+ 144:bertos/net/ax25.c **** 			{
+ 145:bertos/net/ax25.c **** 				if (ctx->crc_in == AX25_CRC_CORRECT)
+ 146:bertos/net/ax25.c **** 				{
+ 147:bertos/net/ax25.c **** 					LOG_INFO("Frame found!\n");
+ 148:bertos/net/ax25.c **** 					ax25_decode(ctx);
+ 149:bertos/net/ax25.c **** 				}
+ 150:bertos/net/ax25.c **** 				else
+ 151:bertos/net/ax25.c **** 				{
+ 152:bertos/net/ax25.c **** 					LOG_INFO("CRC error, computed [%04X]\n", ctx->crc_in);
+ 153:bertos/net/ax25.c **** 				}
+ 154:bertos/net/ax25.c **** 			}
+ 155:bertos/net/ax25.c **** 			ctx->sync = true;
+ 156:bertos/net/ax25.c **** 			ctx->crc_in = CRC_CCITT_INIT_VAL;
+ 157:bertos/net/ax25.c **** 			ctx->frm_len = 0;
+ 158:bertos/net/ax25.c **** 			continue;
+ 159:bertos/net/ax25.c **** 		}
+ 160:bertos/net/ax25.c **** 
+ 161:bertos/net/ax25.c **** 		if (!ctx->escape && c == HDLC_RESET)
+ 162:bertos/net/ax25.c **** 		{
+ 163:bertos/net/ax25.c **** 			LOG_INFO("HDLC reset\n");
+ 164:bertos/net/ax25.c **** 			ctx->sync = false;
+ 165:bertos/net/ax25.c **** 			continue;
+ 166:bertos/net/ax25.c **** 		}
+ 167:bertos/net/ax25.c **** 
+ 168:bertos/net/ax25.c **** 		if (!ctx->escape && c == AX25_ESC)
+ 169:bertos/net/ax25.c **** 		{
+ 170:bertos/net/ax25.c **** 			ctx->escape = true;
+ 171:bertos/net/ax25.c **** 			continue;
+ 172:bertos/net/ax25.c **** 		}
+ 173:bertos/net/ax25.c **** 
+ 174:bertos/net/ax25.c **** 		if (ctx->sync)
+ 175:bertos/net/ax25.c **** 		{
+ 176:bertos/net/ax25.c **** 			if (ctx->frm_len < CONFIG_AX25_FRAME_BUF_LEN)
+ 177:bertos/net/ax25.c **** 			{
+ 178:bertos/net/ax25.c **** 				ctx->buf[ctx->frm_len++] = c;
+ 179:bertos/net/ax25.c **** 				ctx->crc_in = updcrc_ccitt(c, ctx->crc_in);
+ 180:bertos/net/ax25.c **** 			}
+ 181:bertos/net/ax25.c **** 			else
+ 182:bertos/net/ax25.c **** 			{
+ 183:bertos/net/ax25.c **** 				LOG_INFO("Buffer overrun");
+ 184:bertos/net/ax25.c **** 				ctx->sync = false;
+ 185:bertos/net/ax25.c **** 			}
+ 186:bertos/net/ax25.c **** 		}
+ 187:bertos/net/ax25.c **** 		ctx->escape = false;
+ 188:bertos/net/ax25.c **** 	}
+ 189:bertos/net/ax25.c **** 
+ 190:bertos/net/ax25.c **** 	if (kfile_error(ctx->ch))
+ 191:bertos/net/ax25.c **** 	{
+ 192:bertos/net/ax25.c **** 		LOG_ERR("Channel error [%04x]\n", kfile_error(ctx->ch));
+ 193:bertos/net/ax25.c **** 		kfile_clearerr(ctx->ch);
+ 194:bertos/net/ax25.c **** 	}
+ 195:bertos/net/ax25.c **** }
+ 196:bertos/net/ax25.c **** 
+ 197:bertos/net/ax25.c **** static void ax25_putchar(AX25Ctx *ctx, uint8_t c)
+ 198:bertos/net/ax25.c **** {
+  18               		.loc 1 198 0
   19               		.cfi_startproc
   20               	.LVL0:
   21 0000 0F93      		push r16	 ;  68	*pushqi/1	[length = 1]
@@ -223,20 +233,20 @@
   36               	.L__stack_usage = 3
   37 0006 8C01      		movw r16,r24	 ;  2	*movhi/1	[length = 1]
   38 0008 C62F      		mov r28,r22	 ;  3	*movqi/1	[length = 1]
- 189:bertos/net/ax25.c **** 	if (c == HDLC_FLAG || c == HDLC_RESET
-  39               		.loc 1 189 0
+ 199:bertos/net/ax25.c **** 	if (c == HDLC_FLAG || c == HDLC_RESET
+  39               		.loc 1 199 0
   40 000a 862F      		mov r24,r22	 ;  62	*movqi/1	[length = 1]
   41               	.LVL1:
   42 000c 8E57      		subi r24,lo8(-(-126))	 ;  7	addqi3/2	[length = 1]
   43 000e 8230      		cpi r24,lo8(2)	 ;  8	*cmpqi/3	[length = 1]
   44 0010 00F0      		brlo .L2	 ;  9	branch	[length = 1]
- 190:bertos/net/ax25.c **** 		|| c == AX25_ESC)
-  45               		.loc 1 190 0
+ 200:bertos/net/ax25.c **** 		|| c == AX25_ESC)
+  45               		.loc 1 200 0
   46 0012 6B31      		cpi r22,lo8(27)	 ;  11	*cmpqi/3	[length = 1]
   47 0014 01F4      		brne .L3	 ;  12	branch	[length = 1]
   48               	.L2:
- 191:bertos/net/ax25.c **** 		kfile_putc(AX25_ESC, ctx->ch);
-  49               		.loc 1 191 0
+ 201:bertos/net/ax25.c **** 		kfile_putc(AX25_ESC, ctx->ch);
+  49               		.loc 1 201 0
   50 0016 F801      		movw r30,r16	 ;  63	*movhi/1	[length = 1]
   51 0018 E65B      		subi r30,lo8(-(330))	 ;  16	*addhi3/4	[length = 2]
   52 001a FE4F      		sbci r31,hi8(-(330))
@@ -247,8 +257,8 @@
   57 0022 90E0      		ldi r25,hi8(27)
   58 0024 0E94 0000 		call kfile_putc	 ;  20	call_value_insn/3	[length = 2]
   59               	.L3:
- 192:bertos/net/ax25.c **** 	ctx->crc_out = updcrc_ccitt(c, ctx->crc_out);
-  60               		.loc 1 192 0
+ 202:bertos/net/ax25.c **** 	ctx->crc_out = updcrc_ccitt(c, ctx->crc_out);
+  60               		.loc 1 202 0
   61 0028 D801      		movw r26,r16	 ;  64	*movhi/1	[length = 1]
   62 002a A05B      		subi r26,lo8(-(336))	 ;  23	*addhi3/4	[length = 2]
   63 002c BE4F      		sbci r27,hi8(-(336))
@@ -347,11 +357,11 @@
   96               	.LVL6:
   97               	.LBE44:
   98               	.LBE43:
-  99               		.loc 1 192 0
+  99               		.loc 1 202 0
  100 0052 8D93      		st X+,r24	 ;  41	*movhi/3	[length = 2]
  101 0054 9C93      		st X,r25
- 193:bertos/net/ax25.c **** 	kfile_putc(c, ctx->ch);
- 102               		.loc 1 193 0
+ 203:bertos/net/ax25.c **** 	kfile_putc(c, ctx->ch);
+ 102               		.loc 1 203 0
  103 0056 F801      		movw r30,r16	 ;  65	*movhi/1	[length = 1]
  104 0058 E65B      		subi r30,lo8(-(330))	 ;  44	*addhi3/4	[length = 2]
  105 005a FE4F      		sbci r31,hi8(-(330))
@@ -362,8 +372,8 @@
  110 0064 0E94 0000 		call kfile_putc	 ;  48	call_value_insn/3	[length = 2]
  111               	.LVL7:
  112               	/* epilogue start */
- 194:bertos/net/ax25.c **** }
- 113               		.loc 1 194 0
+ 204:bertos/net/ax25.c **** }
+ 113               		.loc 1 204 0
  114 0068 CF91      		pop r28	 ;  73	popqi	[length = 1]
  115               	.LVL8:
  116 006a 1F91      		pop r17	 ;  74	popqi	[length = 1]
@@ -381,75 +391,75 @@
  128               		.section	.text.print_call,"ax",@progbits
  130               	print_call:
  131               	.LFB15:
- 195:bertos/net/ax25.c **** 
- 196:bertos/net/ax25.c **** static void ax25_sendCall(AX25Ctx *ctx, const AX25Call *addr, bool last)
- 197:bertos/net/ax25.c **** {
- 198:bertos/net/ax25.c **** 	unsigned len = MIN(sizeof(addr->call), strlen(addr->call));
- 199:bertos/net/ax25.c **** 
- 200:bertos/net/ax25.c **** 	for (unsigned i = 0; i < len; i++)
- 201:bertos/net/ax25.c **** 	{
- 202:bertos/net/ax25.c **** 		uint8_t c = addr->call[i];
- 203:bertos/net/ax25.c **** 		ASSERT(isalnum(c) || c == ' ');
- 204:bertos/net/ax25.c **** 		c = toupper(c);
- 205:bertos/net/ax25.c **** 		ax25_putchar(ctx, c << 1);
- 206:bertos/net/ax25.c **** 	}
- 207:bertos/net/ax25.c **** 
- 208:bertos/net/ax25.c **** 	/* Fill with spaces the rest of the CALL if it's shorter */
- 209:bertos/net/ax25.c **** 	if (len < sizeof(addr->call))
- 210:bertos/net/ax25.c **** 		for (unsigned i = 0; i < sizeof(addr->call) - len; i++)
- 211:bertos/net/ax25.c **** 			ax25_putchar(ctx, ' ' << 1);
- 212:bertos/net/ax25.c **** 
- 213:bertos/net/ax25.c **** 	/* The bit0 of last call SSID should be set to 1 */
- 214:bertos/net/ax25.c **** 	uint8_t ssid = addr->ssid << 1 | (last ? 0x01 : 0);
- 215:bertos/net/ax25.c **** 	ax25_putchar(ctx, ssid);
- 216:bertos/net/ax25.c **** }
+ 205:bertos/net/ax25.c **** 
+ 206:bertos/net/ax25.c **** static void ax25_sendCall(AX25Ctx *ctx, const AX25Call *addr, bool last)
+ 207:bertos/net/ax25.c **** {
+ 208:bertos/net/ax25.c **** 	unsigned len = MIN(sizeof(addr->call), strlen(addr->call));
+ 209:bertos/net/ax25.c **** 
+ 210:bertos/net/ax25.c **** 	for (unsigned i = 0; i < len; i++)
+ 211:bertos/net/ax25.c **** 	{
+ 212:bertos/net/ax25.c **** 		uint8_t c = addr->call[i];
+ 213:bertos/net/ax25.c **** 		ASSERT(isalnum(c) || c == ' ');
+ 214:bertos/net/ax25.c **** 		c = toupper(c);
+ 215:bertos/net/ax25.c **** 		ax25_putchar(ctx, c << 1);
+ 216:bertos/net/ax25.c **** 	}
  217:bertos/net/ax25.c **** 
- 218:bertos/net/ax25.c **** /**
- 219:bertos/net/ax25.c ****  * Send an AX25 frame on the channel through a specific path.
- 220:bertos/net/ax25.c ****  * \param ctx AX25 context to operate on.
- 221:bertos/net/ax25.c ****  * \param path An array of callsigns used as path, \see AX25_PATH for
- 222:bertos/net/ax25.c ****  *        an handy way to create a path.
- 223:bertos/net/ax25.c ****  * \param path_len callsigns path lenght.
- 224:bertos/net/ax25.c ****  * \param _buf payload buffer.
- 225:bertos/net/ax25.c ****  * \param len length of the payload.
- 226:bertos/net/ax25.c ****  */
- 227:bertos/net/ax25.c **** void ax25_sendVia(AX25Ctx *ctx, const AX25Call *path, size_t path_len, const void *_buf, size_t len
- 228:bertos/net/ax25.c **** {
- 229:bertos/net/ax25.c **** 	const uint8_t *buf = (const uint8_t *)_buf;
- 230:bertos/net/ax25.c **** 	ASSERT(path);
- 231:bertos/net/ax25.c **** 	ASSERT(path_len >= 2);
- 232:bertos/net/ax25.c **** 
- 233:bertos/net/ax25.c **** 	ctx->crc_out = CRC_CCITT_INIT_VAL;
- 234:bertos/net/ax25.c **** 	kfile_putc(HDLC_FLAG, ctx->ch);
- 235:bertos/net/ax25.c **** 
- 236:bertos/net/ax25.c **** 
- 237:bertos/net/ax25.c **** 	/* Send call */
- 238:bertos/net/ax25.c **** 	for (size_t i = 0; i < path_len; i++)
- 239:bertos/net/ax25.c **** 		ax25_sendCall(ctx, &path[i], (i == path_len - 1));
- 240:bertos/net/ax25.c **** 
- 241:bertos/net/ax25.c **** 	ax25_putchar(ctx, AX25_CTRL_UI);
- 242:bertos/net/ax25.c **** 	ax25_putchar(ctx, AX25_PID_NOLAYER3);
- 243:bertos/net/ax25.c **** 
- 244:bertos/net/ax25.c **** 	while (len--)
- 245:bertos/net/ax25.c **** 		ax25_putchar(ctx, *buf++);
+ 218:bertos/net/ax25.c **** 	/* Fill with spaces the rest of the CALL if it's shorter */
+ 219:bertos/net/ax25.c **** 	if (len < sizeof(addr->call))
+ 220:bertos/net/ax25.c **** 		for (unsigned i = 0; i < sizeof(addr->call) - len; i++)
+ 221:bertos/net/ax25.c **** 			ax25_putchar(ctx, ' ' << 1);
+ 222:bertos/net/ax25.c **** 
+ 223:bertos/net/ax25.c **** 	/* The bit0 of last call SSID should be set to 1 */
+ 224:bertos/net/ax25.c **** 	uint8_t ssid = addr->ssid << 1 | (last ? 0x01 : 0);
+ 225:bertos/net/ax25.c **** 	ax25_putchar(ctx, ssid);
+ 226:bertos/net/ax25.c **** }
+ 227:bertos/net/ax25.c **** 
+ 228:bertos/net/ax25.c **** /**
+ 229:bertos/net/ax25.c ****  * Send an AX25 frame on the channel through a specific path.
+ 230:bertos/net/ax25.c ****  * \param ctx AX25 context to operate on.
+ 231:bertos/net/ax25.c ****  * \param path An array of callsigns used as path, \see AX25_PATH for
+ 232:bertos/net/ax25.c ****  *        an handy way to create a path.
+ 233:bertos/net/ax25.c ****  * \param path_len callsigns path lenght.
+ 234:bertos/net/ax25.c ****  * \param _buf payload buffer.
+ 235:bertos/net/ax25.c ****  * \param len length of the payload.
+ 236:bertos/net/ax25.c ****  */
+ 237:bertos/net/ax25.c **** void ax25_sendVia(AX25Ctx *ctx, const AX25Call *path, size_t path_len, const void *_buf, size_t len
+ 238:bertos/net/ax25.c **** {
+ 239:bertos/net/ax25.c **** 	const uint8_t *buf = (const uint8_t *)_buf;
+ 240:bertos/net/ax25.c **** 	ASSERT(path);
+ 241:bertos/net/ax25.c **** 	ASSERT(path_len >= 2);
+ 242:bertos/net/ax25.c **** 
+ 243:bertos/net/ax25.c **** 	ctx->crc_out = CRC_CCITT_INIT_VAL;
+ 244:bertos/net/ax25.c **** 	kfile_putc(HDLC_FLAG, ctx->ch);
+ 245:bertos/net/ax25.c **** 
  246:bertos/net/ax25.c **** 
- 247:bertos/net/ax25.c **** 	/*
- 248:bertos/net/ax25.c **** 	 * According to AX25 protocol,
- 249:bertos/net/ax25.c **** 	 * CRC is sent in reverse order!
- 250:bertos/net/ax25.c **** 	 */
- 251:bertos/net/ax25.c **** 	uint8_t crcl = (ctx->crc_out & 0xff) ^ 0xff;
- 252:bertos/net/ax25.c **** 	uint8_t crch = (ctx->crc_out >> 8) ^ 0xff;
- 253:bertos/net/ax25.c **** 	ax25_putchar(ctx, crcl);
- 254:bertos/net/ax25.c **** 	ax25_putchar(ctx, crch);
- 255:bertos/net/ax25.c **** 
- 256:bertos/net/ax25.c **** 	ASSERT(ctx->crc_out == AX25_CRC_CORRECT);
- 257:bertos/net/ax25.c **** 
- 258:bertos/net/ax25.c **** 	kfile_putc(HDLC_FLAG, ctx->ch);
- 259:bertos/net/ax25.c **** }
- 260:bertos/net/ax25.c **** 
- 261:bertos/net/ax25.c **** static void print_call(KFile *ch, const AX25Call *call)
- 262:bertos/net/ax25.c **** {
- 132               		.loc 1 262 0
+ 247:bertos/net/ax25.c **** 	/* Send call */
+ 248:bertos/net/ax25.c **** 	for (size_t i = 0; i < path_len; i++)
+ 249:bertos/net/ax25.c **** 		ax25_sendCall(ctx, &path[i], (i == path_len - 1));
+ 250:bertos/net/ax25.c **** 
+ 251:bertos/net/ax25.c **** 	ax25_putchar(ctx, AX25_CTRL_UI);
+ 252:bertos/net/ax25.c **** 	ax25_putchar(ctx, AX25_PID_NOLAYER3);
+ 253:bertos/net/ax25.c **** 
+ 254:bertos/net/ax25.c **** 	while (len--)
+ 255:bertos/net/ax25.c **** 		ax25_putchar(ctx, *buf++);
+ 256:bertos/net/ax25.c **** 
+ 257:bertos/net/ax25.c **** 	/*
+ 258:bertos/net/ax25.c **** 	 * According to AX25 protocol,
+ 259:bertos/net/ax25.c **** 	 * CRC is sent in reverse order!
+ 260:bertos/net/ax25.c **** 	 */
+ 261:bertos/net/ax25.c **** 	uint8_t crcl = (ctx->crc_out & 0xff) ^ 0xff;
+ 262:bertos/net/ax25.c **** 	uint8_t crch = (ctx->crc_out >> 8) ^ 0xff;
+ 263:bertos/net/ax25.c **** 	ax25_putchar(ctx, crcl);
+ 264:bertos/net/ax25.c **** 	ax25_putchar(ctx, crch);
+ 265:bertos/net/ax25.c **** 
+ 266:bertos/net/ax25.c **** 	ASSERT(ctx->crc_out == AX25_CRC_CORRECT);
+ 267:bertos/net/ax25.c **** 
+ 268:bertos/net/ax25.c **** 	kfile_putc(HDLC_FLAG, ctx->ch);
+ 269:bertos/net/ax25.c **** }
+ 270:bertos/net/ax25.c **** 
+ 271:bertos/net/ax25.c **** static void print_call(KFile *ch, const AX25Call *call)
+ 272:bertos/net/ax25.c **** {
+ 132               		.loc 1 272 0
  133               		.cfi_startproc
  134 0000 0F93      		push r16	 ;  49	*pushqi/1	[length = 1]
  135               	.LCFI3:
@@ -473,8 +483,8 @@
  153               	.L__stack_usage = 4
  154 0008 8C01      		movw r16,r24	 ;  2	*movhi/1	[length = 1]
  155 000a EB01      		movw r28,r22	 ;  3	*movhi/1	[length = 1]
- 263:bertos/net/ax25.c **** 	kfile_printf(ch, "%.6s", call->call);
- 156               		.loc 1 263 0
+ 273:bertos/net/ax25.c **** 	kfile_printf(ch, "%.6s", call->call);
+ 156               		.loc 1 273 0
  157 000c 00D0      		rcall .	 ;  7	*addhi3_sp_R_pc2	[length = 3]
  158 000e 00D0      		rcall .
  159 0010 00D0      		rcall .
@@ -497,8 +507,8 @@
  176 002e 6483      		std Z+4,r22
  177               		.cfi_escape 0x2e,0x6
  178 0030 0E94 0000 		call kfile_printf	 ;  13	call_value_insn/3	[length = 2]
- 264:bertos/net/ax25.c **** 	if (call->ssid)
- 179               		.loc 1 264 0
+ 274:bertos/net/ax25.c **** 	if (call->ssid)
+ 179               		.loc 1 274 0
  180 0034 2E81      		ldd r18,Y+6	 ;  14	*movqi/4	[length = 1]
  181 0036 8DB7      		in r24,__SP_L__	 ;  43	*movhi_sp/2	[length = 2]
  182 0038 9EB7      		in r25,__SP_H__
@@ -514,8 +524,8 @@
  192 0048 01F0      		breq .L4	 ;  17	branch	[length = 1]
  193               	.LBB48:
  194               	.LBB49:
- 265:bertos/net/ax25.c **** 		kfile_printf(ch, "-%d", call->ssid);
- 195               		.loc 1 265 0
+ 275:bertos/net/ax25.c **** 		kfile_printf(ch, "-%d", call->ssid);
+ 195               		.loc 1 275 0
  196 004a 00D0      		rcall .	 ;  21	*addhi3_sp_R_pc2	[length = 3]
  197 004c 00D0      		rcall .
  198 004e 00D0      		rcall .
@@ -551,8 +561,8 @@
  228               	/* epilogue start */
  229               	.LBE49:
  230               	.LBE48:
- 266:bertos/net/ax25.c **** }
- 231               		.loc 1 266 0
+ 276:bertos/net/ax25.c **** }
+ 231               		.loc 1 276 0
  232 0082 DF91      		pop r29	 ;  55	popqi	[length = 1]
  233 0084 CF91      		pop r28	 ;  56	popqi	[length = 1]
  234 0086 1F91      		pop r17	 ;  57	popqi	[length = 1]
@@ -570,159 +580,159 @@
  246               	.global	ax25_poll
  248               	ax25_poll:
  249               	.LFB11:
- 126:bertos/net/ax25.c **** {
- 250               		.loc 1 126 0
+ 136:bertos/net/ax25.c **** {
+ 250               		.loc 1 136 0
  251               		.cfi_startproc
  252               	.LVL10:
- 253 0000 2F92      		push r2	 ;  602	*pushqi/1	[length = 1]
+ 253 0000 2F92      		push r2	 ;  613	*pushqi/1	[length = 1]
  254               	.LCFI11:
  255               		.cfi_def_cfa_offset 3
  256               		.cfi_offset 2, -2
- 257 0002 3F92      		push r3	 ;  603	*pushqi/1	[length = 1]
+ 257 0002 3F92      		push r3	 ;  614	*pushqi/1	[length = 1]
  258               	.LCFI12:
  259               		.cfi_def_cfa_offset 4
  260               		.cfi_offset 3, -3
- 261 0004 4F92      		push r4	 ;  604	*pushqi/1	[length = 1]
+ 261 0004 4F92      		push r4	 ;  615	*pushqi/1	[length = 1]
  262               	.LCFI13:
  263               		.cfi_def_cfa_offset 5
  264               		.cfi_offset 4, -4
- 265 0006 5F92      		push r5	 ;  605	*pushqi/1	[length = 1]
+ 265 0006 5F92      		push r5	 ;  616	*pushqi/1	[length = 1]
  266               	.LCFI14:
  267               		.cfi_def_cfa_offset 6
  268               		.cfi_offset 5, -5
- 269 0008 6F92      		push r6	 ;  606	*pushqi/1	[length = 1]
+ 269 0008 6F92      		push r6	 ;  617	*pushqi/1	[length = 1]
  270               	.LCFI15:
  271               		.cfi_def_cfa_offset 7
  272               		.cfi_offset 6, -6
- 273 000a 7F92      		push r7	 ;  607	*pushqi/1	[length = 1]
+ 273 000a 7F92      		push r7	 ;  618	*pushqi/1	[length = 1]
  274               	.LCFI16:
  275               		.cfi_def_cfa_offset 8
  276               		.cfi_offset 7, -7
- 277 000c 8F92      		push r8	 ;  608	*pushqi/1	[length = 1]
+ 277 000c 8F92      		push r8	 ;  619	*pushqi/1	[length = 1]
  278               	.LCFI17:
  279               		.cfi_def_cfa_offset 9
  280               		.cfi_offset 8, -8
- 281 000e 9F92      		push r9	 ;  609	*pushqi/1	[length = 1]
+ 281 000e 9F92      		push r9	 ;  620	*pushqi/1	[length = 1]
  282               	.LCFI18:
  283               		.cfi_def_cfa_offset 10
  284               		.cfi_offset 9, -9
- 285 0010 AF92      		push r10	 ;  610	*pushqi/1	[length = 1]
+ 285 0010 AF92      		push r10	 ;  621	*pushqi/1	[length = 1]
  286               	.LCFI19:
  287               		.cfi_def_cfa_offset 11
  288               		.cfi_offset 10, -10
- 289 0012 BF92      		push r11	 ;  611	*pushqi/1	[length = 1]
+ 289 0012 BF92      		push r11	 ;  622	*pushqi/1	[length = 1]
  290               	.LCFI20:
  291               		.cfi_def_cfa_offset 12
  292               		.cfi_offset 11, -11
- 293 0014 CF92      		push r12	 ;  612	*pushqi/1	[length = 1]
+ 293 0014 CF92      		push r12	 ;  623	*pushqi/1	[length = 1]
  294               	.LCFI21:
  295               		.cfi_def_cfa_offset 13
  296               		.cfi_offset 12, -12
- 297 0016 DF92      		push r13	 ;  613	*pushqi/1	[length = 1]
+ 297 0016 DF92      		push r13	 ;  624	*pushqi/1	[length = 1]
  298               	.LCFI22:
  299               		.cfi_def_cfa_offset 14
  300               		.cfi_offset 13, -13
- 301 0018 EF92      		push r14	 ;  614	*pushqi/1	[length = 1]
+ 301 0018 EF92      		push r14	 ;  625	*pushqi/1	[length = 1]
  302               	.LCFI23:
  303               		.cfi_def_cfa_offset 15
  304               		.cfi_offset 14, -14
- 305 001a FF92      		push r15	 ;  615	*pushqi/1	[length = 1]
+ 305 001a FF92      		push r15	 ;  626	*pushqi/1	[length = 1]
  306               	.LCFI24:
  307               		.cfi_def_cfa_offset 16
  308               		.cfi_offset 15, -15
- 309 001c 0F93      		push r16	 ;  616	*pushqi/1	[length = 1]
+ 309 001c 0F93      		push r16	 ;  627	*pushqi/1	[length = 1]
  310               	.LCFI25:
  311               		.cfi_def_cfa_offset 17
  312               		.cfi_offset 16, -16
- 313 001e 1F93      		push r17	 ;  617	*pushqi/1	[length = 1]
+ 313 001e 1F93      		push r17	 ;  628	*pushqi/1	[length = 1]
  314               	.LCFI26:
  315               		.cfi_def_cfa_offset 18
  316               		.cfi_offset 17, -17
- 317 0020 CF93      		push r28	 ;  618	*pushqi/1	[length = 1]
+ 317 0020 CF93      		push r28	 ;  629	*pushqi/1	[length = 1]
  318               	.LCFI27:
  319               		.cfi_def_cfa_offset 19
  320               		.cfi_offset 28, -18
- 321 0022 DF93      		push r29	 ;  619	*pushqi/1	[length = 1]
+ 321 0022 DF93      		push r29	 ;  630	*pushqi/1	[length = 1]
  322               	.LCFI28:
  323               		.cfi_def_cfa_offset 20
  324               		.cfi_offset 29, -19
- 325 0024 CDB7      		in r28,__SP_L__	 ;  620	*movhi_sp/2	[length = 2]
+ 325 0024 CDB7      		in r28,__SP_L__	 ;  631	*movhi_sp/2	[length = 2]
  326 0026 DEB7      		in r29,__SP_H__
- 327 0028 CE54      		subi r28,lo8(-(-78))	 ;  621	*addhi3/4	[length = 2]
- 328 002a D040      		sbci r29,hi8(-(-78))
+ 327 0028 C655      		subi r28,lo8(-(-86))	 ;  632	*addhi3/4	[length = 2]
+ 328 002a D040      		sbci r29,hi8(-(-86))
  329               	.LCFI29:
- 330               		.cfi_def_cfa 28, 98
- 331 002c 0FB6      		in __tmp_reg__,__SREG__	 ;  622	*movhi_sp/1	[length = 5]
+ 330               		.cfi_def_cfa 28, 106
+ 331 002c 0FB6      		in __tmp_reg__,__SREG__	 ;  633	*movhi_sp/1	[length = 5]
  332 002e F894      		cli
  333 0030 DEBF      		out __SP_H__,r29
  334 0032 0FBE      		out __SREG__,__tmp_reg__
  335 0034 CDBF      		out __SP_L__,r28
  336               	/* prologue: function */
- 337               	/* frame size = 78 */
- 338               	/* stack size = 96 */
- 339               	.L__stack_usage = 96
+ 337               	/* frame size = 86 */
+ 338               	/* stack size = 104 */
+ 339               	.L__stack_usage = 104
  340 0036 7C01      		movw r14,r24	 ;  30	*movhi/1	[length = 1]
- 129:bertos/net/ax25.c **** 	while ((c = kfile_getc(ctx->ch)) != EOF)
- 341               		.loc 1 129 0
- 342 0038 0AE4      		ldi r16,lo8(330)	 ;  659	*reload_inhi	[length = 4]
+ 139:bertos/net/ax25.c **** 	while ((c = kfile_getc(ctx->ch)) != EOF)
+ 341               		.loc 1 139 0
+ 342 0038 0AE4      		ldi r16,lo8(330)	 ;  670	*reload_inhi	[length = 4]
  343 003a 202E      		mov r2,r16
  344 003c 01E0      		ldi r16,hi8(330)
  345 003e 302E      		mov r3,r16
- 346 0040 280E      		add r2,r24	 ;  350	*addhi3/1	[length = 2]
+ 346 0040 280E      		add r2,r24	 ;  354	*addhi3/1	[length = 2]
  347 0042 391E      		adc r3,r25
- 131:bertos/net/ax25.c **** 		if (!ctx->escape && c == HDLC_FLAG)
- 348               		.loc 1 131 0
- 349 0044 25E5      		ldi r18,lo8(341)	 ;  660	*reload_inhi	[length = 4]
+ 141:bertos/net/ax25.c **** 		if (!ctx->escape && c == HDLC_FLAG)
+ 348               		.loc 1 141 0
+ 349 0044 25E5      		ldi r18,lo8(341)	 ;  671	*reload_inhi	[length = 4]
  350 0046 422E      		mov r4,r18
  351 0048 21E0      		ldi r18,hi8(341)
  352 004a 522E      		mov r5,r18
  353 004c 480E      		add r4,r24	 ;  45	*addhi3/1	[length = 2]
  354 004e 591E      		adc r5,r25
- 164:bertos/net/ax25.c **** 		if (ctx->sync)
- 355               		.loc 1 164 0
- 356 0050 34E5      		ldi r19,lo8(340)	 ;  661	*reload_inhi	[length = 4]
+ 174:bertos/net/ax25.c **** 		if (ctx->sync)
+ 355               		.loc 1 174 0
+ 356 0050 34E5      		ldi r19,lo8(340)	 ;  672	*reload_inhi	[length = 4]
  357 0052 A32E      		mov r10,r19
  358 0054 31E0      		ldi r19,hi8(340)
  359 0056 B32E      		mov r11,r19
- 360 0058 A80E      		add r10,r24	 ;  299	*addhi3/1	[length = 2]
+ 360 0058 A80E      		add r10,r24	 ;  303	*addhi3/1	[length = 2]
  361 005a B91E      		adc r11,r25
- 166:bertos/net/ax25.c **** 			if (ctx->frm_len < CONFIG_AX25_FRAME_BUF_LEN)
- 362               		.loc 1 166 0
- 363 005c 4CE4      		ldi r20,lo8(332)	 ;  662	*reload_inhi	[length = 4]
+ 176:bertos/net/ax25.c **** 			if (ctx->frm_len < CONFIG_AX25_FRAME_BUF_LEN)
+ 362               		.loc 1 176 0
+ 363 005c 4CE4      		ldi r20,lo8(332)	 ;  673	*reload_inhi	[length = 4]
  364 005e 842E      		mov r8,r20
  365 0060 41E0      		ldi r20,hi8(332)
  366 0062 942E      		mov r9,r20
- 367 0064 880E      		add r8,r24	 ;  304	*addhi3/1	[length = 2]
+ 367 0064 880E      		add r8,r24	 ;  308	*addhi3/1	[length = 2]
  368 0066 991E      		adc r9,r25
- 169:bertos/net/ax25.c **** 				ctx->crc_in = updcrc_ccitt(c, ctx->crc_in);
- 369               		.loc 1 169 0
- 370 0068 5EE4      		ldi r21,lo8(334)	 ;  663	*reload_inhi	[length = 4]
+ 179:bertos/net/ax25.c **** 				ctx->crc_in = updcrc_ccitt(c, ctx->crc_in);
+ 369               		.loc 1 179 0
+ 370 0068 5EE4      		ldi r21,lo8(334)	 ;  674	*reload_inhi	[length = 4]
  371 006a 652E      		mov r6,r21
  372 006c 51E0      		ldi r21,hi8(334)
  373 006e 752E      		mov r7,r21
- 374 0070 680E      		add r6,r24	 ;  315	*addhi3/1	[length = 2]
+ 374 0070 680E      		add r6,r24	 ;  319	*addhi3/1	[length = 2]
  375 0072 791E      		adc r7,r25
- 129:bertos/net/ax25.c **** 	while ((c = kfile_getc(ctx->ch)) != EOF)
- 376               		.loc 1 129 0
- 377 0074 00C0      		rjmp .L35	 ;  664	jump	[length = 1]
+ 139:bertos/net/ax25.c **** 	while ((c = kfile_getc(ctx->ch)) != EOF)
+ 376               		.loc 1 139 0
+ 377 0074 00C0      		rjmp .L35	 ;  675	jump	[length = 1]
  378               	.LVL11:
  379               	.L27:
- 131:bertos/net/ax25.c **** 		if (!ctx->escape && c == HDLC_FLAG)
- 380               		.loc 1 131 0
- 381 0076 D201      		movw r26,r4	 ;  537	*movhi/1	[length = 1]
+ 141:bertos/net/ax25.c **** 		if (!ctx->escape && c == HDLC_FLAG)
+ 380               		.loc 1 141 0
+ 381 0076 D201      		movw r26,r4	 ;  543	*movhi/1	[length = 1]
  382 0078 8C91      		ld r24,X	 ;  46	*movqi/4	[length = 1]
  383 007a 8823      		tst r24	 ;  47	*cmpqi/1	[length = 1]
  384 007c 01F0      		breq .+2	 ;  48	branch	[length = 2]
  385 007e 00C0      		rjmp .L8
- 131:bertos/net/ax25.c **** 		if (!ctx->escape && c == HDLC_FLAG)
- 386               		.loc 1 131 0 is_stmt 0 discriminator 1
+ 141:bertos/net/ax25.c **** 		if (!ctx->escape && c == HDLC_FLAG)
+ 386               		.loc 1 141 0 is_stmt 0 discriminator 1
  387 0080 2E37      		cpi r18,126	 ;  50	*cmphi/4	[length = 2]
  388 0082 3105      		cpc r19,__zero_reg__
  389 0084 01F0      		breq .+2	 ;  51	branch	[length = 2]
  390 0086 00C0      		rjmp .L9
- 133:bertos/net/ax25.c **** 			if (ctx->frm_len >= AX25_MIN_FRAME_LEN)
- 391               		.loc 1 133 0 is_stmt 1
- 392 0088 F401      		movw r30,r8	 ;  538	*movhi/1	[length = 1]
+ 143:bertos/net/ax25.c **** 			if (ctx->frm_len >= AX25_MIN_FRAME_LEN)
+ 391               		.loc 1 143 0 is_stmt 1
+ 392 0088 F401      		movw r30,r8	 ;  544	*movhi/1	[length = 1]
  393 008a C080      		ld r12,Z	 ;  54	*movhi/2	[length = 2]
  394 008c D180      		ldd r13,Z+1
  395 008e F2E1      		ldi r31,lo8(18)	 ;  55	*cmphi/6	[length = 3]
@@ -730,9 +740,9 @@
  397 0092 D104      		cpc r13,__zero_reg__
  398 0094 00F4      		brsh .+2	 ;  56	branch	[length = 2]
  399 0096 00C0      		rjmp .L10
- 135:bertos/net/ax25.c **** 				if (ctx->crc_in == AX25_CRC_CORRECT)
- 400               		.loc 1 135 0
- 401 0098 D301      		movw r26,r6	 ;  539	*movhi/1	[length = 1]
+ 145:bertos/net/ax25.c **** 				if (ctx->crc_in == AX25_CRC_CORRECT)
+ 400               		.loc 1 145 0
+ 401 0098 D301      		movw r26,r6	 ;  545	*movhi/1	[length = 1]
  402 009a 8D91      		ld r24,X+	 ;  59	*movhi/2	[length = 3]
  403 009c 9C91      		ld r25,X
  404 009e 1197      		sbiw r26,1
@@ -746,7 +756,7 @@
  412               	.LBB71:
   63:bertos/net/ax25.c **** 	uint8_t *buf = ctx->buf;
  413               		.loc 1 63 0
- 414 00aa FE01      		movw r30,r28	 ;  540	*movhi/1	[length = 1]
+ 414 00aa FE01      		movw r30,r28	 ;  546	*movhi/1	[length = 1]
  415 00ac 3896      		adiw r30,8	 ;  70	*addhi3/2	[length = 1]
  416 00ae D701      		movw r26,r14	 ;  32	*movhi/1	[length = 1]
   65:bertos/net/ax25.c **** 	DECODE_CALL(buf, msg.dst.call);
@@ -763,7 +773,7 @@
  427               	.LVL15:
  428 00b8 2032      		cpi r18,lo8(32)	 ;  77	*cmpqi/3	[length = 1]
  429 00ba 01F4      		brne .L11	 ;  78	branch	[length = 1]
- 430 00bc 20E0      		ldi r18,lo8(0)	 ;  481	*movqi/2	[length = 1]
+ 430 00bc 20E0      		ldi r18,lo8(0)	 ;  486	*movqi/2	[length = 1]
  431               	.LVL16:
  432               	.L11:
  433 00be 2193      		st Z+,r18	 ;  82	*movqi/3	[length = 1]
@@ -776,7 +786,7 @@
  440               	.LBE72:
   66:bertos/net/ax25.c **** 	msg.dst.ssid = (*buf++ >> 1) & 0x0F;
  441               		.loc 1 66 0
- 442 00c8 F701      		movw r30,r14	 ;  541	*movhi/1	[length = 1]
+ 442 00c8 F701      		movw r30,r14	 ;  547	*movhi/1	[length = 1]
  443 00ca 8681      		ldd r24,Z+6	 ;  92	*movqi/4	[length = 1]
  444               	.LVL18:
  445 00cc 8695      		lsr r24	 ;  93	*lshrqi3/3	[length = 1]
@@ -784,8 +794,8 @@
  447 00d0 8E87      		std Y+14,r24	 ;  95	*movqi/3	[length = 1]
  448 00d2 3796      		adiw r30,7	 ;  96	*addhi3/2	[length = 1]
  449               	.LVL19:
- 450 00d4 DE01      		movw r26,r28	 ;  543	*movhi/1	[length = 1]
- 451 00d6 1196      		adiw r26,1	 ;  494	*addhi3/2	[length = 1]
+ 450 00d4 DE01      		movw r26,r28	 ;  549	*movhi/1	[length = 1]
+ 451 00d6 1196      		adiw r26,1	 ;  499	*addhi3/2	[length = 1]
   68:bertos/net/ax25.c **** 	DECODE_CALL(buf, msg.src.call);
  452               		.loc 1 68 0
  453 00d8 80E0      		ldi r24,lo8(0)	 ;  35	*movhi/4	[length = 2]
@@ -800,7 +810,7 @@
  462               	.LVL22:
  463 00e0 2032      		cpi r18,lo8(32)	 ;  108	*cmpqi/3	[length = 1]
  464 00e2 01F4      		brne .L13	 ;  109	branch	[length = 1]
- 465 00e4 20E0      		ldi r18,lo8(0)	 ;  480	*movqi/2	[length = 1]
+ 465 00e4 20E0      		ldi r18,lo8(0)	 ;  485	*movqi/2	[length = 1]
  466               	.LVL23:
  467               	.L13:
  468 00e6 2D93      		st X+,r18	 ;  113	*movqi/3	[length = 1]
@@ -810,12 +820,12 @@
  472 00ea 8630      		cpi r24,6	 ;  120	*cmphi/4	[length = 2]
  473 00ec 9105      		cpc r25,__zero_reg__
  474 00ee 01F4      		brne .L14	 ;  121	branch	[length = 1]
- 475 00f0 D701      		movw r26,r14	 ;  544	*movhi/1	[length = 1]
+ 475 00f0 D701      		movw r26,r14	 ;  550	*movhi/1	[length = 1]
  476 00f2 1D96      		adiw r26,13	 ;  123	*addhi3/2	[length = 1]
  477               	.LBE74:
   69:bertos/net/ax25.c **** 	msg.src.ssid = (*buf >> 1) & 0x0F;
  478               		.loc 1 69 0
- 479 00f4 F701      		movw r30,r14	 ;  545	*movhi/1	[length = 1]
+ 479 00f4 F701      		movw r30,r14	 ;  551	*movhi/1	[length = 1]
  480               	.LVL25:
  481 00f6 8585      		ldd r24,Z+13	 ;  124	*movqi/4	[length = 1]
  482               	.LVL26:
@@ -825,413 +835,428 @@
  486               	.LVL27:
   75:bertos/net/ax25.c **** 		for (msg.rpt_cnt = 0; !(*buf++ & 0x01) && (msg.rpt_cnt < countof(msg.rpt_lst)); msg.rpt_cnt++)
  487               		.loc 1 75 0
- 488 00fe 2896      		adiw r28,71-63	 ;  130	*movqi/3	[length = 3]
+ 488 00fe 6096      		adiw r28,79-63	 ;  130	*movqi/3	[length = 3]
  489 0100 1FAE      		std Y+63,__zero_reg__
- 490 0102 2897      		sbiw r28,71-63
+ 490 0102 6097      		sbiw r28,79-63
  491 0104 90E0      		ldi r25,lo8(0)	 ;  39	*movqi/2	[length = 1]
- 492 0106 00C0      		rjmp .L15	 ;  666	jump	[length = 1]
+ 492 0106 00C0      		rjmp .L15	 ;  677	jump	[length = 1]
  493               	.L17:
  494               	.LBB77:
  495               	.LBB78:
   77:bertos/net/ax25.c **** 			DECODE_CALL(buf, msg.rpt_lst[msg.rpt_cnt].call);
  496               		.loc 1 77 0
- 497 0108 F801      		movw r30,r16	 ;  546	*movhi/1	[length = 1]
+ 497 0108 F801      		movw r30,r16	 ;  552	*movhi/1	[length = 1]
  498 010a 8191      		ld r24,Z+	 ;  134	*movqi/4	[length = 1]
- 499 010c 8F01      		movw r16,r30	 ;  547	*movhi/1	[length = 1]
+ 499 010c 8F01      		movw r16,r30	 ;  553	*movhi/1	[length = 1]
  500 010e 8695      		lsr r24	 ;  135	*lshrqi3/3	[length = 1]
  501               	.LVL28:
  502 0110 8032      		cpi r24,lo8(32)	 ;  140	*cmpqi/3	[length = 1]
  503 0112 01F4      		brne .L16	 ;  141	branch	[length = 1]
- 504 0114 80E0      		ldi r24,lo8(0)	 ;  478	*movqi/2	[length = 1]
+ 504 0114 80E0      		ldi r24,lo8(0)	 ;  482	*movqi/2	[length = 1]
  505               	.LVL29:
  506               	.L16:
- 125:bertos/net/ax25.c **** void ax25_poll(AX25Ctx *ctx)
- 507               		.loc 1 125 0
- 508 0116 F901      		movw r30,r18	 ;  548	*movhi/1	[length = 1]
+ 135:bertos/net/ax25.c **** void ax25_poll(AX25Ctx *ctx)
+ 507               		.loc 1 135 0
+ 508 0116 F901      		movw r30,r18	 ;  554	*movhi/1	[length = 1]
  509               	.LVL30:
- 510 0118 E40F      		add r30,r20	 ;  152	*addhi3/1	[length = 2]
- 511 011a F51F      		adc r31,r21
+ 510 0118 E60F      		add r30,r22	 ;  152	*addhi3/1	[length = 2]
+ 511 011a F71F      		adc r31,r23
   77:bertos/net/ax25.c **** 			DECODE_CALL(buf, msg.rpt_lst[msg.rpt_cnt].call);
  512               		.loc 1 77 0
  513 011c 8687      		std Z+14,r24	 ;  153	*movqi/3	[length = 1]
  514               	.LBE78:
- 515 011e 4F5F      		subi r20,lo8(-(1))	 ;  154	*addhi3/4	[length = 2]
- 516 0120 5F4F      		sbci r21,hi8(-(1))
+ 515 011e 6F5F      		subi r22,lo8(-(1))	 ;  154	*addhi3/4	[length = 2]
+ 516 0120 7F4F      		sbci r23,hi8(-(1))
  517               	.LVL31:
- 518 0122 4630      		cpi r20,6	 ;  159	*cmphi/4	[length = 2]
- 519 0124 5105      		cpc r21,__zero_reg__
+ 518 0122 6630      		cpi r22,6	 ;  159	*cmphi/4	[length = 2]
+ 519 0124 7105      		cpc r23,__zero_reg__
  520 0126 01F4      		brne .L17	 ;  160	branch	[length = 1]
- 125:bertos/net/ax25.c **** void ax25_poll(AX25Ctx *ctx)
- 521               		.loc 1 125 0
+ 135:bertos/net/ax25.c **** void ax25_poll(AX25Ctx *ctx)
+ 521               		.loc 1 135 0
  522 0128 1796      		adiw r26,7	 ;  162	*addhi3/2	[length = 1]
  523               	.LBE77:
   78:bertos/net/ax25.c **** 			msg.rpt_lst[msg.rpt_cnt].ssid = (*buf >> 1) & 0x0F;
  524               		.loc 1 78 0
- 525 012a FB01      		movw r30,r22	 ;  549	*movhi/1	[length = 1]
- 526 012c 13E0      		ldi r17,3	 ;  658	*ashlhi3_const/5	[length = 5]
- 527 012e EE0F      	1:	lsl r30
- 528 0130 FF1F      		rol r31
- 529 0132 1A95      		dec r17
- 530 0134 01F4      		brne 1b
- 531 0136 E61B      		sub r30,r22	 ;  166	subhi3/1	[length = 2]
- 532 0138 F70B      		sbc r31,r23
- 533 013a 21E0      		ldi r18,lo8(1)	 ;  551	*movhi/4	[length = 2]
- 534 013c 30E0      		ldi r19,hi8(1)
- 535 013e 2C0F      		add r18,r28	 ;  552	*addhi3/1	[length = 2]
- 536 0140 3D1F      		adc r19,r29
- 537 0142 E20F      		add r30,r18	 ;  167	*addhi3/1	[length = 2]
- 538 0144 F31F      		adc r31,r19
- 539 0146 8C91      		ld r24,X	 ;  169	*movqi/4	[length = 1]
- 540 0148 8695      		lsr r24	 ;  170	*lshrqi3/3	[length = 1]
- 541 014a 8F70      		andi r24,lo8(15)	 ;  171	andqi3/2	[length = 1]
- 542 014c 848B      		std Z+20,r24	 ;  172	*movqi/3	[length = 1]
- 543               	.LVL32:
- 544 014e 9F5F      		subi r25,lo8(-(1))	 ;  174	addqi3/2	[length = 1]
- 545               	.LVL33:
- 546               	.L15:
+ 525 012a 2C91      		ld r18,X	 ;  163	*movqi/4	[length = 1]
+ 526 012c FA01      		movw r30,r20	 ;  555	*movhi/1	[length = 1]
+ 527 012e 13E0      		ldi r17,3	 ;  669	*ashlhi3_const/5	[length = 5]
+ 528 0130 EE0F      	1:	lsl r30
+ 529 0132 FF1F      		rol r31
+ 530 0134 1A95      		dec r17
+ 531 0136 01F4      		brne 1b
+ 532 0138 E41B      		sub r30,r20	 ;  167	subhi3/1	[length = 2]
+ 533 013a F50B      		sbc r31,r21
+ 534 013c 61E0      		ldi r22,lo8(1)	 ;  557	*movhi/4	[length = 2]
+ 535 013e 70E0      		ldi r23,hi8(1)
+ 536               	.LVL32:
+ 537 0140 6C0F      		add r22,r28	 ;  558	*addhi3/1	[length = 2]
+ 538 0142 7D1F      		adc r23,r29
+ 539 0144 E60F      		add r30,r22	 ;  168	*addhi3/1	[length = 2]
+ 540 0146 F71F      		adc r31,r23
+ 541 0148 822F      		mov r24,r18	 ;  559	*movqi/1	[length = 1]
+ 542 014a 8695      		lsr r24	 ;  170	*lshrqi3/3	[length = 1]
+ 543 014c 8F70      		andi r24,lo8(15)	 ;  171	andqi3/2	[length = 1]
+ 544 014e 848B      		std Z+20,r24	 ;  172	*movqi/3	[length = 1]
+  83:bertos/net/ax25.c ****                         msg.rpt_used[msg.rpt_cnt] = (( *buf & 0x80 ) == 0x80 ) ? 1 : 0 ;
+ 545               		.loc 1 83 0
+ 546 0150 E7E4      		ldi r30,lo8(71)	 ;  561	*movhi/4	[length = 2]
+ 547 0152 F0E0      		ldi r31,hi8(71)
+ 548 0154 EC0F      		add r30,r28	 ;  562	*addhi3/1	[length = 2]
+ 549 0156 FD1F      		adc r31,r29
+ 550 0158 4E0F      		add r20,r30	 ;  174	*addhi3/1	[length = 2]
+ 551 015a 5F1F      		adc r21,r31
+ 552 015c 221F      		rol r18	 ;  175	*lshrqi3/5	[length = 3]
+ 553 015e 2227      		clr r18
+ 554 0160 221F      		rol r18
+ 555 0162 FA01      		movw r30,r20	 ;  563	*movhi/1	[length = 1]
+ 556 0164 2083      		st Z,r18	 ;  176	*movqi/3	[length = 1]
+ 557               	.LVL33:
+ 558 0166 9F5F      		subi r25,lo8(-(1))	 ;  178	addqi3/2	[length = 1]
+ 559               	.LVL34:
+ 560               	.L15:
   75:bertos/net/ax25.c **** 		for (msg.rpt_cnt = 0; !(*buf++ & 0x01) && (msg.rpt_cnt < countof(msg.rpt_lst)); msg.rpt_cnt++)
- 547               		.loc 1 75 0
- 548 0150 8C91      		ld r24,X	 ;  180	*movqi/4	[length = 1]
- 549 0152 80FD      		sbrc r24,0	 ;  184	*sbrx_branchhi	[length = 2]
- 550 0154 00C0      		rjmp .L20
- 551               	.L18:
- 552 0156 9830      		cpi r25,lo8(8)	 ;  192	*cmpqi/3	[length = 1]
- 553 0158 00F4      		brsh .L20	 ;  193	branch	[length = 1]
- 125:bertos/net/ax25.c **** void ax25_poll(AX25Ctx *ctx)
- 554               		.loc 1 125 0
- 555 015a 8D01      		movw r16,r26	 ;  553	*movhi/1	[length = 1]
- 556 015c 0F5F      		subi r16,lo8(-(1))	 ;  196	*addhi3/4	[length = 2]
- 557 015e 1F4F      		sbci r17,hi8(-(1))
- 558               	.LBB80:
- 559               	.LBB76:
- 560 0160 40E0      		ldi r20,lo8(0)	 ;  475	*movhi/4	[length = 2]
- 561 0162 50E0      		ldi r21,hi8(0)
- 562               	.LBE76:
- 563               	.LBE80:
- 564               	.LBB81:
- 565               	.LBB79:
+ 561               		.loc 1 75 0
+ 562 0168 8C91      		ld r24,X	 ;  184	*movqi/4	[length = 1]
+ 563 016a 80FD      		sbrc r24,0	 ;  188	*sbrx_branchhi	[length = 2]
+ 564 016c 00C0      		rjmp .L20
+ 565               	.L18:
+ 566 016e 9830      		cpi r25,lo8(8)	 ;  196	*cmpqi/3	[length = 1]
+ 567 0170 00F4      		brsh .L20	 ;  197	branch	[length = 1]
+ 135:bertos/net/ax25.c **** void ax25_poll(AX25Ctx *ctx)
+ 568               		.loc 1 135 0
+ 569 0172 8D01      		movw r16,r26	 ;  564	*movhi/1	[length = 1]
+ 570 0174 0F5F      		subi r16,lo8(-(1))	 ;  200	*addhi3/4	[length = 2]
+ 571 0176 1F4F      		sbci r17,hi8(-(1))
+ 572               	.LBB80:
+ 573               	.LBB76:
+ 574 0178 60E0      		ldi r22,lo8(0)	 ;  479	*movhi/4	[length = 2]
+ 575 017a 70E0      		ldi r23,hi8(0)
+ 576               	.LBE76:
+ 577               	.LBE80:
+ 578               	.LBB81:
+ 579               	.LBB79:
   77:bertos/net/ax25.c **** 			DECODE_CALL(buf, msg.rpt_lst[msg.rpt_cnt].call);
- 566               		.loc 1 77 0
- 567 0164 692F      		mov r22,r25	 ;  600	*movqi/1	[length = 1]
- 568 0166 70E0      		ldi r23,lo8(0)	 ;  601	*movqi/2	[length = 1]
- 125:bertos/net/ax25.c **** void ax25_poll(AX25Ctx *ctx)
- 569               		.loc 1 125 0
- 570 0168 9B01      		movw r18,r22	 ;  554	*movhi/1	[length = 1]
- 571 016a E3E0      		ldi r30,3	 ;  657	*ashlhi3_const/5	[length = 5]
- 572 016c 220F      	1:	lsl r18
- 573 016e 331F      		rol r19
- 574 0170 EA95      		dec r30
- 575 0172 01F4      		brne 1b
- 576 0174 261B      		sub r18,r22	 ;  150	subhi3/1	[length = 2]
- 577 0176 370B      		sbc r19,r23
- 578 0178 E1E0      		ldi r30,lo8(1)	 ;  556	*movhi/4	[length = 2]
- 579 017a F0E0      		ldi r31,hi8(1)
- 580 017c EC0F      		add r30,r28	 ;  557	*addhi3/1	[length = 2]
- 581 017e FD1F      		adc r31,r29
- 582 0180 2E0F      		add r18,r30	 ;  151	*addhi3/1	[length = 2]
- 583 0182 3F1F      		adc r19,r31
- 584 0184 00C0      		rjmp .L17	 ;  668	jump	[length = 1]
- 585               	.L20:
- 586               	.LBE79:
- 587               	.LBE81:
- 588 0186 2896      		adiw r28,71-63	 ;  202	*movqi/3	[length = 3]
- 589 0188 9FAF      		std Y+63,r25
- 590 018a 2897      		sbiw r28,71-63
-  92:bertos/net/ax25.c **** 	msg.ctrl = *buf++;
- 591               		.loc 1 92 0
- 592 018c 1196      		adiw r26,1	 ;  205	*movqi/4	[length = 3]
- 593 018e 8C91      		ld r24,X
- 594 0190 1197      		sbiw r26,1
- 595 0192 90E0      		ldi r25,lo8(0)	 ;  599	*movqi/2	[length = 1]
- 596 0194 2A96      		adiw r28,72-62	 ;  208	*movhi/3	[length = 4]
- 597 0196 9FAF      		std Y+63,r25
- 598 0198 8EAF      		std Y+62,r24
- 599 019a 2A97      		sbiw r28,72-62
- 600               	.LVL34:
-  93:bertos/net/ax25.c **** 	if (msg.ctrl != AX25_CTRL_UI)
- 601               		.loc 1 93 0
- 602 019c 8330      		cpi r24,3	 ;  210	*cmphi/4	[length = 2]
- 603 019e 9105      		cpc r25,__zero_reg__
- 604 01a0 01F0      		breq .L21	 ;  211	branch	[length = 1]
-  95:bertos/net/ax25.c **** 		LOG_WARN("Only UI frames are handled, got [%02X]\n", msg.ctrl);
- 605               		.loc 1 95 0
- 606 01a2 00D0      		rcall .	 ;  213	*addhi3_sp_R_pc2	[length = 3]
- 607 01a4 00D0      		rcall .
- 608 01a6 00D0      		rcall .
- 609 01a8 EDB7      		in r30,__SP_L__	 ;  558	*movhi_sp/2	[length = 2]
- 610 01aa FEB7      		in r31,__SP_H__
- 611 01ac 3196      		adiw r30,1	 ;  441	*addhi3/2	[length = 1]
- 612 01ae 20E0      		ldi r18,lo8(__c.1724)	 ;  215	*movhi/4	[length = 2]
- 613 01b0 30E0      		ldi r19,hi8(__c.1724)
- 614 01b2 ADB7      		in r26,__SP_L__	 ;  559	*movhi_sp/2	[length = 2]
- 615 01b4 BEB7      		in r27,__SP_H__
- 616               	.LVL35:
- 617 01b6 1296      		adiw r26,1+1	 ;  216	*movhi/3	[length = 4]
- 618 01b8 3C93      		st X,r19
- 619 01ba 2E93      		st -X,r18
- 620 01bc 1197      		sbiw r26,1
- 621 01be 20E0      		ldi r18,lo8(.LC2)	 ;  217	*movhi/4	[length = 2]
- 622 01c0 30E0      		ldi r19,hi8(.LC2)
- 623 01c2 3383      		std Z+3,r19	 ;  218	*movhi/3	[length = 2]
- 624 01c4 2283      		std Z+2,r18
- 625 01c6 9583      		std Z+5,r25	 ;  219	*movhi/3	[length = 2]
- 626 01c8 8483      		std Z+4,r24
- 627 01ca 00C0      		rjmp .L36	 ;  670	jump	[length = 1]
- 628               	.LVL36:
- 629               	.L21:
-  99:bertos/net/ax25.c **** 	msg.pid = *buf++;
- 630               		.loc 1 99 0
- 631 01cc 1296      		adiw r26,2	 ;  226	*movqi/4	[length = 3]
- 632 01ce 8C91      		ld r24,X
- 633 01d0 1297      		sbiw r26,2
- 634 01d2 2B96      		adiw r28,74-63	 ;  228	*movqi/3	[length = 3]
- 635 01d4 8FAF      		std Y+63,r24
- 636 01d6 2B97      		sbiw r28,74-63
- 637               	.LVL37:
- 100:bertos/net/ax25.c **** 	if (msg.pid != AX25_PID_NOLAYER3)
- 638               		.loc 1 100 0
- 639 01d8 803F      		cpi r24,lo8(-16)	 ;  231	*cmpqi/3	[length = 1]
- 640 01da 01F0      		breq .L22	 ;  232	branch	[length = 1]
- 102:bertos/net/ax25.c **** 		LOG_WARN("Only frames without layer3 protocol are handled, got [%02X]\n", msg.pid);
- 641               		.loc 1 102 0
- 642 01dc 00D0      		rcall .	 ;  234	*addhi3_sp_R_pc2	[length = 3]
- 643 01de 00D0      		rcall .
- 644 01e0 00D0      		rcall .
- 645 01e2 EDB7      		in r30,__SP_L__	 ;  562	*movhi_sp/2	[length = 2]
- 646 01e4 FEB7      		in r31,__SP_H__
- 647 01e6 3196      		adiw r30,1	 ;  442	*addhi3/2	[length = 1]
- 648 01e8 20E0      		ldi r18,lo8(__c.1726)	 ;  236	*movhi/4	[length = 2]
- 649 01ea 30E0      		ldi r19,hi8(__c.1726)
- 650 01ec ADB7      		in r26,__SP_L__	 ;  563	*movhi_sp/2	[length = 2]
- 651 01ee BEB7      		in r27,__SP_H__
- 652               	.LVL38:
- 653 01f0 1296      		adiw r26,1+1	 ;  237	*movhi/3	[length = 4]
- 654 01f2 3C93      		st X,r19
- 655 01f4 2E93      		st -X,r18
- 656 01f6 1197      		sbiw r26,1
- 657 01f8 20E0      		ldi r18,lo8(.LC2)	 ;  238	*movhi/4	[length = 2]
- 658 01fa 30E0      		ldi r19,hi8(.LC2)
- 659 01fc 3383      		std Z+3,r19	 ;  239	*movhi/3	[length = 2]
- 660 01fe 2283      		std Z+2,r18
- 661 0200 8483      		std Z+4,r24	 ;  455	*movqi/3	[length = 1]
- 662 0202 1582      		std Z+5,__zero_reg__	 ;  456	*movqi/3	[length = 1]
- 663               	.L36:
- 664               		.cfi_escape 0x2e,0x6
- 665 0204 0E94 0000 		call kprintf_P	 ;  242	call_insn/3	[length = 2]
- 666 0208 EDB7      		in r30,__SP_L__	 ;  564	*movhi_sp/2	[length = 2]
- 667 020a FEB7      		in r31,__SP_H__
- 668 020c 3696      		adiw r30,6	 ;  243	*addhi3/2	[length = 1]
- 669 020e 0FB6      		in __tmp_reg__,__SREG__	 ;  565	*movhi_sp/1	[length = 5]
- 670 0210 F894      		cli
- 671 0212 FEBF      		out __SP_H__,r31
- 672 0214 0FBE      		out __SREG__,__tmp_reg__
- 673 0216 EDBF      		out __SP_L__,r30
- 674 0218 00C0      		rjmp .L10	 ;  672	jump	[length = 1]
- 675               	.LVL39:
- 676               	.L22:
-  99:bertos/net/ax25.c **** 	msg.pid = *buf++;
- 677               		.loc 1 99 0
- 678 021a 1396      		adiw r26,3	 ;  248	*addhi3/2	[length = 1]
- 679               	.LVL40:
- 106:bertos/net/ax25.c **** 	msg.len = ctx->frm_len - 2 - (buf - ctx->buf);
- 680               		.loc 1 106 0
- 681 021c C601      		movw r24,r12	 ;  566	*movhi/1	[length = 1]
- 682 021e 0297      		sbiw r24,2	 ;  250	*addhi3/3	[length = 1]
- 683 0220 9701      		movw r18,r14	 ;  567	*movhi/1	[length = 1]
- 684 0222 2A1B      		sub r18,r26	 ;  251	subhi3/1	[length = 2]
- 685 0224 3B0B      		sbc r19,r27
- 686 0226 820F      		add r24,r18	 ;  252	*addhi3/1	[length = 2]
- 687 0228 931F      		adc r25,r19
- 688 022a 2F96      		adiw r28,77-62	 ;  253	*movhi/3	[length = 4]
- 689 022c 9FAF      		std Y+63,r25
- 690 022e 8EAF      		std Y+62,r24
- 691 0230 2F97      		sbiw r28,77-62
- 107:bertos/net/ax25.c **** 	msg.info = buf;
- 692               		.loc 1 107 0
- 693 0232 2D96      		adiw r28,75-62	 ;  255	*movhi/3	[length = 4]
- 694 0234 BFAF      		std Y+63,r27
- 695 0236 AEAF      		std Y+62,r26
- 696 0238 2D97      		sbiw r28,75-62
- 697               	.LVL41:
- 110:bertos/net/ax25.c **** 	if (ctx->hook)
- 698               		.loc 1 110 0
- 699 023a F701      		movw r30,r14	 ;  568	*movhi/1	[length = 1]
- 700 023c EE5A      		subi r30,lo8(-(338))	 ;  257	*addhi3/4	[length = 2]
- 701 023e FE4F      		sbci r31,hi8(-(338))
- 702 0240 0190      		ld __tmp_reg__,Z+	 ;  258	*movhi/2	[length = 3]
- 703 0242 F081      		ld r31,Z
- 704 0244 E02D      		mov r30,__tmp_reg__
- 705 0246 3097      		sbiw r30,0	 ;  259	*cmphi/1	[length = 1]
- 706 0248 01F0      		breq .L10	 ;  260	branch	[length = 1]
- 111:bertos/net/ax25.c **** 		ctx->hook(&msg);
- 707               		.loc 1 111 0
- 708 024a CE01      		movw r24,r28	 ;  569	*movhi/1	[length = 1]
- 709 024c 0196      		adiw r24,1	 ;  503	*addhi3/2	[length = 1]
- 710               		.cfi_escape 0x2e,0
- 711 024e 0995      		icall	 ;  264	call_insn/1	[length = 1]
- 712               	.LVL42:
- 713               	.L10:
- 714               	.LBE71:
- 715               	.LBE70:
- 145:bertos/net/ax25.c **** 			ctx->sync = true;
- 716               		.loc 1 145 0
- 717 0250 81E0      		ldi r24,lo8(1)	 ;  268	*movqi/2	[length = 1]
- 718 0252 D501      		movw r26,r10	 ;  570	*movhi/1	[length = 1]
- 719 0254 8C93      		st X,r24	 ;  269	*movqi/3	[length = 1]
- 146:bertos/net/ax25.c **** 			ctx->crc_in = CRC_CCITT_INIT_VAL;
- 720               		.loc 1 146 0
- 721 0256 8FEF      		ldi r24,lo8(-1)	 ;  271	*movhi/4	[length = 2]
- 722 0258 9FEF      		ldi r25,hi8(-1)
- 723 025a F301      		movw r30,r6	 ;  571	*movhi/1	[length = 1]
- 724 025c 9183      		std Z+1,r25	 ;  272	*movhi/3	[length = 2]
- 725 025e 8083      		st Z,r24
- 147:bertos/net/ax25.c **** 			ctx->frm_len = 0;
- 726               		.loc 1 147 0
- 727 0260 D401      		movw r26,r8	 ;  572	*movhi/1	[length = 1]
- 728 0262 1196      		adiw r26,1	 ;  274	*movhi/3	[length = 3]
- 729 0264 1C92      		st X,__zero_reg__
- 730 0266 1E92      		st -X,__zero_reg__
- 148:bertos/net/ax25.c **** 			continue;
- 731               		.loc 1 148 0
- 732 0268 00C0      		rjmp .L35	 ;  674	jump	[length = 1]
- 733               	.LVL43:
- 734               	.L9:
- 151:bertos/net/ax25.c **** 		if (!ctx->escape && c == HDLC_RESET)
- 735               		.loc 1 151 0 discriminator 1
- 736 026a 2F37      		cpi r18,127	 ;  279	*cmphi/4	[length = 2]
- 737 026c 3105      		cpc r19,__zero_reg__
- 738 026e 01F4      		brne .L24	 ;  280	branch	[length = 1]
- 739               	.LVL44:
- 154:bertos/net/ax25.c **** 			ctx->sync = false;
- 740               		.loc 1 154 0
- 741 0270 F501      		movw r30,r10	 ;  573	*movhi/1	[length = 1]
- 742 0272 1082      		st Z,__zero_reg__	 ;  284	*movqi/3	[length = 1]
- 155:bertos/net/ax25.c **** 			continue;
- 743               		.loc 1 155 0
- 744 0274 00C0      		rjmp .L35	 ;  676	jump	[length = 1]
- 745               	.LVL45:
- 746               	.L24:
- 158:bertos/net/ax25.c **** 		if (!ctx->escape && c == AX25_ESC)
- 747               		.loc 1 158 0 discriminator 1
- 748 0276 2B31      		cpi r18,27	 ;  289	*cmphi/4	[length = 2]
- 749 0278 3105      		cpc r19,__zero_reg__
- 750 027a 01F4      		brne .L8	 ;  290	branch	[length = 1]
- 160:bertos/net/ax25.c **** 			ctx->escape = true;
- 751               		.loc 1 160 0
- 752 027c 81E0      		ldi r24,lo8(1)	 ;  293	*movqi/2	[length = 1]
- 753 027e D201      		movw r26,r4	 ;  574	*movhi/1	[length = 1]
- 754 0280 8C93      		st X,r24	 ;  294	*movqi/3	[length = 1]
- 161:bertos/net/ax25.c **** 			continue;
- 755               		.loc 1 161 0
- 756 0282 00C0      		rjmp .L35	 ;  678	jump	[length = 1]
- 757               	.L8:
- 164:bertos/net/ax25.c **** 		if (ctx->sync)
- 758               		.loc 1 164 0
- 759 0284 F501      		movw r30,r10	 ;  575	*movhi/1	[length = 1]
- 760 0286 8081      		ld r24,Z	 ;  300	*movqi/4	[length = 1]
- 761 0288 8823      		tst r24	 ;  301	*cmpqi/1	[length = 1]
- 762 028a 01F0      		breq .L25	 ;  302	branch	[length = 1]
- 166:bertos/net/ax25.c **** 			if (ctx->frm_len < CONFIG_AX25_FRAME_BUF_LEN)
- 763               		.loc 1 166 0
- 764 028c D401      		movw r26,r8	 ;  576	*movhi/1	[length = 1]
- 765 028e 8D91      		ld r24,X+	 ;  305	*movhi/2	[length = 3]
- 766 0290 9C91      		ld r25,X
- 767 0292 1197      		sbiw r26,1
- 768 0294 B1E0      		ldi r27,hi8(330)	 ;  306	*cmphi/5	[length = 3]
- 769 0296 8A34      		cpi r24,lo8(330)
- 770 0298 9B07      		cpc r25,r27
- 771 029a 00F4      		brsh .L26	 ;  307	branch	[length = 1]
- 168:bertos/net/ax25.c **** 				ctx->buf[ctx->frm_len++] = c;
- 772               		.loc 1 168 0
- 773 029c F701      		movw r30,r14	 ;  577	*movhi/1	[length = 1]
- 774 029e E80F      		add r30,r24	 ;  310	*addhi3/1	[length = 2]
- 775 02a0 F91F      		adc r31,r25
- 776 02a2 2083      		st Z,r18	 ;  311	*movqi/3	[length = 1]
- 777 02a4 0196      		adiw r24,1	 ;  313	*addhi3/2	[length = 1]
- 778 02a6 F401      		movw r30,r8	 ;  578	*movhi/1	[length = 1]
- 779 02a8 9183      		std Z+1,r25	 ;  314	*movhi/3	[length = 2]
- 780 02aa 8083      		st Z,r24
- 169:bertos/net/ax25.c **** 				ctx->crc_in = updcrc_ccitt(c, ctx->crc_in);
- 781               		.loc 1 169 0
- 782 02ac D301      		movw r26,r6	 ;  579	*movhi/1	[length = 1]
- 783 02ae 4D91      		ld r20,X+	 ;  316	*movhi/2	[length = 3]
- 784 02b0 5C91      		ld r21,X
- 785 02b2 1197      		sbiw r26,1
- 786               	.LVL46:
- 787               	.LBB82:
- 788               	.LBB83:
- 789               	.LBB84:
- 790               		.loc 2 60 0
- 791 02b4 822F      		mov r24,r18	 ;  596	*movqi/1	[length = 1]
- 792 02b6 90E0      		ldi r25,lo8(0)	 ;  597	*movqi/2	[length = 1]
- 793 02b8 8427      		eor r24,r20	 ;  320	xorhi3	[length = 2]
- 794 02ba 9527      		eor r25,r21
- 795 02bc 9070      		andi r25,hi8(255)	 ;  321	andhi3/2	[length = 2]
- 796 02be 880F      		lsl r24	 ;  655	*ashlhi3_const/2	[length = 2]
- 797 02c0 991F      		rol r25
- 798 02c2 8050      		subi r24,lo8(-(crc_ccitt_tab))	 ;  323	*addhi3/4	[length = 2]
- 799 02c4 9040      		sbci r25,hi8(-(crc_ccitt_tab))
+ 580               		.loc 1 77 0
+ 581 017c 492F      		mov r20,r25	 ;  611	*movqi/1	[length = 1]
+ 582 017e 50E0      		ldi r21,lo8(0)	 ;  612	*movqi/2	[length = 1]
+ 135:bertos/net/ax25.c **** void ax25_poll(AX25Ctx *ctx)
+ 583               		.loc 1 135 0
+ 584 0180 9A01      		movw r18,r20	 ;  565	*movhi/1	[length = 1]
+ 585 0182 E3E0      		ldi r30,3	 ;  668	*ashlhi3_const/5	[length = 5]
+ 586 0184 220F      	1:	lsl r18
+ 587 0186 331F      		rol r19
+ 588 0188 EA95      		dec r30
+ 589 018a 01F4      		brne 1b
+ 590 018c 241B      		sub r18,r20	 ;  150	subhi3/1	[length = 2]
+ 591 018e 350B      		sbc r19,r21
+ 592 0190 E1E0      		ldi r30,lo8(1)	 ;  567	*movhi/4	[length = 2]
+ 593 0192 F0E0      		ldi r31,hi8(1)
+ 594 0194 EC0F      		add r30,r28	 ;  568	*addhi3/1	[length = 2]
+ 595 0196 FD1F      		adc r31,r29
+ 596 0198 2E0F      		add r18,r30	 ;  151	*addhi3/1	[length = 2]
+ 597 019a 3F1F      		adc r19,r31
+ 598 019c 00C0      		rjmp .L17	 ;  679	jump	[length = 1]
+ 599               	.L20:
+ 600               	.LBE79:
+ 601               	.LBE81:
+ 602 019e 6096      		adiw r28,79-63	 ;  206	*movqi/3	[length = 3]
+ 603 01a0 9FAF      		std Y+63,r25
+ 604 01a2 6097      		sbiw r28,79-63
+ 102:bertos/net/ax25.c **** 	msg.ctrl = *buf++;
+ 605               		.loc 1 102 0
+ 606 01a4 1196      		adiw r26,1	 ;  209	*movqi/4	[length = 3]
+ 607 01a6 8C91      		ld r24,X
+ 608 01a8 1197      		sbiw r26,1
+ 609 01aa 90E0      		ldi r25,lo8(0)	 ;  610	*movqi/2	[length = 1]
+ 610 01ac 6296      		adiw r28,80-62	 ;  212	*movhi/3	[length = 4]
+ 611 01ae 9FAF      		std Y+63,r25
+ 612 01b0 8EAF      		std Y+62,r24
+ 613 01b2 6297      		sbiw r28,80-62
+ 614               	.LVL35:
+ 103:bertos/net/ax25.c **** 	if (msg.ctrl != AX25_CTRL_UI)
+ 615               		.loc 1 103 0
+ 616 01b4 8330      		cpi r24,3	 ;  214	*cmphi/4	[length = 2]
+ 617 01b6 9105      		cpc r25,__zero_reg__
+ 618 01b8 01F0      		breq .L21	 ;  215	branch	[length = 1]
+ 105:bertos/net/ax25.c **** 		LOG_WARN("Only UI frames are handled, got [%02X]\n", msg.ctrl);
+ 619               		.loc 1 105 0
+ 620 01ba 00D0      		rcall .	 ;  217	*addhi3_sp_R_pc2	[length = 3]
+ 621 01bc 00D0      		rcall .
+ 622 01be 00D0      		rcall .
+ 623 01c0 EDB7      		in r30,__SP_L__	 ;  569	*movhi_sp/2	[length = 2]
+ 624 01c2 FEB7      		in r31,__SP_H__
+ 625 01c4 3196      		adiw r30,1	 ;  445	*addhi3/2	[length = 1]
+ 626 01c6 20E0      		ldi r18,lo8(__c.1725)	 ;  219	*movhi/4	[length = 2]
+ 627 01c8 30E0      		ldi r19,hi8(__c.1725)
+ 628 01ca ADB7      		in r26,__SP_L__	 ;  570	*movhi_sp/2	[length = 2]
+ 629 01cc BEB7      		in r27,__SP_H__
+ 630               	.LVL36:
+ 631 01ce 1296      		adiw r26,1+1	 ;  220	*movhi/3	[length = 4]
+ 632 01d0 3C93      		st X,r19
+ 633 01d2 2E93      		st -X,r18
+ 634 01d4 1197      		sbiw r26,1
+ 635 01d6 20E0      		ldi r18,lo8(.LC2)	 ;  221	*movhi/4	[length = 2]
+ 636 01d8 30E0      		ldi r19,hi8(.LC2)
+ 637 01da 3383      		std Z+3,r19	 ;  222	*movhi/3	[length = 2]
+ 638 01dc 2283      		std Z+2,r18
+ 639 01de 9583      		std Z+5,r25	 ;  223	*movhi/3	[length = 2]
+ 640 01e0 8483      		std Z+4,r24
+ 641 01e2 00C0      		rjmp .L36	 ;  681	jump	[length = 1]
+ 642               	.LVL37:
+ 643               	.L21:
+ 109:bertos/net/ax25.c **** 	msg.pid = *buf++;
+ 644               		.loc 1 109 0
+ 645 01e4 1296      		adiw r26,2	 ;  230	*movqi/4	[length = 3]
+ 646 01e6 8C91      		ld r24,X
+ 647 01e8 1297      		sbiw r26,2
+ 648 01ea 6396      		adiw r28,82-63	 ;  232	*movqi/3	[length = 3]
+ 649 01ec 8FAF      		std Y+63,r24
+ 650 01ee 6397      		sbiw r28,82-63
+ 651               	.LVL38:
+ 110:bertos/net/ax25.c **** 	if (msg.pid != AX25_PID_NOLAYER3)
+ 652               		.loc 1 110 0
+ 653 01f0 803F      		cpi r24,lo8(-16)	 ;  235	*cmpqi/3	[length = 1]
+ 654 01f2 01F0      		breq .L22	 ;  236	branch	[length = 1]
+ 112:bertos/net/ax25.c **** 		LOG_WARN("Only frames without layer3 protocol are handled, got [%02X]\n", msg.pid);
+ 655               		.loc 1 112 0
+ 656 01f4 00D0      		rcall .	 ;  238	*addhi3_sp_R_pc2	[length = 3]
+ 657 01f6 00D0      		rcall .
+ 658 01f8 00D0      		rcall .
+ 659 01fa EDB7      		in r30,__SP_L__	 ;  573	*movhi_sp/2	[length = 2]
+ 660 01fc FEB7      		in r31,__SP_H__
+ 661 01fe 3196      		adiw r30,1	 ;  446	*addhi3/2	[length = 1]
+ 662 0200 20E0      		ldi r18,lo8(__c.1727)	 ;  240	*movhi/4	[length = 2]
+ 663 0202 30E0      		ldi r19,hi8(__c.1727)
+ 664 0204 ADB7      		in r26,__SP_L__	 ;  574	*movhi_sp/2	[length = 2]
+ 665 0206 BEB7      		in r27,__SP_H__
+ 666               	.LVL39:
+ 667 0208 1296      		adiw r26,1+1	 ;  241	*movhi/3	[length = 4]
+ 668 020a 3C93      		st X,r19
+ 669 020c 2E93      		st -X,r18
+ 670 020e 1197      		sbiw r26,1
+ 671 0210 20E0      		ldi r18,lo8(.LC2)	 ;  242	*movhi/4	[length = 2]
+ 672 0212 30E0      		ldi r19,hi8(.LC2)
+ 673 0214 3383      		std Z+3,r19	 ;  243	*movhi/3	[length = 2]
+ 674 0216 2283      		std Z+2,r18
+ 675 0218 8483      		std Z+4,r24	 ;  459	*movqi/3	[length = 1]
+ 676 021a 1582      		std Z+5,__zero_reg__	 ;  460	*movqi/3	[length = 1]
+ 677               	.L36:
+ 678               		.cfi_escape 0x2e,0x6
+ 679 021c 0E94 0000 		call kprintf_P	 ;  246	call_insn/3	[length = 2]
+ 680 0220 EDB7      		in r30,__SP_L__	 ;  575	*movhi_sp/2	[length = 2]
+ 681 0222 FEB7      		in r31,__SP_H__
+ 682 0224 3696      		adiw r30,6	 ;  247	*addhi3/2	[length = 1]
+ 683 0226 0FB6      		in __tmp_reg__,__SREG__	 ;  576	*movhi_sp/1	[length = 5]
+ 684 0228 F894      		cli
+ 685 022a FEBF      		out __SP_H__,r31
+ 686 022c 0FBE      		out __SREG__,__tmp_reg__
+ 687 022e EDBF      		out __SP_L__,r30
+ 688 0230 00C0      		rjmp .L10	 ;  683	jump	[length = 1]
+ 689               	.LVL40:
+ 690               	.L22:
+ 109:bertos/net/ax25.c **** 	msg.pid = *buf++;
+ 691               		.loc 1 109 0
+ 692 0232 1396      		adiw r26,3	 ;  252	*addhi3/2	[length = 1]
+ 693               	.LVL41:
+ 116:bertos/net/ax25.c **** 	msg.len = ctx->frm_len - 2 - (buf - ctx->buf);
+ 694               		.loc 1 116 0
+ 695 0234 C601      		movw r24,r12	 ;  577	*movhi/1	[length = 1]
+ 696 0236 0297      		sbiw r24,2	 ;  254	*addhi3/3	[length = 1]
+ 697 0238 9701      		movw r18,r14	 ;  578	*movhi/1	[length = 1]
+ 698 023a 2A1B      		sub r18,r26	 ;  255	subhi3/1	[length = 2]
+ 699 023c 3B0B      		sbc r19,r27
+ 700 023e 820F      		add r24,r18	 ;  256	*addhi3/1	[length = 2]
+ 701 0240 931F      		adc r25,r19
+ 702 0242 6796      		adiw r28,85-62	 ;  257	*movhi/3	[length = 4]
+ 703 0244 9FAF      		std Y+63,r25
+ 704 0246 8EAF      		std Y+62,r24
+ 705 0248 6797      		sbiw r28,85-62
+ 117:bertos/net/ax25.c **** 	msg.info = buf;
+ 706               		.loc 1 117 0
+ 707 024a 6596      		adiw r28,83-62	 ;  259	*movhi/3	[length = 4]
+ 708 024c BFAF      		std Y+63,r27
+ 709 024e AEAF      		std Y+62,r26
+ 710 0250 6597      		sbiw r28,83-62
+ 711               	.LVL42:
+ 120:bertos/net/ax25.c **** 	if (ctx->hook)
+ 712               		.loc 1 120 0
+ 713 0252 F701      		movw r30,r14	 ;  579	*movhi/1	[length = 1]
+ 714 0254 EE5A      		subi r30,lo8(-(338))	 ;  261	*addhi3/4	[length = 2]
+ 715 0256 FE4F      		sbci r31,hi8(-(338))
+ 716 0258 0190      		ld __tmp_reg__,Z+	 ;  262	*movhi/2	[length = 3]
+ 717 025a F081      		ld r31,Z
+ 718 025c E02D      		mov r30,__tmp_reg__
+ 719 025e 3097      		sbiw r30,0	 ;  263	*cmphi/1	[length = 1]
+ 720 0260 01F0      		breq .L10	 ;  264	branch	[length = 1]
+ 121:bertos/net/ax25.c **** 		ctx->hook(&msg);
+ 721               		.loc 1 121 0
+ 722 0262 CE01      		movw r24,r28	 ;  580	*movhi/1	[length = 1]
+ 723 0264 0196      		adiw r24,1	 ;  507	*addhi3/2	[length = 1]
+ 724               		.cfi_escape 0x2e,0
+ 725 0266 0995      		icall	 ;  268	call_insn/1	[length = 1]
+ 726               	.LVL43:
+ 727               	.L10:
+ 728               	.LBE71:
+ 729               	.LBE70:
+ 155:bertos/net/ax25.c **** 			ctx->sync = true;
+ 730               		.loc 1 155 0
+ 731 0268 81E0      		ldi r24,lo8(1)	 ;  272	*movqi/2	[length = 1]
+ 732 026a D501      		movw r26,r10	 ;  581	*movhi/1	[length = 1]
+ 733 026c 8C93      		st X,r24	 ;  273	*movqi/3	[length = 1]
+ 156:bertos/net/ax25.c **** 			ctx->crc_in = CRC_CCITT_INIT_VAL;
+ 734               		.loc 1 156 0
+ 735 026e 8FEF      		ldi r24,lo8(-1)	 ;  275	*movhi/4	[length = 2]
+ 736 0270 9FEF      		ldi r25,hi8(-1)
+ 737 0272 F301      		movw r30,r6	 ;  582	*movhi/1	[length = 1]
+ 738 0274 9183      		std Z+1,r25	 ;  276	*movhi/3	[length = 2]
+ 739 0276 8083      		st Z,r24
+ 157:bertos/net/ax25.c **** 			ctx->frm_len = 0;
+ 740               		.loc 1 157 0
+ 741 0278 D401      		movw r26,r8	 ;  583	*movhi/1	[length = 1]
+ 742 027a 1196      		adiw r26,1	 ;  278	*movhi/3	[length = 3]
+ 743 027c 1C92      		st X,__zero_reg__
+ 744 027e 1E92      		st -X,__zero_reg__
+ 158:bertos/net/ax25.c **** 			continue;
+ 745               		.loc 1 158 0
+ 746 0280 00C0      		rjmp .L35	 ;  685	jump	[length = 1]
+ 747               	.LVL44:
+ 748               	.L9:
+ 161:bertos/net/ax25.c **** 		if (!ctx->escape && c == HDLC_RESET)
+ 749               		.loc 1 161 0 discriminator 1
+ 750 0282 2F37      		cpi r18,127	 ;  283	*cmphi/4	[length = 2]
+ 751 0284 3105      		cpc r19,__zero_reg__
+ 752 0286 01F4      		brne .L24	 ;  284	branch	[length = 1]
+ 753               	.LVL45:
+ 164:bertos/net/ax25.c **** 			ctx->sync = false;
+ 754               		.loc 1 164 0
+ 755 0288 F501      		movw r30,r10	 ;  584	*movhi/1	[length = 1]
+ 756 028a 1082      		st Z,__zero_reg__	 ;  288	*movqi/3	[length = 1]
+ 165:bertos/net/ax25.c **** 			continue;
+ 757               		.loc 1 165 0
+ 758 028c 00C0      		rjmp .L35	 ;  687	jump	[length = 1]
+ 759               	.LVL46:
+ 760               	.L24:
+ 168:bertos/net/ax25.c **** 		if (!ctx->escape && c == AX25_ESC)
+ 761               		.loc 1 168 0 discriminator 1
+ 762 028e 2B31      		cpi r18,27	 ;  293	*cmphi/4	[length = 2]
+ 763 0290 3105      		cpc r19,__zero_reg__
+ 764 0292 01F4      		brne .L8	 ;  294	branch	[length = 1]
+ 170:bertos/net/ax25.c **** 			ctx->escape = true;
+ 765               		.loc 1 170 0
+ 766 0294 81E0      		ldi r24,lo8(1)	 ;  297	*movqi/2	[length = 1]
+ 767 0296 D201      		movw r26,r4	 ;  585	*movhi/1	[length = 1]
+ 768 0298 8C93      		st X,r24	 ;  298	*movqi/3	[length = 1]
+ 171:bertos/net/ax25.c **** 			continue;
+ 769               		.loc 1 171 0
+ 770 029a 00C0      		rjmp .L35	 ;  689	jump	[length = 1]
+ 771               	.L8:
+ 174:bertos/net/ax25.c **** 		if (ctx->sync)
+ 772               		.loc 1 174 0
+ 773 029c F501      		movw r30,r10	 ;  586	*movhi/1	[length = 1]
+ 774 029e 8081      		ld r24,Z	 ;  304	*movqi/4	[length = 1]
+ 775 02a0 8823      		tst r24	 ;  305	*cmpqi/1	[length = 1]
+ 776 02a2 01F0      		breq .L25	 ;  306	branch	[length = 1]
+ 176:bertos/net/ax25.c **** 			if (ctx->frm_len < CONFIG_AX25_FRAME_BUF_LEN)
+ 777               		.loc 1 176 0
+ 778 02a4 D401      		movw r26,r8	 ;  587	*movhi/1	[length = 1]
+ 779 02a6 8D91      		ld r24,X+	 ;  309	*movhi/2	[length = 3]
+ 780 02a8 9C91      		ld r25,X
+ 781 02aa 1197      		sbiw r26,1
+ 782 02ac B1E0      		ldi r27,hi8(330)	 ;  310	*cmphi/5	[length = 3]
+ 783 02ae 8A34      		cpi r24,lo8(330)
+ 784 02b0 9B07      		cpc r25,r27
+ 785 02b2 00F4      		brsh .L26	 ;  311	branch	[length = 1]
+ 178:bertos/net/ax25.c **** 				ctx->buf[ctx->frm_len++] = c;
+ 786               		.loc 1 178 0
+ 787 02b4 F701      		movw r30,r14	 ;  588	*movhi/1	[length = 1]
+ 788 02b6 E80F      		add r30,r24	 ;  314	*addhi3/1	[length = 2]
+ 789 02b8 F91F      		adc r31,r25
+ 790 02ba 2083      		st Z,r18	 ;  315	*movqi/3	[length = 1]
+ 791 02bc 0196      		adiw r24,1	 ;  317	*addhi3/2	[length = 1]
+ 792 02be F401      		movw r30,r8	 ;  589	*movhi/1	[length = 1]
+ 793 02c0 9183      		std Z+1,r25	 ;  318	*movhi/3	[length = 2]
+ 794 02c2 8083      		st Z,r24
+ 179:bertos/net/ax25.c **** 				ctx->crc_in = updcrc_ccitt(c, ctx->crc_in);
+ 795               		.loc 1 179 0
+ 796 02c4 D301      		movw r26,r6	 ;  590	*movhi/1	[length = 1]
+ 797 02c6 4D91      		ld r20,X+	 ;  320	*movhi/2	[length = 3]
+ 798 02c8 5C91      		ld r21,X
+ 799 02ca 1197      		sbiw r26,1
  800               	.LVL47:
- 801 02c6 FC01      		movw r30,r24	 ;  530	*movhi/1	[length = 1]
- 802               	/* #APP */
- 803               	 ;  60 "bertos/algo/crc_ccitt.h" 1
- 804 02c8 2591      		lpm r18, Z+
- 805 02ca 3491      		lpm r19, Z
- 806               		
- 807               	 ;  0 "" 2
- 808               	.LVL48:
- 809               	/* #NOAPP */
- 810               	.LBE84:
- 811 02cc 852F      		mov r24,r21	 ;  656	*lshrhi3_const/3	[length = 2]
- 812 02ce 9927      		clr r25
- 813               	.LVL49:
- 814 02d0 2827      		eor r18,r24	 ;  332	xorhi3	[length = 2]
- 815 02d2 3927      		eor r19,r25
- 816               	.LVL50:
- 817               	.LBE83:
- 818               	.LBE82:
- 169:bertos/net/ax25.c **** 				ctx->crc_in = updcrc_ccitt(c, ctx->crc_in);
- 819               		.loc 1 169 0
- 820 02d4 1196      		adiw r26,1	 ;  333	*movhi/3	[length = 3]
- 821 02d6 3C93      		st X,r19
- 822 02d8 2E93      		st -X,r18
- 823 02da 00C0      		rjmp .L25	 ;  680	jump	[length = 1]
- 824               	.LVL51:
- 825               	.L26:
- 174:bertos/net/ax25.c **** 				ctx->sync = false;
- 826               		.loc 1 174 0
- 827 02dc F501      		movw r30,r10	 ;  580	*movhi/1	[length = 1]
- 828 02de 1082      		st Z,__zero_reg__	 ;  340	*movqi/3	[length = 1]
- 829               	.LVL52:
- 830               	.L25:
- 177:bertos/net/ax25.c **** 		ctx->escape = false;
- 831               		.loc 1 177 0
- 832 02e0 D201      		movw r26,r4	 ;  581	*movhi/1	[length = 1]
- 833 02e2 1C92      		st X,__zero_reg__	 ;  344	*movqi/3	[length = 1]
- 834               	.L35:
- 129:bertos/net/ax25.c **** 	while ((c = kfile_getc(ctx->ch)) != EOF)
- 835               		.loc 1 129 0 discriminator 1
- 836 02e4 F101      		movw r30,r2	 ;  582	*movhi/1	[length = 1]
- 837 02e6 8081      		ld r24,Z	 ;  352	*movhi/2	[length = 2]
- 838 02e8 9181      		ldd r25,Z+1
- 839 02ea 0E94 0000 		call kfile_getc	 ;  353	call_value_insn/3	[length = 2]
- 840 02ee 9C01      		movw r18,r24	 ;  354	*movhi/1	[length = 1]
- 841               	.LVL53:
- 842 02f0 FFEF      		ldi r31,hi8(-1)	 ;  357	*cmphi/5	[length = 3]
- 843 02f2 8F3F      		cpi r24,lo8(-1)
- 844 02f4 9F07      		cpc r25,r31
- 845 02f6 01F0      		breq .+2	 ;  358	branch	[length = 2]
- 846 02f8 00C0      		rjmp .L27
- 180:bertos/net/ax25.c **** 	if (kfile_error(ctx->ch))
- 847               		.loc 1 180 0
- 848 02fa D101      		movw r26,r2	 ;  583	*movhi/1	[length = 1]
- 849 02fc 0D91      		ld r16,X+	 ;  361	*movhi/2	[length = 3]
- 850 02fe 1C91      		ld r17,X
- 851 0300 1197      		sbiw r26,1
- 852               	.LVL54:
- 853               	.LBB85:
- 854               	.LBB86:
- 855               		.file 3 "bertos/kern/kfile.h"
+ 801               	.LBB82:
+ 802               	.LBB83:
+ 803               	.LBB84:
+ 804               		.loc 2 60 0
+ 805 02cc 822F      		mov r24,r18	 ;  607	*movqi/1	[length = 1]
+ 806 02ce 90E0      		ldi r25,lo8(0)	 ;  608	*movqi/2	[length = 1]
+ 807 02d0 8427      		eor r24,r20	 ;  324	xorhi3	[length = 2]
+ 808 02d2 9527      		eor r25,r21
+ 809 02d4 9070      		andi r25,hi8(255)	 ;  325	andhi3/2	[length = 2]
+ 810 02d6 880F      		lsl r24	 ;  666	*ashlhi3_const/2	[length = 2]
+ 811 02d8 991F      		rol r25
+ 812 02da 8050      		subi r24,lo8(-(crc_ccitt_tab))	 ;  327	*addhi3/4	[length = 2]
+ 813 02dc 9040      		sbci r25,hi8(-(crc_ccitt_tab))
+ 814               	.LVL48:
+ 815 02de FC01      		movw r30,r24	 ;  535	*movhi/1	[length = 1]
+ 816               	/* #APP */
+ 817               	 ;  60 "bertos/algo/crc_ccitt.h" 1
+ 818 02e0 2591      		lpm r18, Z+
+ 819 02e2 3491      		lpm r19, Z
+ 820               		
+ 821               	 ;  0 "" 2
+ 822               	.LVL49:
+ 823               	/* #NOAPP */
+ 824               	.LBE84:
+ 825 02e4 852F      		mov r24,r21	 ;  667	*lshrhi3_const/3	[length = 2]
+ 826 02e6 9927      		clr r25
+ 827               	.LVL50:
+ 828 02e8 2827      		eor r18,r24	 ;  336	xorhi3	[length = 2]
+ 829 02ea 3927      		eor r19,r25
+ 830               	.LVL51:
+ 831               	.LBE83:
+ 832               	.LBE82:
+ 179:bertos/net/ax25.c **** 				ctx->crc_in = updcrc_ccitt(c, ctx->crc_in);
+ 833               		.loc 1 179 0
+ 834 02ec 1196      		adiw r26,1	 ;  337	*movhi/3	[length = 3]
+ 835 02ee 3C93      		st X,r19
+ 836 02f0 2E93      		st -X,r18
+ 837 02f2 00C0      		rjmp .L25	 ;  691	jump	[length = 1]
+ 838               	.LVL52:
+ 839               	.L26:
+ 184:bertos/net/ax25.c **** 				ctx->sync = false;
+ 840               		.loc 1 184 0
+ 841 02f4 F501      		movw r30,r10	 ;  591	*movhi/1	[length = 1]
+ 842 02f6 1082      		st Z,__zero_reg__	 ;  344	*movqi/3	[length = 1]
+ 843               	.LVL53:
+ 844               	.L25:
+ 187:bertos/net/ax25.c **** 		ctx->escape = false;
+ 845               		.loc 1 187 0
+ 846 02f8 D201      		movw r26,r4	 ;  592	*movhi/1	[length = 1]
+ 847 02fa 1C92      		st X,__zero_reg__	 ;  348	*movqi/3	[length = 1]
+ 848               	.L35:
+ 139:bertos/net/ax25.c **** 	while ((c = kfile_getc(ctx->ch)) != EOF)
+ 849               		.loc 1 139 0 discriminator 1
+ 850 02fc F101      		movw r30,r2	 ;  593	*movhi/1	[length = 1]
+ 851 02fe 8081      		ld r24,Z	 ;  356	*movhi/2	[length = 2]
+ 852 0300 9181      		ldd r25,Z+1
+ 853 0302 0E94 0000 		call kfile_getc	 ;  357	call_value_insn/3	[length = 2]
+ 854 0306 9C01      		movw r18,r24	 ;  358	*movhi/1	[length = 1]
+ 855               	.LVL54:
+ 856 0308 FFEF      		ldi r31,hi8(-1)	 ;  361	*cmphi/5	[length = 3]
+ 857 030a 8F3F      		cpi r24,lo8(-1)
+ 858 030c 9F07      		cpc r25,r31
+ 859 030e 01F0      		breq .+2	 ;  362	branch	[length = 2]
+ 860 0310 00C0      		rjmp .L27
+ 190:bertos/net/ax25.c **** 	if (kfile_error(ctx->ch))
+ 861               		.loc 1 190 0
+ 862 0312 D101      		movw r26,r2	 ;  594	*movhi/1	[length = 1]
+ 863 0314 0D91      		ld r16,X+	 ;  365	*movhi/2	[length = 3]
+ 864 0316 1C91      		ld r17,X
+ 865 0318 1197      		sbiw r26,1
+ 866               	.LVL55:
+ 867               	.LBB85:
+ 868               	.LBB86:
+ 869               		.file 3 "bertos/kern/kfile.h"
    1:bertos/kern/kfile.h **** /**
    2:bertos/kern/kfile.h ****  * \file
    3:bertos/kern/kfile.h ****  * <!--
@@ -1501,1120 +1526,1120 @@
  267:bertos/kern/kfile.h **** INLINE int kfile_error(struct KFile *fd)
  268:bertos/kern/kfile.h **** {
  269:bertos/kern/kfile.h **** 	ASSERT(fd->error);
- 856               		.loc 3 269 0
- 857 0302 F801      		movw r30,r16	 ;  584	*movhi/1	[length = 1]
- 858 0304 8485      		ldd r24,Z+12	 ;  363	*movhi/2	[length = 2]
- 859 0306 9585      		ldd r25,Z+13
- 860               	.LVL55:
- 861 0308 0097      		sbiw r24,0	 ;  364	*cmphi/1	[length = 1]
- 862 030a 01F4      		brne .L28	 ;  365	branch	[length = 1]
- 863 030c 80E0      		ldi r24,lo8(__c.1462)	 ;  370	*movhi/4	[length = 2]
- 864 030e 90E0      		ldi r25,hi8(__c.1462)
- 865 0310 60E0      		ldi r22,lo8(__c.1464)	 ;  371	*movhi/4	[length = 2]
- 866 0312 70E0      		ldi r23,hi8(__c.1464)
- 867 0314 4DE0      		ldi r20,lo8(269)	 ;  372	*movhi/4	[length = 2]
- 868 0316 51E0      		ldi r21,hi8(269)
- 869 0318 0E94 0000 		call __bassert_P	 ;  373	call_value_insn/3	[length = 2]
- 870               	.LVL56:
- 871               	.L28:
+ 870               		.loc 3 269 0
+ 871 031a F801      		movw r30,r16	 ;  595	*movhi/1	[length = 1]
+ 872 031c 8485      		ldd r24,Z+12	 ;  367	*movhi/2	[length = 2]
+ 873 031e 9585      		ldd r25,Z+13
+ 874               	.LVL56:
+ 875 0320 0097      		sbiw r24,0	 ;  368	*cmphi/1	[length = 1]
+ 876 0322 01F4      		brne .L28	 ;  369	branch	[length = 1]
+ 877 0324 80E0      		ldi r24,lo8(__c.1462)	 ;  374	*movhi/4	[length = 2]
+ 878 0326 90E0      		ldi r25,hi8(__c.1462)
+ 879 0328 60E0      		ldi r22,lo8(__c.1464)	 ;  375	*movhi/4	[length = 2]
+ 880 032a 70E0      		ldi r23,hi8(__c.1464)
+ 881 032c 4DE0      		ldi r20,lo8(269)	 ;  376	*movhi/4	[length = 2]
+ 882 032e 51E0      		ldi r21,hi8(269)
+ 883 0330 0E94 0000 		call __bassert_P	 ;  377	call_value_insn/3	[length = 2]
+ 884               	.LVL57:
+ 885               	.L28:
  270:bertos/kern/kfile.h **** 	return fd->error(fd);
- 872               		.loc 3 270 0
- 873 031c D801      		movw r26,r16	 ;  585	*movhi/1	[length = 1]
- 874 031e 1C96      		adiw r26,12	 ;  377	*movhi/2	[length = 4]
- 875 0320 ED91      		ld r30,X+
- 876 0322 FC91      		ld r31,X
- 877 0324 1D97      		sbiw r26,12+1
- 878 0326 C801      		movw r24,r16	 ;  378	*movhi/1	[length = 1]
- 879 0328 0995      		icall	 ;  379	call_value_insn/1	[length = 1]
- 880               	.LBE86:
- 881               	.LBE85:
- 180:bertos/net/ax25.c **** 	if (kfile_error(ctx->ch))
- 882               		.loc 1 180 0
- 883 032a 0097      		sbiw r24,0	 ;  381	*cmphi/1	[length = 1]
- 884 032c 01F4      		brne .+2	 ;  382	branch	[length = 2]
- 885 032e 00C0      		rjmp .L6
- 182:bertos/net/ax25.c **** 		LOG_ERR("Channel error [%04x]\n", kfile_error(ctx->ch));
- 886               		.loc 1 182 0
- 887 0330 F701      		movw r30,r14	 ;  586	*movhi/1	[length = 1]
- 888 0332 E65B      		subi r30,lo8(-(330))	 ;  384	*addhi3/4	[length = 2]
- 889 0334 FE4F      		sbci r31,hi8(-(330))
- 890 0336 0081      		ld r16,Z	 ;  385	*movhi/2	[length = 2]
- 891 0338 1181      		ldd r17,Z+1
- 892               	.LVL57:
- 893               	.LBB87:
- 894               	.LBB88:
+ 886               		.loc 3 270 0
+ 887 0334 D801      		movw r26,r16	 ;  596	*movhi/1	[length = 1]
+ 888 0336 1C96      		adiw r26,12	 ;  381	*movhi/2	[length = 4]
+ 889 0338 ED91      		ld r30,X+
+ 890 033a FC91      		ld r31,X
+ 891 033c 1D97      		sbiw r26,12+1
+ 892 033e C801      		movw r24,r16	 ;  382	*movhi/1	[length = 1]
+ 893 0340 0995      		icall	 ;  383	call_value_insn/1	[length = 1]
+ 894               	.LBE86:
+ 895               	.LBE85:
+ 190:bertos/net/ax25.c **** 	if (kfile_error(ctx->ch))
+ 896               		.loc 1 190 0
+ 897 0342 0097      		sbiw r24,0	 ;  385	*cmphi/1	[length = 1]
+ 898 0344 01F4      		brne .+2	 ;  386	branch	[length = 2]
+ 899 0346 00C0      		rjmp .L6
+ 192:bertos/net/ax25.c **** 		LOG_ERR("Channel error [%04x]\n", kfile_error(ctx->ch));
+ 900               		.loc 1 192 0
+ 901 0348 F701      		movw r30,r14	 ;  597	*movhi/1	[length = 1]
+ 902 034a E65B      		subi r30,lo8(-(330))	 ;  388	*addhi3/4	[length = 2]
+ 903 034c FE4F      		sbci r31,hi8(-(330))
+ 904 034e 0081      		ld r16,Z	 ;  389	*movhi/2	[length = 2]
+ 905 0350 1181      		ldd r17,Z+1
+ 906               	.LVL58:
+ 907               	.LBB87:
+ 908               	.LBB88:
  269:bertos/kern/kfile.h **** 	ASSERT(fd->error);
- 895               		.loc 3 269 0
- 896 033a F801      		movw r30,r16	 ;  587	*movhi/1	[length = 1]
- 897               	.LVL58:
- 898 033c 8485      		ldd r24,Z+12	 ;  387	*movhi/2	[length = 2]
- 899 033e 9585      		ldd r25,Z+13
- 900 0340 0097      		sbiw r24,0	 ;  388	*cmphi/1	[length = 1]
- 901 0342 01F4      		brne .L30	 ;  389	branch	[length = 1]
- 902 0344 80E0      		ldi r24,lo8(__c.1462)	 ;  394	*movhi/4	[length = 2]
- 903 0346 90E0      		ldi r25,hi8(__c.1462)
- 904 0348 60E0      		ldi r22,lo8(__c.1464)	 ;  395	*movhi/4	[length = 2]
- 905 034a 70E0      		ldi r23,hi8(__c.1464)
- 906 034c 4DE0      		ldi r20,lo8(269)	 ;  396	*movhi/4	[length = 2]
- 907 034e 51E0      		ldi r21,hi8(269)
- 908 0350 0E94 0000 		call __bassert_P	 ;  397	call_value_insn/3	[length = 2]
- 909               	.L30:
- 910               		.loc 3 270 0
- 911 0354 D801      		movw r26,r16	 ;  588	*movhi/1	[length = 1]
- 912 0356 1C96      		adiw r26,12	 ;  401	*movhi/2	[length = 4]
- 913 0358 ED91      		ld r30,X+
- 914 035a FC91      		ld r31,X
- 915 035c 1D97      		sbiw r26,12+1
- 916 035e C801      		movw r24,r16	 ;  402	*movhi/1	[length = 1]
- 917 0360 0995      		icall	 ;  403	call_value_insn/1	[length = 1]
- 918               	.LBE88:
- 919               	.LBE87:
- 182:bertos/net/ax25.c **** 		LOG_ERR("Channel error [%04x]\n", kfile_error(ctx->ch));
- 920               		.loc 1 182 0
- 921 0362 00D0      		rcall .	 ;  405	*addhi3_sp_R_pc2	[length = 3]
- 922 0364 00D0      		rcall .
- 923 0366 00D0      		rcall .
- 924 0368 EDB7      		in r30,__SP_L__	 ;  589	*movhi_sp/2	[length = 2]
- 925 036a FEB7      		in r31,__SP_H__
- 926 036c 3196      		adiw r30,1	 ;  450	*addhi3/2	[length = 1]
- 927 036e 20E0      		ldi r18,lo8(__c.1735)	 ;  407	*movhi/4	[length = 2]
- 928 0370 30E0      		ldi r19,hi8(__c.1735)
- 929 0372 ADB7      		in r26,__SP_L__	 ;  590	*movhi_sp/2	[length = 2]
- 930 0374 BEB7      		in r27,__SP_H__
- 931 0376 1296      		adiw r26,1+1	 ;  408	*movhi/3	[length = 4]
- 932 0378 3C93      		st X,r19
- 933 037a 2E93      		st -X,r18
- 934 037c 1197      		sbiw r26,1
- 935 037e 20E0      		ldi r18,lo8(.LC3)	 ;  409	*movhi/4	[length = 2]
- 936 0380 30E0      		ldi r19,hi8(.LC3)
- 937 0382 3383      		std Z+3,r19	 ;  410	*movhi/3	[length = 2]
- 938 0384 2283      		std Z+2,r18
- 939 0386 9583      		std Z+5,r25	 ;  411	*movhi/3	[length = 2]
- 940 0388 8483      		std Z+4,r24
- 941               		.cfi_escape 0x2e,0x6
- 942 038a 0E94 0000 		call kprintf_P	 ;  412	call_insn/3	[length = 2]
- 183:bertos/net/ax25.c **** 		kfile_clearerr(ctx->ch);
- 943               		.loc 1 183 0
- 944 038e F701      		movw r30,r14	 ;  591	*movhi/1	[length = 1]
- 945 0390 E65B      		subi r30,lo8(-(330))	 ;  413	*addhi3/4	[length = 2]
- 946 0392 FE4F      		sbci r31,hi8(-(330))
- 947 0394 0081      		ld r16,Z	 ;  414	*movhi/2	[length = 2]
- 948 0396 1181      		ldd r17,Z+1
- 949               	.LVL59:
- 950               	.LBB89:
- 951               	.LBB90:
+ 909               		.loc 3 269 0
+ 910 0352 F801      		movw r30,r16	 ;  598	*movhi/1	[length = 1]
+ 911               	.LVL59:
+ 912 0354 8485      		ldd r24,Z+12	 ;  391	*movhi/2	[length = 2]
+ 913 0356 9585      		ldd r25,Z+13
+ 914 0358 0097      		sbiw r24,0	 ;  392	*cmphi/1	[length = 1]
+ 915 035a 01F4      		brne .L30	 ;  393	branch	[length = 1]
+ 916 035c 80E0      		ldi r24,lo8(__c.1462)	 ;  398	*movhi/4	[length = 2]
+ 917 035e 90E0      		ldi r25,hi8(__c.1462)
+ 918 0360 60E0      		ldi r22,lo8(__c.1464)	 ;  399	*movhi/4	[length = 2]
+ 919 0362 70E0      		ldi r23,hi8(__c.1464)
+ 920 0364 4DE0      		ldi r20,lo8(269)	 ;  400	*movhi/4	[length = 2]
+ 921 0366 51E0      		ldi r21,hi8(269)
+ 922 0368 0E94 0000 		call __bassert_P	 ;  401	call_value_insn/3	[length = 2]
+ 923               	.L30:
+ 924               		.loc 3 270 0
+ 925 036c D801      		movw r26,r16	 ;  599	*movhi/1	[length = 1]
+ 926 036e 1C96      		adiw r26,12	 ;  405	*movhi/2	[length = 4]
+ 927 0370 ED91      		ld r30,X+
+ 928 0372 FC91      		ld r31,X
+ 929 0374 1D97      		sbiw r26,12+1
+ 930 0376 C801      		movw r24,r16	 ;  406	*movhi/1	[length = 1]
+ 931 0378 0995      		icall	 ;  407	call_value_insn/1	[length = 1]
+ 932               	.LBE88:
+ 933               	.LBE87:
+ 192:bertos/net/ax25.c **** 		LOG_ERR("Channel error [%04x]\n", kfile_error(ctx->ch));
+ 934               		.loc 1 192 0
+ 935 037a 00D0      		rcall .	 ;  409	*addhi3_sp_R_pc2	[length = 3]
+ 936 037c 00D0      		rcall .
+ 937 037e 00D0      		rcall .
+ 938 0380 EDB7      		in r30,__SP_L__	 ;  600	*movhi_sp/2	[length = 2]
+ 939 0382 FEB7      		in r31,__SP_H__
+ 940 0384 3196      		adiw r30,1	 ;  454	*addhi3/2	[length = 1]
+ 941 0386 20E0      		ldi r18,lo8(__c.1736)	 ;  411	*movhi/4	[length = 2]
+ 942 0388 30E0      		ldi r19,hi8(__c.1736)
+ 943 038a ADB7      		in r26,__SP_L__	 ;  601	*movhi_sp/2	[length = 2]
+ 944 038c BEB7      		in r27,__SP_H__
+ 945 038e 1296      		adiw r26,1+1	 ;  412	*movhi/3	[length = 4]
+ 946 0390 3C93      		st X,r19
+ 947 0392 2E93      		st -X,r18
+ 948 0394 1197      		sbiw r26,1
+ 949 0396 20E0      		ldi r18,lo8(.LC3)	 ;  413	*movhi/4	[length = 2]
+ 950 0398 30E0      		ldi r19,hi8(.LC3)
+ 951 039a 3383      		std Z+3,r19	 ;  414	*movhi/3	[length = 2]
+ 952 039c 2283      		std Z+2,r18
+ 953 039e 9583      		std Z+5,r25	 ;  415	*movhi/3	[length = 2]
+ 954 03a0 8483      		std Z+4,r24
+ 955               		.cfi_escape 0x2e,0x6
+ 956 03a2 0E94 0000 		call kprintf_P	 ;  416	call_insn/3	[length = 2]
+ 193:bertos/net/ax25.c **** 		kfile_clearerr(ctx->ch);
+ 957               		.loc 1 193 0
+ 958 03a6 F701      		movw r30,r14	 ;  602	*movhi/1	[length = 1]
+ 959 03a8 E65B      		subi r30,lo8(-(330))	 ;  417	*addhi3/4	[length = 2]
+ 960 03aa FE4F      		sbci r31,hi8(-(330))
+ 961 03ac 0081      		ld r16,Z	 ;  418	*movhi/2	[length = 2]
+ 962 03ae 1181      		ldd r17,Z+1
+ 963               	.LVL60:
+ 964               	.LBB89:
+ 965               	.LBB90:
  271:bertos/kern/kfile.h **** }
  272:bertos/kern/kfile.h **** 
  273:bertos/kern/kfile.h **** INLINE void kfile_clearerr(struct KFile *fd)
  274:bertos/kern/kfile.h **** {
  275:bertos/kern/kfile.h **** 	ASSERT(fd->clearerr);
- 952               		.loc 3 275 0
- 953 0398 EDB7      		in r30,__SP_L__	 ;  592	*movhi_sp/2	[length = 2]
- 954 039a FEB7      		in r31,__SP_H__
- 955               	.LVL60:
- 956 039c 3696      		adiw r30,6	 ;  416	*addhi3/2	[length = 1]
- 957 039e 0FB6      		in __tmp_reg__,__SREG__	 ;  593	*movhi_sp/1	[length = 5]
- 958 03a0 F894      		cli
- 959 03a2 FEBF      		out __SP_H__,r31
- 960 03a4 0FBE      		out __SREG__,__tmp_reg__
- 961 03a6 EDBF      		out __SP_L__,r30
- 962 03a8 D801      		movw r26,r16	 ;  594	*movhi/1	[length = 1]
- 963 03aa 1E96      		adiw r26,14	 ;  417	*movhi/2	[length = 4]
- 964 03ac 8D91      		ld r24,X+
- 965 03ae 9C91      		ld r25,X
- 966 03b0 1F97      		sbiw r26,14+1
- 967 03b2 0097      		sbiw r24,0	 ;  418	*cmphi/1	[length = 1]
- 968 03b4 01F4      		brne .L31	 ;  419	branch	[length = 1]
- 969 03b6 80E0      		ldi r24,lo8(__c.1469)	 ;  424	*movhi/4	[length = 2]
- 970 03b8 90E0      		ldi r25,hi8(__c.1469)
- 971 03ba 60E0      		ldi r22,lo8(__c.1471)	 ;  425	*movhi/4	[length = 2]
- 972 03bc 70E0      		ldi r23,hi8(__c.1471)
- 973 03be 43E1      		ldi r20,lo8(275)	 ;  426	*movhi/4	[length = 2]
- 974 03c0 51E0      		ldi r21,hi8(275)
- 975               		.cfi_escape 0x2e,0
- 976 03c2 0E94 0000 		call __bassert_P	 ;  427	call_value_insn/3	[length = 2]
- 977               	.L31:
+ 966               		.loc 3 275 0
+ 967 03b0 EDB7      		in r30,__SP_L__	 ;  603	*movhi_sp/2	[length = 2]
+ 968 03b2 FEB7      		in r31,__SP_H__
+ 969               	.LVL61:
+ 970 03b4 3696      		adiw r30,6	 ;  420	*addhi3/2	[length = 1]
+ 971 03b6 0FB6      		in __tmp_reg__,__SREG__	 ;  604	*movhi_sp/1	[length = 5]
+ 972 03b8 F894      		cli
+ 973 03ba FEBF      		out __SP_H__,r31
+ 974 03bc 0FBE      		out __SREG__,__tmp_reg__
+ 975 03be EDBF      		out __SP_L__,r30
+ 976 03c0 D801      		movw r26,r16	 ;  605	*movhi/1	[length = 1]
+ 977 03c2 1E96      		adiw r26,14	 ;  421	*movhi/2	[length = 4]
+ 978 03c4 8D91      		ld r24,X+
+ 979 03c6 9C91      		ld r25,X
+ 980 03c8 1F97      		sbiw r26,14+1
+ 981 03ca 0097      		sbiw r24,0	 ;  422	*cmphi/1	[length = 1]
+ 982 03cc 01F4      		brne .L31	 ;  423	branch	[length = 1]
+ 983 03ce 80E0      		ldi r24,lo8(__c.1469)	 ;  428	*movhi/4	[length = 2]
+ 984 03d0 90E0      		ldi r25,hi8(__c.1469)
+ 985 03d2 60E0      		ldi r22,lo8(__c.1471)	 ;  429	*movhi/4	[length = 2]
+ 986 03d4 70E0      		ldi r23,hi8(__c.1471)
+ 987 03d6 43E1      		ldi r20,lo8(275)	 ;  430	*movhi/4	[length = 2]
+ 988 03d8 51E0      		ldi r21,hi8(275)
+ 989               		.cfi_escape 0x2e,0
+ 990 03da 0E94 0000 		call __bassert_P	 ;  431	call_value_insn/3	[length = 2]
+ 991               	.L31:
  276:bertos/kern/kfile.h **** 	fd->clearerr(fd);
- 978               		.loc 3 276 0
- 979 03c6 D801      		movw r26,r16	 ;  595	*movhi/1	[length = 1]
- 980 03c8 1E96      		adiw r26,14	 ;  431	*movhi/2	[length = 4]
- 981 03ca ED91      		ld r30,X+
- 982 03cc FC91      		ld r31,X
- 983 03ce 1F97      		sbiw r26,14+1
- 984 03d0 C801      		movw r24,r16	 ;  432	*movhi/1	[length = 1]
- 985 03d2 0995      		icall	 ;  433	call_insn/1	[length = 1]
- 986               	.LVL61:
- 987               	.L6:
- 988               	/* epilogue start */
- 989               	.LBE90:
- 990               	.LBE89:
- 185:bertos/net/ax25.c **** }
- 991               		.loc 1 185 0
- 992 03d4 C25B      		subi r28,lo8(-(78))	 ;  625	*addhi3/4	[length = 2]
- 993 03d6 DF4F      		sbci r29,hi8(-(78))
- 994 03d8 0FB6      		in __tmp_reg__,__SREG__	 ;  626	*movhi_sp/1	[length = 5]
- 995 03da F894      		cli
- 996 03dc DEBF      		out __SP_H__,r29
- 997 03de 0FBE      		out __SREG__,__tmp_reg__
- 998 03e0 CDBF      		out __SP_L__,r28
- 999 03e2 DF91      		pop r29	 ;  627	popqi	[length = 1]
- 1000 03e4 CF91      		pop r28	 ;  628	popqi	[length = 1]
- 1001 03e6 1F91      		pop r17	 ;  629	popqi	[length = 1]
- 1002 03e8 0F91      		pop r16	 ;  630	popqi	[length = 1]
- 1003 03ea FF90      		pop r15	 ;  631	popqi	[length = 1]
- 1004 03ec EF90      		pop r14	 ;  632	popqi	[length = 1]
- 1005               	.LVL62:
- 1006 03ee DF90      		pop r13	 ;  633	popqi	[length = 1]
- 1007 03f0 CF90      		pop r12	 ;  634	popqi	[length = 1]
- 1008 03f2 BF90      		pop r11	 ;  635	popqi	[length = 1]
- 1009 03f4 AF90      		pop r10	 ;  636	popqi	[length = 1]
- 1010 03f6 9F90      		pop r9	 ;  637	popqi	[length = 1]
- 1011 03f8 8F90      		pop r8	 ;  638	popqi	[length = 1]
- 1012 03fa 7F90      		pop r7	 ;  639	popqi	[length = 1]
- 1013 03fc 6F90      		pop r6	 ;  640	popqi	[length = 1]
- 1014 03fe 5F90      		pop r5	 ;  641	popqi	[length = 1]
- 1015 0400 4F90      		pop r4	 ;  642	popqi	[length = 1]
- 1016 0402 3F90      		pop r3	 ;  643	popqi	[length = 1]
- 1017 0404 2F90      		pop r2	 ;  644	popqi	[length = 1]
- 1018 0406 0895      		ret	 ;  645	return_from_epilogue	[length = 1]
- 1019               		.cfi_endproc
- 1020               	.LFE11:
- 1022               		.section	.text.ax25_sendVia,"ax",@progbits
- 1023               	.global	ax25_sendVia
- 1025               	ax25_sendVia:
- 1026               	.LFB14:
- 228:bertos/net/ax25.c **** {
- 1027               		.loc 1 228 0
- 1028               		.cfi_startproc
- 1029               	.LVL63:
- 1030 0000 2F92      		push r2	 ;  328	*pushqi/1	[length = 1]
- 1031               	.LCFI30:
- 1032               		.cfi_def_cfa_offset 3
- 1033               		.cfi_offset 2, -2
- 1034 0002 3F92      		push r3	 ;  329	*pushqi/1	[length = 1]
- 1035               	.LCFI31:
- 1036               		.cfi_def_cfa_offset 4
- 1037               		.cfi_offset 3, -3
- 1038 0004 4F92      		push r4	 ;  330	*pushqi/1	[length = 1]
- 1039               	.LCFI32:
- 1040               		.cfi_def_cfa_offset 5
- 1041               		.cfi_offset 4, -4
- 1042 0006 5F92      		push r5	 ;  331	*pushqi/1	[length = 1]
- 1043               	.LCFI33:
- 1044               		.cfi_def_cfa_offset 6
- 1045               		.cfi_offset 5, -5
- 1046 0008 6F92      		push r6	 ;  332	*pushqi/1	[length = 1]
- 1047               	.LCFI34:
- 1048               		.cfi_def_cfa_offset 7
- 1049               		.cfi_offset 6, -6
- 1050 000a 7F92      		push r7	 ;  333	*pushqi/1	[length = 1]
- 1051               	.LCFI35:
- 1052               		.cfi_def_cfa_offset 8
- 1053               		.cfi_offset 7, -7
- 1054 000c 8F92      		push r8	 ;  334	*pushqi/1	[length = 1]
- 1055               	.LCFI36:
- 1056               		.cfi_def_cfa_offset 9
- 1057               		.cfi_offset 8, -8
- 1058 000e 9F92      		push r9	 ;  335	*pushqi/1	[length = 1]
- 1059               	.LCFI37:
- 1060               		.cfi_def_cfa_offset 10
- 1061               		.cfi_offset 9, -9
- 1062 0010 AF92      		push r10	 ;  336	*pushqi/1	[length = 1]
- 1063               	.LCFI38:
- 1064               		.cfi_def_cfa_offset 11
- 1065               		.cfi_offset 10, -10
- 1066 0012 BF92      		push r11	 ;  337	*pushqi/1	[length = 1]
- 1067               	.LCFI39:
- 1068               		.cfi_def_cfa_offset 12
- 1069               		.cfi_offset 11, -11
- 1070 0014 CF92      		push r12	 ;  338	*pushqi/1	[length = 1]
- 1071               	.LCFI40:
- 1072               		.cfi_def_cfa_offset 13
- 1073               		.cfi_offset 12, -12
- 1074 0016 DF92      		push r13	 ;  339	*pushqi/1	[length = 1]
- 1075               	.LCFI41:
- 1076               		.cfi_def_cfa_offset 14
- 1077               		.cfi_offset 13, -13
- 1078 0018 EF92      		push r14	 ;  340	*pushqi/1	[length = 1]
- 1079               	.LCFI42:
- 1080               		.cfi_def_cfa_offset 15
- 1081               		.cfi_offset 14, -14
- 1082 001a FF92      		push r15	 ;  341	*pushqi/1	[length = 1]
- 1083               	.LCFI43:
- 1084               		.cfi_def_cfa_offset 16
- 1085               		.cfi_offset 15, -15
- 1086 001c 0F93      		push r16	 ;  342	*pushqi/1	[length = 1]
- 1087               	.LCFI44:
- 1088               		.cfi_def_cfa_offset 17
- 1089               		.cfi_offset 16, -16
- 1090 001e 1F93      		push r17	 ;  343	*pushqi/1	[length = 1]
- 1091               	.LCFI45:
- 1092               		.cfi_def_cfa_offset 18
- 1093               		.cfi_offset 17, -17
- 1094 0020 CF93      		push r28	 ;  344	*pushqi/1	[length = 1]
- 1095               	.LCFI46:
- 1096               		.cfi_def_cfa_offset 19
- 1097               		.cfi_offset 28, -18
- 1098 0022 DF93      		push r29	 ;  345	*pushqi/1	[length = 1]
- 1099               	.LCFI47:
- 1100               		.cfi_def_cfa_offset 20
- 1101               		.cfi_offset 29, -19
- 1102 0024 00D0      		rcall .	 ;  349	*addhi3_sp_R_pc2	[length = 3]
- 1103 0026 00D0      		rcall .
- 1104 0028 0F92      		push __tmp_reg__
- 1105               	.LCFI48:
- 1106               		.cfi_def_cfa_offset 25
- 1107 002a CDB7      		in r28,__SP_L__	 ;  350	*movhi_sp/2	[length = 2]
- 1108 002c DEB7      		in r29,__SP_H__
- 1109               	.LCFI49:
- 1110               		.cfi_def_cfa_register 28
- 1111               	/* prologue: function */
- 1112               	/* frame size = 5 */
- 1113               	/* stack size = 23 */
- 1114               	.L__stack_usage = 23
- 1115 002e 6C01      		movw r12,r24	 ;  2	*movhi/1	[length = 1]
- 1116 0030 5B01      		movw r10,r22	 ;  3	*movhi/1	[length = 1]
- 1117 0032 1A01      		movw r2,r20	 ;  4	*movhi/1	[length = 1]
- 1118 0034 2983      		std Y+1,r18	 ;  254	*movqi/3	[length = 1]
- 1119 0036 3A83      		std Y+2,r19	 ;  255	*movqi/3	[length = 1]
- 1120 0038 2801      		movw r4,r16	 ;  6	*movhi/1	[length = 1]
- 1121               	.LVL64:
- 230:bertos/net/ax25.c **** 	ASSERT(path);
- 1122               		.loc 1 230 0
- 1123 003a 6115      		cp r22,__zero_reg__	 ;  16	*cmphi/2	[length = 2]
- 1124 003c 7105      		cpc r23,__zero_reg__
- 1125 003e 01F4      		brne .L38	 ;  17	branch	[length = 1]
- 1126               	.LVL65:
- 230:bertos/net/ax25.c **** 	ASSERT(path);
- 1127               		.loc 1 230 0 is_stmt 0 discriminator 1
- 1128 0040 80E0      		ldi r24,lo8(__c.1774)	 ;  22	*movhi/4	[length = 2]
- 1129 0042 90E0      		ldi r25,hi8(__c.1774)
- 1130 0044 60E0      		ldi r22,lo8(__c.1776)	 ;  23	*movhi/4	[length = 2]
- 1131 0046 70E0      		ldi r23,hi8(__c.1776)
- 1132 0048 46EE      		ldi r20,lo8(230)	 ;  24	*movhi/4	[length = 2]
- 1133 004a 50E0      		ldi r21,hi8(230)
- 1134 004c 0E94 0000 		call __bassert_P	 ;  25	call_value_insn/3	[length = 2]
- 1135               	.LVL66:
- 1136               	.L38:
- 231:bertos/net/ax25.c **** 	ASSERT(path_len >= 2);
- 1137               		.loc 1 231 0 is_stmt 1
- 1138 0050 22E0      		ldi r18,lo8(2)	 ;  28	*cmphi/6	[length = 3]
- 1139 0052 2216      		cp r2,r18
- 1140 0054 3104      		cpc r3,__zero_reg__
- 1141 0056 00F4      		brsh .L39	 ;  29	branch	[length = 1]
- 231:bertos/net/ax25.c **** 	ASSERT(path_len >= 2);
- 1142               		.loc 1 231 0 is_stmt 0 discriminator 1
- 1143 0058 80E0      		ldi r24,lo8(__c.1778)	 ;  34	*movhi/4	[length = 2]
- 1144 005a 90E0      		ldi r25,hi8(__c.1778)
- 1145 005c 60E0      		ldi r22,lo8(__c.1780)	 ;  35	*movhi/4	[length = 2]
- 1146 005e 70E0      		ldi r23,hi8(__c.1780)
- 1147 0060 47EE      		ldi r20,lo8(231)	 ;  36	*movhi/4	[length = 2]
- 1148 0062 50E0      		ldi r21,hi8(231)
- 1149 0064 0E94 0000 		call __bassert_P	 ;  37	call_value_insn/3	[length = 2]
- 1150               	.L39:
- 233:bertos/net/ax25.c **** 	ctx->crc_out = CRC_CCITT_INIT_VAL;
- 1151               		.loc 1 233 0 is_stmt 1
- 1152 0068 F601      		movw r30,r12	 ;  305	*movhi/1	[length = 1]
- 1153 006a E05B      		subi r30,lo8(-(336))	 ;  40	*addhi3/4	[length = 2]
- 1154 006c FE4F      		sbci r31,hi8(-(336))
- 1155 006e 8FEF      		ldi r24,lo8(-1)	 ;  41	*movhi/4	[length = 2]
- 1156 0070 9FEF      		ldi r25,hi8(-1)
- 1157 0072 9183      		std Z+1,r25	 ;  42	*movhi/3	[length = 2]
- 1158 0074 8083      		st Z,r24
- 234:bertos/net/ax25.c **** 	kfile_putc(HDLC_FLAG, ctx->ch);
- 1159               		.loc 1 234 0
- 1160 0076 F601      		movw r30,r12	 ;  306	*movhi/1	[length = 1]
- 1161 0078 E65B      		subi r30,lo8(-(330))	 ;  44	*addhi3/4	[length = 2]
- 1162 007a FE4F      		sbci r31,hi8(-(330))
- 1163 007c 6081      		ld r22,Z	 ;  45	*movhi/2	[length = 2]
- 1164 007e 7181      		ldd r23,Z+1
- 1165 0080 8EE7      		ldi r24,lo8(126)	 ;  46	*movhi/4	[length = 2]
- 1166 0082 90E0      		ldi r25,hi8(126)
- 1167 0084 0E94 0000 		call kfile_putc	 ;  48	call_value_insn/3	[length = 2]
- 1168               	.LVL67:
- 1169               	.LBB106:
- 238:bertos/net/ax25.c **** 	for (size_t i = 0; i < path_len; i++)
- 1170               		.loc 1 238 0
- 1171 0088 8824      		clr r8	 ;  11	*movhi/5	[length = 2]
- 1172 008a 9924      		clr r9
- 239:bertos/net/ax25.c **** 		ax25_sendCall(ctx, &path[i], (i == path_len - 1));
- 1173               		.loc 1 239 0
- 1174 008c 9101      		movw r18,r2	 ;  307	*movhi/1	[length = 1]
- 1175 008e 2150      		subi r18,lo8(-(-1))	 ;  55	*addhi3/4	[length = 2]
- 1176 0090 3040      		sbci r19,hi8(-(-1))
- 1177 0092 3C83      		std Y+4,r19	 ;  308	*movhi/3	[length = 2]
- 1178 0094 2B83      		std Y+3,r18
- 238:bertos/net/ax25.c **** 	for (size_t i = 0; i < path_len; i++)
- 1179               		.loc 1 238 0
- 1180 0096 00C0      		rjmp .L40	 ;  379	jump	[length = 1]
- 1181               	.LVL68:
- 1182               	.L49:
- 1183               	.LBB107:
- 1184               	.LBB108:
- 1185               	.LBB109:
- 198:bertos/net/ax25.c **** 	unsigned len = MIN(sizeof(addr->call), strlen(addr->call));
- 1186               		.loc 1 198 0 discriminator 2
- 1187 0098 D501      		movw r26,r10	 ;  309	*movhi/1	[length = 1]
- 1188 009a 0D90      		ld __tmp_reg__,X+	 ;  61	*strlenhi	[length = 3]
- 1189 009c 0020      		tst __tmp_reg__
- 1190 009e 01F4      		brne .-6
- 1191 00a0 8D01      		movw r16,r26	 ;  310	*movhi/1	[length = 1]
- 1192 00a2 0150      		subi r16,lo8(-(-1))	 ;  62	*addhi3/4	[length = 2]
- 1193 00a4 1040      		sbci r17,hi8(-(-1))
- 1194 00a6 0A19      		sub r16,r10	 ;  63	subhi3/1	[length = 2]
- 1195 00a8 1B09      		sbc r17,r11
- 1196 00aa 0730      		cpi r16,7	 ;  67	*cmphi/4	[length = 2]
- 1197 00ac 1105      		cpc r17,__zero_reg__
- 1198 00ae 00F0      		brlo .L41	 ;  68	branch	[length = 1]
- 1199 00b0 06E0      		ldi r16,lo8(6)	 ;  281	*movhi/4	[length = 2]
- 1200 00b2 10E0      		ldi r17,hi8(6)
- 1201               	.L41:
- 1202               	.LVL69:
- 1203 00b4 3501      		movw r6,r10	 ;  8	*movhi/1	[length = 1]
- 200:bertos/net/ax25.c **** 	for (unsigned i = 0; i < len; i++)
- 1204               		.loc 1 200 0 discriminator 2
- 1205 00b6 EE24      		clr r14	 ;  282	*movhi/5	[length = 2]
- 1206 00b8 FF24      		clr r15
- 1207 00ba 00C0      		rjmp .L42	 ;  381	jump	[length = 1]
- 1208               	.LVL70:
- 1209               	.L44:
- 1210               	.LBE109:
- 1211               	.LBB110:
- 1212               	.LBB111:
- 202:bertos/net/ax25.c **** 		uint8_t c = addr->call[i];
- 1213               		.loc 1 202 0
- 1214 00bc F301      		movw r30,r6	 ;  311	*movhi/1	[length = 1]
- 1215 00be 2191      		ld r18,Z+	 ;  76	*movqi/4	[length = 1]
- 1216 00c0 3F01      		movw r6,r30	 ;  312	*movhi/1	[length = 1]
- 1217               	.LVL71:
- 203:bertos/net/ax25.c **** 		ASSERT(isalnum(c) || c == ' ');
- 1218               		.loc 1 203 0
- 1219 00c2 822F      		mov r24,r18	 ;  263	*movqi/1	[length = 1]
- 1220 00c4 90E0      		ldi r25,lo8(0)	 ;  264	*movqi/2	[length = 1]
- 1221 00c6 2D83      		std Y+5,r18	 ;  301	*movqi/3	[length = 1]
- 1222 00c8 0E94 0000 		call isalnum	 ;  83	call_value_insn/3	[length = 2]
- 1223               	.LVL72:
- 1224 00cc 2D81      		ldd r18,Y+5	 ;  302	*movqi/4	[length = 1]
- 1225               	.LVL73:
- 1226 00ce 0097      		sbiw r24,0	 ;  85	*cmphi/1	[length = 1]
- 1227 00d0 01F4      		brne .L43	 ;  86	branch	[length = 1]
- 1228 00d2 2032      		cpi r18,lo8(32)	 ;  88	*cmpqi/3	[length = 1]
- 1229 00d4 01F0      		breq .L43	 ;  89	branch	[length = 1]
- 1230 00d6 80E0      		ldi r24,lo8(__c.1754)	 ;  278	*movhi/4	[length = 2]
- 1231 00d8 90E0      		ldi r25,hi8(__c.1754)
- 1232 00da 60E0      		ldi r22,lo8(__c.1756)	 ;  279	*movhi/4	[length = 2]
- 1233 00dc 70E0      		ldi r23,hi8(__c.1756)
- 1234 00de 4BEC      		ldi r20,lo8(203)	 ;  96	*movhi/4	[length = 2]
- 1235 00e0 50E0      		ldi r21,hi8(203)
- 1236 00e2 0E94 0000 		call __bassert_P	 ;  97	call_value_insn/3	[length = 2]
- 1237               	.LVL74:
- 1238 00e6 2D81      		ldd r18,Y+5	 ;  304	*movqi/4	[length = 1]
- 1239               	.L43:
- 204:bertos/net/ax25.c **** 		c = toupper(c);
- 1240               		.loc 1 204 0
- 1241 00e8 822F      		mov r24,r18	 ;  265	*movqi/1	[length = 1]
- 1242 00ea 90E0      		ldi r25,lo8(0)	 ;  266	*movqi/2	[length = 1]
- 1243 00ec 0E94 0000 		call toupper	 ;  102	call_value_insn/3	[length = 2]
- 1244               	.LVL75:
- 205:bertos/net/ax25.c **** 		ax25_putchar(ctx, c << 1);
- 1245               		.loc 1 205 0
- 1246 00f0 682F      		mov r22,r24	 ;  313	*movqi/1	[length = 1]
- 1247 00f2 660F      		lsl r22	 ;  106	*ashlqi3/3	[length = 1]
- 1248 00f4 C601      		movw r24,r12	 ;  107	*movhi/1	[length = 1]
- 1249               	.LVL76:
- 1250 00f6 0E94 0000 		call ax25_putchar	 ;  109	call_insn/3	[length = 2]
- 1251               	.LBE111:
- 200:bertos/net/ax25.c **** 	for (unsigned i = 0; i < len; i++)
- 1252               		.loc 1 200 0
- 1253 00fa 0894      		sec	 ;  110	*addhi3/5	[length = 3]
- 1254 00fc E11C      		adc r14,__zero_reg__
- 1255 00fe F11C      		adc r15,__zero_reg__
- 1256               	.LVL77:
- 1257               	.L42:
- 1258 0100 E016      		cp r14,r16	 ;  116	*cmphi/3	[length = 2]
- 1259 0102 F106      		cpc r15,r17
- 1260 0104 01F4      		brne .L44	 ;  117	branch	[length = 1]
- 1261               	.LBE110:
- 209:bertos/net/ax25.c **** 	if (len < sizeof(addr->call))
- 1262               		.loc 1 209 0
- 1263 0106 F6E0      		ldi r31,lo8(6)	 ;  119	*cmphi/6	[length = 3]
- 1264 0108 EF16      		cp r14,r31
- 1265 010a F104      		cpc r15,__zero_reg__
- 1266 010c 00F0      		brlo .L53	 ;  120	branch	[length = 1]
- 1267 010e 00C0      		rjmp .L46	 ;  384	jump	[length = 1]
- 1268               	.LVL78:
- 1269               	.L47:
- 1270               	.LBB112:
- 211:bertos/net/ax25.c **** 			ax25_putchar(ctx, ' ' << 1);
- 1271               		.loc 1 211 0
- 1272 0110 C601      		movw r24,r12	 ;  126	*movhi/1	[length = 1]
- 1273 0112 60E4      		ldi r22,lo8(64)	 ;  127	*movqi/2	[length = 1]
- 1274 0114 0E94 0000 		call ax25_putchar	 ;  128	call_insn/3	[length = 2]
- 210:bertos/net/ax25.c **** 		for (unsigned i = 0; i < sizeof(addr->call) - len; i++)
- 1275               		.loc 1 210 0
- 1276 0118 0F5F      		subi r16,lo8(-(1))	 ;  129	*addhi3/4	[length = 2]
- 1277 011a 1F4F      		sbci r17,hi8(-(1))
- 1278               	.LVL79:
- 1279 011c 00C0      		rjmp .L45	 ;  386	jump	[length = 1]
- 1280               	.LVL80:
- 1281               	.L53:
- 1282               	.LBE112:
- 209:bertos/net/ax25.c **** 	if (len < sizeof(addr->call))
- 1283               		.loc 1 209 0
- 1284 011e 00E0      		ldi r16,lo8(0)	 ;  285	*movhi/4	[length = 2]
- 1285 0120 10E0      		ldi r17,hi8(0)
- 1286               	.LVL81:
- 1287               	.LBB113:
- 210:bertos/net/ax25.c **** 		for (unsigned i = 0; i < sizeof(addr->call) - len; i++)
- 1288               		.loc 1 210 0
- 1289 0122 26E0      		ldi r18,lo8(6)	 ;  314	*movhi/4	[length = 2]
- 1290 0124 30E0      		ldi r19,hi8(6)
- 1291 0126 2E19      		sub r18,r14	 ;  136	subhi3/1	[length = 2]
- 1292 0128 3F09      		sbc r19,r15
- 1293 012a 7901      		movw r14,r18	 ;  315	*movhi/1	[length = 1]
- 1294               	.LVL82:
- 1295               	.L45:
- 1296 012c 0E15      		cp r16,r14	 ;  137	*cmphi/3	[length = 2]
- 1297 012e 1F05      		cpc r17,r15
- 1298 0130 00F0      		brlo .L47	 ;  138	branch	[length = 1]
- 1299               	.LVL83:
- 1300               	.L46:
- 1301               	.LBE113:
- 214:bertos/net/ax25.c **** 	uint8_t ssid = addr->ssid << 1 | (last ? 0x01 : 0);
- 1302               		.loc 1 214 0
- 1303 0132 D501      		movw r26,r10	 ;  316	*movhi/1	[length = 1]
- 1304 0134 1696      		adiw r26,6	 ;  143	*movqi/4	[length = 3]
- 1305 0136 6C91      		ld r22,X
- 1306 0138 1697      		sbiw r26,6
- 1307 013a 70E0      		ldi r23,lo8(0)	 ;  327	*movqi/2	[length = 1]
- 1308 013c 660F      		lsl r22	 ;  377	*ashlhi3_const/2	[length = 2]
- 1309 013e 771F      		rol r23
- 1310 0140 81E0      		ldi r24,lo8(1)	 ;  288	*movqi/2	[length = 1]
- 1311 0142 2B81      		ldd r18,Y+3	 ;  317	*movhi/2	[length = 2]
- 1312 0144 3C81      		ldd r19,Y+4
- 1313 0146 8216      		cp r8,r18	 ;  147	*cmphi/3	[length = 2]
- 1314 0148 9306      		cpc r9,r19
- 1315 014a 01F0      		breq .L48	 ;  148	branch	[length = 1]
- 1316 014c 80E0      		ldi r24,lo8(0)	 ;  149	*movqi/2	[length = 1]
- 1317               	.L48:
- 1318 014e 682B      		or r22,r24	 ;  151	iorqi3/1	[length = 1]
- 215:bertos/net/ax25.c **** 	ax25_putchar(ctx, ssid);
- 1319               		.loc 1 215 0
- 1320 0150 C601      		movw r24,r12	 ;  152	*movhi/1	[length = 1]
- 1321 0152 0E94 0000 		call ax25_putchar	 ;  154	call_insn/3	[length = 2]
- 1322               	.LBE108:
- 1323               	.LBE107:
- 238:bertos/net/ax25.c **** 	for (size_t i = 0; i < path_len; i++)
- 1324               		.loc 1 238 0
- 1325 0156 0894      		sec	 ;  155	*addhi3/5	[length = 3]
- 1326 0158 811C      		adc r8,__zero_reg__
- 1327 015a 911C      		adc r9,__zero_reg__
- 1328               	.LVL84:
- 1329 015c 87E0      		ldi r24,lo8(7)	 ;  318	*movhi/4	[length = 2]
- 1330 015e 90E0      		ldi r25,hi8(7)
- 1331 0160 A80E      		add r10,r24	 ;  157	*addhi3/1	[length = 2]
- 1332 0162 B91E      		adc r11,r25
- 1333               	.LVL85:
- 1334               	.L40:
- 238:bertos/net/ax25.c **** 	for (size_t i = 0; i < path_len; i++)
- 1335               		.loc 1 238 0 is_stmt 0 discriminator 1
- 1336 0164 8214      		cp r8,r2	 ;  162	*cmphi/3	[length = 2]
- 1337 0166 9304      		cpc r9,r3
- 1338 0168 01F0      		breq .+2	 ;  163	branch	[length = 2]
- 1339 016a 00C0      		rjmp .L49
- 1340               	.LBE106:
- 241:bertos/net/ax25.c **** 	ax25_putchar(ctx, AX25_CTRL_UI);
- 1341               		.loc 1 241 0 is_stmt 1
- 1342 016c C601      		movw r24,r12	 ;  166	*movhi/1	[length = 1]
- 1343 016e 63E0      		ldi r22,lo8(3)	 ;  167	*movqi/2	[length = 1]
- 1344 0170 0E94 0000 		call ax25_putchar	 ;  168	call_insn/3	[length = 2]
- 242:bertos/net/ax25.c **** 	ax25_putchar(ctx, AX25_PID_NOLAYER3);
- 1345               		.loc 1 242 0
- 1346 0174 C601      		movw r24,r12	 ;  170	*movhi/1	[length = 1]
- 1347 0176 60EF      		ldi r22,lo8(-16)	 ;  171	*movqi/2	[length = 1]
- 1348 0178 0E94 0000 		call ax25_putchar	 ;  172	call_insn/3	[length = 2]
- 229:bertos/net/ax25.c **** 	const uint8_t *buf = (const uint8_t *)_buf;
- 1349               		.loc 1 229 0
- 1350 017c 0981      		ldd r16,Y+1	 ;  270	*movqi/4	[length = 1]
- 1351 017e 1A81      		ldd r17,Y+2	 ;  271	*movqi/4	[length = 1]
- 244:bertos/net/ax25.c **** 	while (len--)
- 1352               		.loc 1 244 0
- 1353 0180 00C0      		rjmp .L50	 ;  388	jump	[length = 1]
- 1354               	.LVL86:
- 1355               	.L51:
- 245:bertos/net/ax25.c **** 		ax25_putchar(ctx, *buf++);
- 1356               		.loc 1 245 0
- 1357 0182 D801      		movw r26,r16	 ;  319	*movhi/1	[length = 1]
- 1358 0184 6D91      		ld r22,X+	 ;  176	*movqi/4	[length = 1]
- 1359 0186 8D01      		movw r16,r26	 ;  320	*movhi/1	[length = 1]
- 1360               	.LVL87:
- 1361 0188 C601      		movw r24,r12	 ;  180	*movhi/1	[length = 1]
- 1362 018a 0E94 0000 		call ax25_putchar	 ;  182	call_insn/3	[length = 2]
- 1363               	.LVL88:
- 1364 018e 0894      		sec	 ;  183	*addhi3/6	[length = 3]
- 1365 0190 4108      		sbc r4,__zero_reg__
- 1366 0192 5108      		sbc r5,__zero_reg__
- 1367               	.LVL89:
- 1368               	.L50:
- 244:bertos/net/ax25.c **** 	while (len--)
- 1369               		.loc 1 244 0 discriminator 1
- 1370 0194 4114      		cp r4,__zero_reg__	 ;  190	*cmphi/2	[length = 2]
- 1371 0196 5104      		cpc r5,__zero_reg__
- 1372 0198 01F4      		brne .L51	 ;  191	branch	[length = 1]
- 251:bertos/net/ax25.c **** 	uint8_t crcl = (ctx->crc_out & 0xff) ^ 0xff;
- 1373               		.loc 1 251 0
- 1374 019a 60E5      		ldi r22,lo8(336)	 ;  376	*reload_inhi	[length = 4]
- 1375 019c E62E      		mov r14,r22
- 1376 019e 61E0      		ldi r22,hi8(336)
- 1377 01a0 F62E      		mov r15,r22
- 1378 01a2 EC0C      		add r14,r12	 ;  193	*addhi3/1	[length = 2]
- 1379 01a4 FD1C      		adc r15,r13
- 1380 01a6 F701      		movw r30,r14	 ;  322	*movhi/1	[length = 1]
- 1381 01a8 6081      		ld r22,Z	 ;  272	*movqi/4	[length = 1]
- 1382 01aa 0181      		ldd r16,Z+1	 ;  273	*movqi/4	[length = 1]
- 1383               	.LVL90:
- 1384 01ac 6095      		com r22	 ;  198	one_cmplqi2	[length = 1]
- 253:bertos/net/ax25.c **** 	ax25_putchar(ctx, crcl);
- 1385               		.loc 1 253 0
- 1386 01ae C601      		movw r24,r12	 ;  199	*movhi/1	[length = 1]
- 1387 01b0 0E94 0000 		call ax25_putchar	 ;  201	call_insn/3	[length = 2]
- 1388               	.LVL91:
- 252:bertos/net/ax25.c **** 	uint8_t crch = (ctx->crc_out >> 8) ^ 0xff;
- 1389               		.loc 1 252 0
- 1390 01b4 602F      		mov r22,r16	 ;  323	*movqi/1	[length = 1]
- 1391 01b6 6095      		com r22	 ;  204	one_cmplqi2	[length = 1]
- 254:bertos/net/ax25.c **** 	ax25_putchar(ctx, crch);
- 1392               		.loc 1 254 0
- 1393 01b8 C601      		movw r24,r12	 ;  205	*movhi/1	[length = 1]
- 1394 01ba 0E94 0000 		call ax25_putchar	 ;  207	call_insn/3	[length = 2]
- 256:bertos/net/ax25.c **** 	ASSERT(ctx->crc_out == AX25_CRC_CORRECT);
- 1395               		.loc 1 256 0
- 1396 01be D701      		movw r26,r14	 ;  324	*movhi/1	[length = 1]
- 1397 01c0 8D91      		ld r24,X+	 ;  209	*movhi/2	[length = 3]
- 1398 01c2 9C91      		ld r25,X
- 1399 01c4 1197      		sbiw r26,1
- 1400 01c6 B0EF      		ldi r27,hi8(-3912)	 ;  210	*cmphi/5	[length = 3]
- 1401 01c8 883B      		cpi r24,lo8(-3912)
- 1402 01ca 9B07      		cpc r25,r27
- 1403 01cc 01F0      		breq .L52	 ;  211	branch	[length = 1]
- 256:bertos/net/ax25.c **** 	ASSERT(ctx->crc_out == AX25_CRC_CORRECT);
- 1404               		.loc 1 256 0 is_stmt 0 discriminator 1
- 1405 01ce 80E0      		ldi r24,lo8(__c.1791)	 ;  216	*movhi/4	[length = 2]
- 1406 01d0 90E0      		ldi r25,hi8(__c.1791)
- 1407 01d2 60E0      		ldi r22,lo8(__c.1793)	 ;  217	*movhi/4	[length = 2]
- 1408 01d4 70E0      		ldi r23,hi8(__c.1793)
- 1409 01d6 40E0      		ldi r20,lo8(256)	 ;  218	*movhi/4	[length = 2]
- 1410 01d8 51E0      		ldi r21,hi8(256)
- 1411 01da 0E94 0000 		call __bassert_P	 ;  219	call_value_insn/3	[length = 2]
- 1412               	.L52:
- 258:bertos/net/ax25.c **** 	kfile_putc(HDLC_FLAG, ctx->ch);
- 1413               		.loc 1 258 0 is_stmt 1
- 1414 01de F601      		movw r30,r12	 ;  325	*movhi/1	[length = 1]
- 1415 01e0 E65B      		subi r30,lo8(-(330))	 ;  223	*addhi3/4	[length = 2]
- 1416 01e2 FE4F      		sbci r31,hi8(-(330))
- 1417 01e4 6081      		ld r22,Z	 ;  224	*movhi/2	[length = 2]
- 1418 01e6 7181      		ldd r23,Z+1
- 1419 01e8 8EE7      		ldi r24,lo8(126)	 ;  225	*movhi/4	[length = 2]
- 1420 01ea 90E0      		ldi r25,hi8(126)
- 1421 01ec 0E94 0000 		call kfile_putc	 ;  227	call_value_insn/3	[length = 2]
- 1422               	/* epilogue start */
- 259:bertos/net/ax25.c **** }
- 1423               		.loc 1 259 0
- 1424 01f0 0F90      		pop __tmp_reg__	 ;  355	*addhi3_sp_R_pc2	[length = 5]
- 1425 01f2 0F90      		pop __tmp_reg__
- 1426 01f4 0F90      		pop __tmp_reg__
- 1427 01f6 0F90      		pop __tmp_reg__
- 1428 01f8 0F90      		pop __tmp_reg__
- 1429 01fa DF91      		pop r29	 ;  356	popqi	[length = 1]
- 1430 01fc CF91      		pop r28	 ;  357	popqi	[length = 1]
- 1431 01fe 1F91      		pop r17	 ;  358	popqi	[length = 1]
- 1432 0200 0F91      		pop r16	 ;  359	popqi	[length = 1]
- 1433               	.LVL92:
- 1434 0202 FF90      		pop r15	 ;  360	popqi	[length = 1]
- 1435 0204 EF90      		pop r14	 ;  361	popqi	[length = 1]
- 1436 0206 DF90      		pop r13	 ;  362	popqi	[length = 1]
- 1437 0208 CF90      		pop r12	 ;  363	popqi	[length = 1]
- 1438               	.LVL93:
- 1439 020a BF90      		pop r11	 ;  364	popqi	[length = 1]
- 1440 020c AF90      		pop r10	 ;  365	popqi	[length = 1]
- 1441 020e 9F90      		pop r9	 ;  366	popqi	[length = 1]
- 1442 0210 8F90      		pop r8	 ;  367	popqi	[length = 1]
- 1443               	.LVL94:
- 1444 0212 7F90      		pop r7	 ;  368	popqi	[length = 1]
- 1445 0214 6F90      		pop r6	 ;  369	popqi	[length = 1]
- 1446 0216 5F90      		pop r5	 ;  370	popqi	[length = 1]
- 1447 0218 4F90      		pop r4	 ;  371	popqi	[length = 1]
- 1448 021a 3F90      		pop r3	 ;  372	popqi	[length = 1]
- 1449 021c 2F90      		pop r2	 ;  373	popqi	[length = 1]
- 1450               	.LVL95:
- 1451 021e 0895      		ret	 ;  374	return_from_epilogue	[length = 1]
- 1452               		.cfi_endproc
- 1453               	.LFE14:
- 1455               		.data
- 1456               	.LC4:
- 1457 0012 3A25 2E2A 		.string	":%.*s\n"
- 1457      730A 00
- 1458               		.section	.text.ax25_print,"ax",@progbits
- 1459               	.global	ax25_print
- 1461               	ax25_print:
- 1462               	.LFB16:
- 267:bertos/net/ax25.c **** 
- 268:bertos/net/ax25.c **** /**
- 269:bertos/net/ax25.c ****  * Print a AX25 message in TNC-2 packet monitor format.
- 270:bertos/net/ax25.c ****  * \param ch a kfile channel where the message will be printed.
- 271:bertos/net/ax25.c ****  * \param msg the message to be printed.
- 272:bertos/net/ax25.c ****  */
- 273:bertos/net/ax25.c **** void ax25_print(KFile *ch, const AX25Msg *msg)
- 274:bertos/net/ax25.c **** {
- 1463               		.loc 1 274 0
- 1464               		.cfi_startproc
- 1465               	.LVL96:
- 1466 0000 CF92      		push r12	 ;  90	*pushqi/1	[length = 1]
- 1467               	.LCFI50:
- 1468               		.cfi_def_cfa_offset 3
- 1469               		.cfi_offset 12, -2
- 1470 0002 DF92      		push r13	 ;  91	*pushqi/1	[length = 1]
- 1471               	.LCFI51:
- 1472               		.cfi_def_cfa_offset 4
- 1473               		.cfi_offset 13, -3
- 1474 0004 EF92      		push r14	 ;  92	*pushqi/1	[length = 1]
- 1475               	.LCFI52:
- 1476               		.cfi_def_cfa_offset 5
- 1477               		.cfi_offset 14, -4
- 1478 0006 FF92      		push r15	 ;  93	*pushqi/1	[length = 1]
- 1479               	.LCFI53:
- 1480               		.cfi_def_cfa_offset 6
- 1481               		.cfi_offset 15, -5
- 1482 0008 0F93      		push r16	 ;  94	*pushqi/1	[length = 1]
- 1483               	.LCFI54:
- 1484               		.cfi_def_cfa_offset 7
- 1485               		.cfi_offset 16, -6
- 1486 000a 1F93      		push r17	 ;  95	*pushqi/1	[length = 1]
- 1487               	.LCFI55:
- 1488               		.cfi_def_cfa_offset 8
- 1489               		.cfi_offset 17, -7
- 1490 000c CF93      		push r28	 ;  96	*pushqi/1	[length = 1]
- 1491               	.LCFI56:
- 1492               		.cfi_def_cfa_offset 9
- 1493               		.cfi_offset 28, -8
- 1494 000e DF93      		push r29	 ;  97	*pushqi/1	[length = 1]
- 1495               	.LCFI57:
- 1496               		.cfi_def_cfa_offset 10
- 1497               		.cfi_offset 29, -9
- 1498               	/* prologue: function */
- 1499               	/* frame size = 0 */
- 1500               	/* stack size = 8 */
- 1501               	.L__stack_usage = 8
- 1502 0010 8C01      		movw r16,r24	 ;  2	*movhi/1	[length = 1]
- 1503 0012 7B01      		movw r14,r22	 ;  3	*movhi/1	[length = 1]
- 275:bertos/net/ax25.c **** 	print_call(ch, &msg->src);
- 1504               		.loc 1 275 0
- 1505 0014 0E94 0000 		call print_call	 ;  11	call_insn/3	[length = 2]
- 1506               	.LVL97:
- 276:bertos/net/ax25.c **** 	kfile_putc('>', ch);
- 1507               		.loc 1 276 0
- 1508 0018 8EE3      		ldi r24,lo8(62)	 ;  13	*movhi/4	[length = 2]
- 1509 001a 90E0      		ldi r25,hi8(62)
- 1510 001c B801      		movw r22,r16	 ;  14	*movhi/1	[length = 1]
- 1511 001e 0E94 0000 		call kfile_putc	 ;  15	call_value_insn/3	[length = 2]
- 277:bertos/net/ax25.c **** 	print_call(ch, &msg->dst);
- 1512               		.loc 1 277 0
- 1513 0022 B701      		movw r22,r14	 ;  76	*movhi/1	[length = 1]
- 1514 0024 695F      		subi r22,lo8(-(7))	 ;  17	*addhi3/4	[length = 2]
- 1515 0026 7F4F      		sbci r23,hi8(-(7))
- 1516 0028 C801      		movw r24,r16	 ;  18	*movhi/1	[length = 1]
- 1517 002a 0E94 0000 		call print_call	 ;  20	call_insn/3	[length = 2]
- 1518               	.LVL98:
- 1519               	.LBB114:
- 278:bertos/net/ax25.c **** 
- 279:bertos/net/ax25.c **** 	#if CONFIG_AX25_RPT_LST
- 280:bertos/net/ax25.c **** 	for (int i = 0; i < msg->rpt_cnt; i++)
- 1520               		.loc 1 280 0
- 1521 002e C0E0      		ldi r28,lo8(0)	 ;  5	*movhi/4	[length = 2]
- 1522 0030 D0E0      		ldi r29,hi8(0)
- 1523 0032 A6E4      		ldi r26,lo8(70)	 ;  111	*reload_inhi	[length = 3]
- 1524 0034 CA2E      		mov r12,r26
- 1525 0036 D12C      		mov r13,__zero_reg__
- 1526 0038 CE0C      		add r12,r14	 ;  45	*addhi3/1	[length = 2]
- 1527 003a DF1C      		adc r13,r15
- 1528 003c 00C0      		rjmp .L55	 ;  112	jump	[length = 1]
- 1529               	.LVL99:
- 1530               	.L56:
- 281:bertos/net/ax25.c **** 	{
- 282:bertos/net/ax25.c **** 		kfile_putc(',', ch);
- 1531               		.loc 1 282 0 discriminator 2
- 1532 003e 8CE2      		ldi r24,lo8(44)	 ;  26	*movhi/4	[length = 2]
- 1533 0040 90E0      		ldi r25,hi8(44)
- 1534 0042 B801      		movw r22,r16	 ;  27	*movhi/1	[length = 1]
- 1535 0044 0E94 0000 		call kfile_putc	 ;  28	call_value_insn/3	[length = 2]
- 283:bertos/net/ax25.c **** 		print_call(ch, &msg->rpt_lst[i]);
- 1536               		.loc 1 283 0 discriminator 2
- 1537 0048 BE01      		movw r22,r28	 ;  78	*movhi/1	[length = 1]
- 1538 004a F3E0      		ldi r31,3	 ;  110	*ashlhi3_const/5	[length = 5]
- 1539 004c 660F      	1:	lsl r22
- 1540 004e 771F      		rol r23
- 1541 0050 FA95      		dec r31
- 1542 0052 01F4      		brne 1b
- 1543 0054 6C1B      		sub r22,r28	 ;  33	subhi3/1	[length = 2]
- 1544 0056 7D0B      		sbc r23,r29
- 1545 0058 625F      		subi r22,lo8(-(14))	 ;  34	*addhi3/4	[length = 2]
- 1546 005a 7F4F      		sbci r23,hi8(-(14))
- 1547 005c 6E0D      		add r22,r14	 ;  35	*addhi3/1	[length = 2]
- 1548 005e 7F1D      		adc r23,r15
- 1549 0060 C801      		movw r24,r16	 ;  36	*movhi/1	[length = 1]
- 1550 0062 0E94 0000 		call print_call	 ;  38	call_insn/3	[length = 2]
- 280:bertos/net/ax25.c **** 	for (int i = 0; i < msg->rpt_cnt; i++)
- 1551               		.loc 1 280 0 discriminator 2
- 1552 0066 2196      		adiw r28,1	 ;  39	*addhi3/2	[length = 1]
- 1553               	.LVL100:
- 1554               	.L55:
- 280:bertos/net/ax25.c **** 	for (int i = 0; i < msg->rpt_cnt; i++)
- 1555               		.loc 1 280 0 is_stmt 0 discriminator 1
- 1556 0068 D601      		movw r26,r12	 ;  79	*movhi/1	[length = 1]
- 1557 006a 8C91      		ld r24,X	 ;  46	*movqi/4	[length = 1]
- 1558 006c 90E0      		ldi r25,lo8(0)	 ;  89	*movqi/2	[length = 1]
- 1559 006e C817      		cp r28,r24	 ;  48	*cmphi/3	[length = 2]
- 1560 0070 D907      		cpc r29,r25
- 1561 0072 04F0      		brlt .L56	 ;  49	branch	[length = 1]
- 1562               	.LBE114:
- 284:bertos/net/ax25.c **** 		// TODO: add * to the trasmitting digi
- 285:bertos/net/ax25.c **** 	}
- 286:bertos/net/ax25.c **** 	#endif
- 287:bertos/net/ax25.c **** 
- 288:bertos/net/ax25.c **** 	kfile_printf(ch, ":%.*s\n", msg->len, msg->info);
- 1563               		.loc 1 288 0 is_stmt 1
- 1564 0074 EDB7      		in r30,__SP_L__	 ;  80	*movhi_sp/2	[length = 2]
- 1565 0076 FEB7      		in r31,__SP_H__
- 1566 0078 3897      		sbiw r30,8	 ;  51	*addhi3/3	[length = 1]
- 1567 007a 0FB6      		in __tmp_reg__,__SREG__	 ;  81	*movhi_sp/1	[length = 5]
- 1568 007c F894      		cli
- 1569 007e FEBF      		out __SP_H__,r31
- 1570 0080 0FBE      		out __SREG__,__tmp_reg__
- 1571 0082 EDBF      		out __SP_L__,r30
- 1572 0084 3196      		adiw r30,1	 ;  71	*addhi3/2	[length = 1]
- 1573 0086 ADB7      		in r26,__SP_L__	 ;  83	*movhi_sp/2	[length = 2]
- 1574 0088 BEB7      		in r27,__SP_H__
- 1575 008a 1296      		adiw r26,1+1	 ;  53	*movhi/3	[length = 4]
- 1576 008c 1C93      		st X,r17
- 1577 008e 0E93      		st -X,r16
- 1578 0090 1197      		sbiw r26,1
- 1579 0092 80E0      		ldi r24,lo8(.LC4)	 ;  54	*movhi/4	[length = 2]
- 1580 0094 90E0      		ldi r25,hi8(.LC4)
- 1581 0096 9383      		std Z+3,r25	 ;  55	*movhi/3	[length = 2]
- 1582 0098 8283      		std Z+2,r24
- 1583 009a D701      		movw r26,r14	 ;  84	*movhi/1	[length = 1]
- 1584 009c A45B      		subi r26,lo8(-(76))	 ;  56	*addhi3/4	[length = 2]
- 1585 009e BF4F      		sbci r27,hi8(-(76))
- 1586 00a0 8D91      		ld r24,X+	 ;  57	*movhi/2	[length = 2]
- 1587 00a2 9C91      		ld r25,X
- 1588 00a4 9583      		std Z+5,r25	 ;  58	*movhi/3	[length = 2]
- 1589 00a6 8483      		std Z+4,r24
- 1590 00a8 D701      		movw r26,r14	 ;  85	*movhi/1	[length = 1]
- 1591 00aa A65B      		subi r26,lo8(-(74))	 ;  59	*addhi3/4	[length = 2]
- 1592 00ac BF4F      		sbci r27,hi8(-(74))
- 1593 00ae 8D91      		ld r24,X+	 ;  60	*movhi/2	[length = 2]
- 1594 00b0 9C91      		ld r25,X
- 1595 00b2 9783      		std Z+7,r25	 ;  61	*movhi/3	[length = 2]
- 1596 00b4 8683      		std Z+6,r24
- 1597 00b6 0E94 0000 		call kfile_printf	 ;  62	call_value_insn/3	[length = 2]
- 1598 00ba EDB7      		in r30,__SP_L__	 ;  86	*movhi_sp/2	[length = 2]
- 1599 00bc FEB7      		in r31,__SP_H__
- 1600 00be 3896      		adiw r30,8	 ;  63	*addhi3/2	[length = 1]
- 1601 00c0 0FB6      		in __tmp_reg__,__SREG__	 ;  87	*movhi_sp/1	[length = 5]
- 1602 00c2 F894      		cli
- 1603 00c4 FEBF      		out __SP_H__,r31
- 1604 00c6 0FBE      		out __SREG__,__tmp_reg__
- 1605 00c8 EDBF      		out __SP_L__,r30
- 1606               	/* epilogue start */
- 289:bertos/net/ax25.c **** }
- 1607               		.loc 1 289 0
- 1608 00ca DF91      		pop r29	 ;  100	popqi	[length = 1]
- 1609 00cc CF91      		pop r28	 ;  101	popqi	[length = 1]
- 1610               	.LVL101:
- 1611 00ce 1F91      		pop r17	 ;  102	popqi	[length = 1]
- 1612 00d0 0F91      		pop r16	 ;  103	popqi	[length = 1]
- 1613               	.LVL102:
- 1614 00d2 FF90      		pop r15	 ;  104	popqi	[length = 1]
- 1615 00d4 EF90      		pop r14	 ;  105	popqi	[length = 1]
- 1616               	.LVL103:
- 1617 00d6 DF90      		pop r13	 ;  106	popqi	[length = 1]
- 1618 00d8 CF90      		pop r12	 ;  107	popqi	[length = 1]
- 1619 00da 0895      		ret	 ;  108	return_from_epilogue	[length = 1]
- 1620               		.cfi_endproc
- 1621               	.LFE16:
- 1623               		.section	.text.ax25_init,"ax",@progbits
- 1624               	.global	ax25_init
- 1626               	ax25_init:
- 1627               	.LFB17:
- 290:bertos/net/ax25.c **** 
- 291:bertos/net/ax25.c **** 
- 292:bertos/net/ax25.c **** /**
- 293:bertos/net/ax25.c ****  * Init the AX25 protocol decoder.
- 294:bertos/net/ax25.c ****  *
- 295:bertos/net/ax25.c ****  * \param ctx AX25 context to init.
- 296:bertos/net/ax25.c ****  * \param channel Used to gain access to the physical medium
- 297:bertos/net/ax25.c ****  * \param hook Callback function called when a message is received
- 298:bertos/net/ax25.c ****  */
- 299:bertos/net/ax25.c **** void ax25_init(AX25Ctx *ctx, KFile *channel, ax25_callback_t hook)
- 300:bertos/net/ax25.c **** {
- 1628               		.loc 1 300 0
- 1629               		.cfi_startproc
+ 992               		.loc 3 276 0
+ 993 03de D801      		movw r26,r16	 ;  606	*movhi/1	[length = 1]
+ 994 03e0 1E96      		adiw r26,14	 ;  435	*movhi/2	[length = 4]
+ 995 03e2 ED91      		ld r30,X+
+ 996 03e4 FC91      		ld r31,X
+ 997 03e6 1F97      		sbiw r26,14+1
+ 998 03e8 C801      		movw r24,r16	 ;  436	*movhi/1	[length = 1]
+ 999 03ea 0995      		icall	 ;  437	call_insn/1	[length = 1]
+ 1000               	.LVL62:
+ 1001               	.L6:
+ 1002               	/* epilogue start */
+ 1003               	.LBE90:
+ 1004               	.LBE89:
+ 195:bertos/net/ax25.c **** }
+ 1005               		.loc 1 195 0
+ 1006 03ec CA5A      		subi r28,lo8(-(86))	 ;  636	*addhi3/4	[length = 2]
+ 1007 03ee DF4F      		sbci r29,hi8(-(86))
+ 1008 03f0 0FB6      		in __tmp_reg__,__SREG__	 ;  637	*movhi_sp/1	[length = 5]
+ 1009 03f2 F894      		cli
+ 1010 03f4 DEBF      		out __SP_H__,r29
+ 1011 03f6 0FBE      		out __SREG__,__tmp_reg__
+ 1012 03f8 CDBF      		out __SP_L__,r28
+ 1013 03fa DF91      		pop r29	 ;  638	popqi	[length = 1]
+ 1014 03fc CF91      		pop r28	 ;  639	popqi	[length = 1]
+ 1015 03fe 1F91      		pop r17	 ;  640	popqi	[length = 1]
+ 1016 0400 0F91      		pop r16	 ;  641	popqi	[length = 1]
+ 1017 0402 FF90      		pop r15	 ;  642	popqi	[length = 1]
+ 1018 0404 EF90      		pop r14	 ;  643	popqi	[length = 1]
+ 1019               	.LVL63:
+ 1020 0406 DF90      		pop r13	 ;  644	popqi	[length = 1]
+ 1021 0408 CF90      		pop r12	 ;  645	popqi	[length = 1]
+ 1022 040a BF90      		pop r11	 ;  646	popqi	[length = 1]
+ 1023 040c AF90      		pop r10	 ;  647	popqi	[length = 1]
+ 1024 040e 9F90      		pop r9	 ;  648	popqi	[length = 1]
+ 1025 0410 8F90      		pop r8	 ;  649	popqi	[length = 1]
+ 1026 0412 7F90      		pop r7	 ;  650	popqi	[length = 1]
+ 1027 0414 6F90      		pop r6	 ;  651	popqi	[length = 1]
+ 1028 0416 5F90      		pop r5	 ;  652	popqi	[length = 1]
+ 1029 0418 4F90      		pop r4	 ;  653	popqi	[length = 1]
+ 1030 041a 3F90      		pop r3	 ;  654	popqi	[length = 1]
+ 1031 041c 2F90      		pop r2	 ;  655	popqi	[length = 1]
+ 1032 041e 0895      		ret	 ;  656	return_from_epilogue	[length = 1]
+ 1033               		.cfi_endproc
+ 1034               	.LFE11:
+ 1036               		.section	.text.ax25_sendVia,"ax",@progbits
+ 1037               	.global	ax25_sendVia
+ 1039               	ax25_sendVia:
+ 1040               	.LFB14:
+ 238:bertos/net/ax25.c **** {
+ 1041               		.loc 1 238 0
+ 1042               		.cfi_startproc
+ 1043               	.LVL64:
+ 1044 0000 2F92      		push r2	 ;  328	*pushqi/1	[length = 1]
+ 1045               	.LCFI30:
+ 1046               		.cfi_def_cfa_offset 3
+ 1047               		.cfi_offset 2, -2
+ 1048 0002 3F92      		push r3	 ;  329	*pushqi/1	[length = 1]
+ 1049               	.LCFI31:
+ 1050               		.cfi_def_cfa_offset 4
+ 1051               		.cfi_offset 3, -3
+ 1052 0004 4F92      		push r4	 ;  330	*pushqi/1	[length = 1]
+ 1053               	.LCFI32:
+ 1054               		.cfi_def_cfa_offset 5
+ 1055               		.cfi_offset 4, -4
+ 1056 0006 5F92      		push r5	 ;  331	*pushqi/1	[length = 1]
+ 1057               	.LCFI33:
+ 1058               		.cfi_def_cfa_offset 6
+ 1059               		.cfi_offset 5, -5
+ 1060 0008 6F92      		push r6	 ;  332	*pushqi/1	[length = 1]
+ 1061               	.LCFI34:
+ 1062               		.cfi_def_cfa_offset 7
+ 1063               		.cfi_offset 6, -6
+ 1064 000a 7F92      		push r7	 ;  333	*pushqi/1	[length = 1]
+ 1065               	.LCFI35:
+ 1066               		.cfi_def_cfa_offset 8
+ 1067               		.cfi_offset 7, -7
+ 1068 000c 8F92      		push r8	 ;  334	*pushqi/1	[length = 1]
+ 1069               	.LCFI36:
+ 1070               		.cfi_def_cfa_offset 9
+ 1071               		.cfi_offset 8, -8
+ 1072 000e 9F92      		push r9	 ;  335	*pushqi/1	[length = 1]
+ 1073               	.LCFI37:
+ 1074               		.cfi_def_cfa_offset 10
+ 1075               		.cfi_offset 9, -9
+ 1076 0010 AF92      		push r10	 ;  336	*pushqi/1	[length = 1]
+ 1077               	.LCFI38:
+ 1078               		.cfi_def_cfa_offset 11
+ 1079               		.cfi_offset 10, -10
+ 1080 0012 BF92      		push r11	 ;  337	*pushqi/1	[length = 1]
+ 1081               	.LCFI39:
+ 1082               		.cfi_def_cfa_offset 12
+ 1083               		.cfi_offset 11, -11
+ 1084 0014 CF92      		push r12	 ;  338	*pushqi/1	[length = 1]
+ 1085               	.LCFI40:
+ 1086               		.cfi_def_cfa_offset 13
+ 1087               		.cfi_offset 12, -12
+ 1088 0016 DF92      		push r13	 ;  339	*pushqi/1	[length = 1]
+ 1089               	.LCFI41:
+ 1090               		.cfi_def_cfa_offset 14
+ 1091               		.cfi_offset 13, -13
+ 1092 0018 EF92      		push r14	 ;  340	*pushqi/1	[length = 1]
+ 1093               	.LCFI42:
+ 1094               		.cfi_def_cfa_offset 15
+ 1095               		.cfi_offset 14, -14
+ 1096 001a FF92      		push r15	 ;  341	*pushqi/1	[length = 1]
+ 1097               	.LCFI43:
+ 1098               		.cfi_def_cfa_offset 16
+ 1099               		.cfi_offset 15, -15
+ 1100 001c 0F93      		push r16	 ;  342	*pushqi/1	[length = 1]
+ 1101               	.LCFI44:
+ 1102               		.cfi_def_cfa_offset 17
+ 1103               		.cfi_offset 16, -16
+ 1104 001e 1F93      		push r17	 ;  343	*pushqi/1	[length = 1]
+ 1105               	.LCFI45:
+ 1106               		.cfi_def_cfa_offset 18
+ 1107               		.cfi_offset 17, -17
+ 1108 0020 CF93      		push r28	 ;  344	*pushqi/1	[length = 1]
+ 1109               	.LCFI46:
+ 1110               		.cfi_def_cfa_offset 19
+ 1111               		.cfi_offset 28, -18
+ 1112 0022 DF93      		push r29	 ;  345	*pushqi/1	[length = 1]
+ 1113               	.LCFI47:
+ 1114               		.cfi_def_cfa_offset 20
+ 1115               		.cfi_offset 29, -19
+ 1116 0024 00D0      		rcall .	 ;  349	*addhi3_sp_R_pc2	[length = 3]
+ 1117 0026 00D0      		rcall .
+ 1118 0028 0F92      		push __tmp_reg__
+ 1119               	.LCFI48:
+ 1120               		.cfi_def_cfa_offset 25
+ 1121 002a CDB7      		in r28,__SP_L__	 ;  350	*movhi_sp/2	[length = 2]
+ 1122 002c DEB7      		in r29,__SP_H__
+ 1123               	.LCFI49:
+ 1124               		.cfi_def_cfa_register 28
+ 1125               	/* prologue: function */
+ 1126               	/* frame size = 5 */
+ 1127               	/* stack size = 23 */
+ 1128               	.L__stack_usage = 23
+ 1129 002e 6C01      		movw r12,r24	 ;  2	*movhi/1	[length = 1]
+ 1130 0030 5B01      		movw r10,r22	 ;  3	*movhi/1	[length = 1]
+ 1131 0032 1A01      		movw r2,r20	 ;  4	*movhi/1	[length = 1]
+ 1132 0034 2983      		std Y+1,r18	 ;  254	*movqi/3	[length = 1]
+ 1133 0036 3A83      		std Y+2,r19	 ;  255	*movqi/3	[length = 1]
+ 1134 0038 2801      		movw r4,r16	 ;  6	*movhi/1	[length = 1]
+ 1135               	.LVL65:
+ 240:bertos/net/ax25.c **** 	ASSERT(path);
+ 1136               		.loc 1 240 0
+ 1137 003a 6115      		cp r22,__zero_reg__	 ;  16	*cmphi/2	[length = 2]
+ 1138 003c 7105      		cpc r23,__zero_reg__
+ 1139 003e 01F4      		brne .L38	 ;  17	branch	[length = 1]
+ 1140               	.LVL66:
+ 240:bertos/net/ax25.c **** 	ASSERT(path);
+ 1141               		.loc 1 240 0 is_stmt 0 discriminator 1
+ 1142 0040 80E0      		ldi r24,lo8(__c.1775)	 ;  22	*movhi/4	[length = 2]
+ 1143 0042 90E0      		ldi r25,hi8(__c.1775)
+ 1144 0044 60E0      		ldi r22,lo8(__c.1777)	 ;  23	*movhi/4	[length = 2]
+ 1145 0046 70E0      		ldi r23,hi8(__c.1777)
+ 1146 0048 40EF      		ldi r20,lo8(240)	 ;  24	*movhi/4	[length = 2]
+ 1147 004a 50E0      		ldi r21,hi8(240)
+ 1148 004c 0E94 0000 		call __bassert_P	 ;  25	call_value_insn/3	[length = 2]
+ 1149               	.LVL67:
+ 1150               	.L38:
+ 241:bertos/net/ax25.c **** 	ASSERT(path_len >= 2);
+ 1151               		.loc 1 241 0 is_stmt 1
+ 1152 0050 22E0      		ldi r18,lo8(2)	 ;  28	*cmphi/6	[length = 3]
+ 1153 0052 2216      		cp r2,r18
+ 1154 0054 3104      		cpc r3,__zero_reg__
+ 1155 0056 00F4      		brsh .L39	 ;  29	branch	[length = 1]
+ 241:bertos/net/ax25.c **** 	ASSERT(path_len >= 2);
+ 1156               		.loc 1 241 0 is_stmt 0 discriminator 1
+ 1157 0058 80E0      		ldi r24,lo8(__c.1779)	 ;  34	*movhi/4	[length = 2]
+ 1158 005a 90E0      		ldi r25,hi8(__c.1779)
+ 1159 005c 60E0      		ldi r22,lo8(__c.1781)	 ;  35	*movhi/4	[length = 2]
+ 1160 005e 70E0      		ldi r23,hi8(__c.1781)
+ 1161 0060 41EF      		ldi r20,lo8(241)	 ;  36	*movhi/4	[length = 2]
+ 1162 0062 50E0      		ldi r21,hi8(241)
+ 1163 0064 0E94 0000 		call __bassert_P	 ;  37	call_value_insn/3	[length = 2]
+ 1164               	.L39:
+ 243:bertos/net/ax25.c **** 	ctx->crc_out = CRC_CCITT_INIT_VAL;
+ 1165               		.loc 1 243 0 is_stmt 1
+ 1166 0068 F601      		movw r30,r12	 ;  305	*movhi/1	[length = 1]
+ 1167 006a E05B      		subi r30,lo8(-(336))	 ;  40	*addhi3/4	[length = 2]
+ 1168 006c FE4F      		sbci r31,hi8(-(336))
+ 1169 006e 8FEF      		ldi r24,lo8(-1)	 ;  41	*movhi/4	[length = 2]
+ 1170 0070 9FEF      		ldi r25,hi8(-1)
+ 1171 0072 9183      		std Z+1,r25	 ;  42	*movhi/3	[length = 2]
+ 1172 0074 8083      		st Z,r24
+ 244:bertos/net/ax25.c **** 	kfile_putc(HDLC_FLAG, ctx->ch);
+ 1173               		.loc 1 244 0
+ 1174 0076 F601      		movw r30,r12	 ;  306	*movhi/1	[length = 1]
+ 1175 0078 E65B      		subi r30,lo8(-(330))	 ;  44	*addhi3/4	[length = 2]
+ 1176 007a FE4F      		sbci r31,hi8(-(330))
+ 1177 007c 6081      		ld r22,Z	 ;  45	*movhi/2	[length = 2]
+ 1178 007e 7181      		ldd r23,Z+1
+ 1179 0080 8EE7      		ldi r24,lo8(126)	 ;  46	*movhi/4	[length = 2]
+ 1180 0082 90E0      		ldi r25,hi8(126)
+ 1181 0084 0E94 0000 		call kfile_putc	 ;  48	call_value_insn/3	[length = 2]
+ 1182               	.LVL68:
+ 1183               	.LBB106:
+ 248:bertos/net/ax25.c **** 	for (size_t i = 0; i < path_len; i++)
+ 1184               		.loc 1 248 0
+ 1185 0088 8824      		clr r8	 ;  11	*movhi/5	[length = 2]
+ 1186 008a 9924      		clr r9
+ 249:bertos/net/ax25.c **** 		ax25_sendCall(ctx, &path[i], (i == path_len - 1));
+ 1187               		.loc 1 249 0
+ 1188 008c 9101      		movw r18,r2	 ;  307	*movhi/1	[length = 1]
+ 1189 008e 2150      		subi r18,lo8(-(-1))	 ;  55	*addhi3/4	[length = 2]
+ 1190 0090 3040      		sbci r19,hi8(-(-1))
+ 1191 0092 3C83      		std Y+4,r19	 ;  308	*movhi/3	[length = 2]
+ 1192 0094 2B83      		std Y+3,r18
+ 248:bertos/net/ax25.c **** 	for (size_t i = 0; i < path_len; i++)
+ 1193               		.loc 1 248 0
+ 1194 0096 00C0      		rjmp .L40	 ;  379	jump	[length = 1]
+ 1195               	.LVL69:
+ 1196               	.L49:
+ 1197               	.LBB107:
+ 1198               	.LBB108:
+ 1199               	.LBB109:
+ 208:bertos/net/ax25.c **** 	unsigned len = MIN(sizeof(addr->call), strlen(addr->call));
+ 1200               		.loc 1 208 0 discriminator 2
+ 1201 0098 D501      		movw r26,r10	 ;  309	*movhi/1	[length = 1]
+ 1202 009a 0D90      		ld __tmp_reg__,X+	 ;  61	*strlenhi	[length = 3]
+ 1203 009c 0020      		tst __tmp_reg__
+ 1204 009e 01F4      		brne .-6
+ 1205 00a0 8D01      		movw r16,r26	 ;  310	*movhi/1	[length = 1]
+ 1206 00a2 0150      		subi r16,lo8(-(-1))	 ;  62	*addhi3/4	[length = 2]
+ 1207 00a4 1040      		sbci r17,hi8(-(-1))
+ 1208 00a6 0A19      		sub r16,r10	 ;  63	subhi3/1	[length = 2]
+ 1209 00a8 1B09      		sbc r17,r11
+ 1210 00aa 0730      		cpi r16,7	 ;  67	*cmphi/4	[length = 2]
+ 1211 00ac 1105      		cpc r17,__zero_reg__
+ 1212 00ae 00F0      		brlo .L41	 ;  68	branch	[length = 1]
+ 1213 00b0 06E0      		ldi r16,lo8(6)	 ;  281	*movhi/4	[length = 2]
+ 1214 00b2 10E0      		ldi r17,hi8(6)
+ 1215               	.L41:
+ 1216               	.LVL70:
+ 1217 00b4 3501      		movw r6,r10	 ;  8	*movhi/1	[length = 1]
+ 210:bertos/net/ax25.c **** 	for (unsigned i = 0; i < len; i++)
+ 1218               		.loc 1 210 0 discriminator 2
+ 1219 00b6 EE24      		clr r14	 ;  282	*movhi/5	[length = 2]
+ 1220 00b8 FF24      		clr r15
+ 1221 00ba 00C0      		rjmp .L42	 ;  381	jump	[length = 1]
+ 1222               	.LVL71:
+ 1223               	.L44:
+ 1224               	.LBE109:
+ 1225               	.LBB110:
+ 1226               	.LBB111:
+ 212:bertos/net/ax25.c **** 		uint8_t c = addr->call[i];
+ 1227               		.loc 1 212 0
+ 1228 00bc F301      		movw r30,r6	 ;  311	*movhi/1	[length = 1]
+ 1229 00be 2191      		ld r18,Z+	 ;  76	*movqi/4	[length = 1]
+ 1230 00c0 3F01      		movw r6,r30	 ;  312	*movhi/1	[length = 1]
+ 1231               	.LVL72:
+ 213:bertos/net/ax25.c **** 		ASSERT(isalnum(c) || c == ' ');
+ 1232               		.loc 1 213 0
+ 1233 00c2 822F      		mov r24,r18	 ;  263	*movqi/1	[length = 1]
+ 1234 00c4 90E0      		ldi r25,lo8(0)	 ;  264	*movqi/2	[length = 1]
+ 1235 00c6 2D83      		std Y+5,r18	 ;  301	*movqi/3	[length = 1]
+ 1236 00c8 0E94 0000 		call isalnum	 ;  83	call_value_insn/3	[length = 2]
+ 1237               	.LVL73:
+ 1238 00cc 2D81      		ldd r18,Y+5	 ;  302	*movqi/4	[length = 1]
+ 1239               	.LVL74:
+ 1240 00ce 0097      		sbiw r24,0	 ;  85	*cmphi/1	[length = 1]
+ 1241 00d0 01F4      		brne .L43	 ;  86	branch	[length = 1]
+ 1242 00d2 2032      		cpi r18,lo8(32)	 ;  88	*cmpqi/3	[length = 1]
+ 1243 00d4 01F0      		breq .L43	 ;  89	branch	[length = 1]
+ 1244 00d6 80E0      		ldi r24,lo8(__c.1755)	 ;  278	*movhi/4	[length = 2]
+ 1245 00d8 90E0      		ldi r25,hi8(__c.1755)
+ 1246 00da 60E0      		ldi r22,lo8(__c.1757)	 ;  279	*movhi/4	[length = 2]
+ 1247 00dc 70E0      		ldi r23,hi8(__c.1757)
+ 1248 00de 45ED      		ldi r20,lo8(213)	 ;  96	*movhi/4	[length = 2]
+ 1249 00e0 50E0      		ldi r21,hi8(213)
+ 1250 00e2 0E94 0000 		call __bassert_P	 ;  97	call_value_insn/3	[length = 2]
+ 1251               	.LVL75:
+ 1252 00e6 2D81      		ldd r18,Y+5	 ;  304	*movqi/4	[length = 1]
+ 1253               	.L43:
+ 214:bertos/net/ax25.c **** 		c = toupper(c);
+ 1254               		.loc 1 214 0
+ 1255 00e8 822F      		mov r24,r18	 ;  265	*movqi/1	[length = 1]
+ 1256 00ea 90E0      		ldi r25,lo8(0)	 ;  266	*movqi/2	[length = 1]
+ 1257 00ec 0E94 0000 		call toupper	 ;  102	call_value_insn/3	[length = 2]
+ 1258               	.LVL76:
+ 215:bertos/net/ax25.c **** 		ax25_putchar(ctx, c << 1);
+ 1259               		.loc 1 215 0
+ 1260 00f0 682F      		mov r22,r24	 ;  313	*movqi/1	[length = 1]
+ 1261 00f2 660F      		lsl r22	 ;  106	*ashlqi3/3	[length = 1]
+ 1262 00f4 C601      		movw r24,r12	 ;  107	*movhi/1	[length = 1]
+ 1263               	.LVL77:
+ 1264 00f6 0E94 0000 		call ax25_putchar	 ;  109	call_insn/3	[length = 2]
+ 1265               	.LBE111:
+ 210:bertos/net/ax25.c **** 	for (unsigned i = 0; i < len; i++)
+ 1266               		.loc 1 210 0
+ 1267 00fa 0894      		sec	 ;  110	*addhi3/5	[length = 3]
+ 1268 00fc E11C      		adc r14,__zero_reg__
+ 1269 00fe F11C      		adc r15,__zero_reg__
+ 1270               	.LVL78:
+ 1271               	.L42:
+ 1272 0100 E016      		cp r14,r16	 ;  116	*cmphi/3	[length = 2]
+ 1273 0102 F106      		cpc r15,r17
+ 1274 0104 01F4      		brne .L44	 ;  117	branch	[length = 1]
+ 1275               	.LBE110:
+ 219:bertos/net/ax25.c **** 	if (len < sizeof(addr->call))
+ 1276               		.loc 1 219 0
+ 1277 0106 F6E0      		ldi r31,lo8(6)	 ;  119	*cmphi/6	[length = 3]
+ 1278 0108 EF16      		cp r14,r31
+ 1279 010a F104      		cpc r15,__zero_reg__
+ 1280 010c 00F0      		brlo .L53	 ;  120	branch	[length = 1]
+ 1281 010e 00C0      		rjmp .L46	 ;  384	jump	[length = 1]
+ 1282               	.LVL79:
+ 1283               	.L47:
+ 1284               	.LBB112:
+ 221:bertos/net/ax25.c **** 			ax25_putchar(ctx, ' ' << 1);
+ 1285               		.loc 1 221 0
+ 1286 0110 C601      		movw r24,r12	 ;  126	*movhi/1	[length = 1]
+ 1287 0112 60E4      		ldi r22,lo8(64)	 ;  127	*movqi/2	[length = 1]
+ 1288 0114 0E94 0000 		call ax25_putchar	 ;  128	call_insn/3	[length = 2]
+ 220:bertos/net/ax25.c **** 		for (unsigned i = 0; i < sizeof(addr->call) - len; i++)
+ 1289               		.loc 1 220 0
+ 1290 0118 0F5F      		subi r16,lo8(-(1))	 ;  129	*addhi3/4	[length = 2]
+ 1291 011a 1F4F      		sbci r17,hi8(-(1))
+ 1292               	.LVL80:
+ 1293 011c 00C0      		rjmp .L45	 ;  386	jump	[length = 1]
+ 1294               	.LVL81:
+ 1295               	.L53:
+ 1296               	.LBE112:
+ 219:bertos/net/ax25.c **** 	if (len < sizeof(addr->call))
+ 1297               		.loc 1 219 0
+ 1298 011e 00E0      		ldi r16,lo8(0)	 ;  285	*movhi/4	[length = 2]
+ 1299 0120 10E0      		ldi r17,hi8(0)
+ 1300               	.LVL82:
+ 1301               	.LBB113:
+ 220:bertos/net/ax25.c **** 		for (unsigned i = 0; i < sizeof(addr->call) - len; i++)
+ 1302               		.loc 1 220 0
+ 1303 0122 26E0      		ldi r18,lo8(6)	 ;  314	*movhi/4	[length = 2]
+ 1304 0124 30E0      		ldi r19,hi8(6)
+ 1305 0126 2E19      		sub r18,r14	 ;  136	subhi3/1	[length = 2]
+ 1306 0128 3F09      		sbc r19,r15
+ 1307 012a 7901      		movw r14,r18	 ;  315	*movhi/1	[length = 1]
+ 1308               	.LVL83:
+ 1309               	.L45:
+ 1310 012c 0E15      		cp r16,r14	 ;  137	*cmphi/3	[length = 2]
+ 1311 012e 1F05      		cpc r17,r15
+ 1312 0130 00F0      		brlo .L47	 ;  138	branch	[length = 1]
+ 1313               	.LVL84:
+ 1314               	.L46:
+ 1315               	.LBE113:
+ 224:bertos/net/ax25.c **** 	uint8_t ssid = addr->ssid << 1 | (last ? 0x01 : 0);
+ 1316               		.loc 1 224 0
+ 1317 0132 D501      		movw r26,r10	 ;  316	*movhi/1	[length = 1]
+ 1318 0134 1696      		adiw r26,6	 ;  143	*movqi/4	[length = 3]
+ 1319 0136 6C91      		ld r22,X
+ 1320 0138 1697      		sbiw r26,6
+ 1321 013a 70E0      		ldi r23,lo8(0)	 ;  327	*movqi/2	[length = 1]
+ 1322 013c 660F      		lsl r22	 ;  377	*ashlhi3_const/2	[length = 2]
+ 1323 013e 771F      		rol r23
+ 1324 0140 81E0      		ldi r24,lo8(1)	 ;  288	*movqi/2	[length = 1]
+ 1325 0142 2B81      		ldd r18,Y+3	 ;  317	*movhi/2	[length = 2]
+ 1326 0144 3C81      		ldd r19,Y+4
+ 1327 0146 8216      		cp r8,r18	 ;  147	*cmphi/3	[length = 2]
+ 1328 0148 9306      		cpc r9,r19
+ 1329 014a 01F0      		breq .L48	 ;  148	branch	[length = 1]
+ 1330 014c 80E0      		ldi r24,lo8(0)	 ;  149	*movqi/2	[length = 1]
+ 1331               	.L48:
+ 1332 014e 682B      		or r22,r24	 ;  151	iorqi3/1	[length = 1]
+ 225:bertos/net/ax25.c **** 	ax25_putchar(ctx, ssid);
+ 1333               		.loc 1 225 0
+ 1334 0150 C601      		movw r24,r12	 ;  152	*movhi/1	[length = 1]
+ 1335 0152 0E94 0000 		call ax25_putchar	 ;  154	call_insn/3	[length = 2]
+ 1336               	.LBE108:
+ 1337               	.LBE107:
+ 248:bertos/net/ax25.c **** 	for (size_t i = 0; i < path_len; i++)
+ 1338               		.loc 1 248 0
+ 1339 0156 0894      		sec	 ;  155	*addhi3/5	[length = 3]
+ 1340 0158 811C      		adc r8,__zero_reg__
+ 1341 015a 911C      		adc r9,__zero_reg__
+ 1342               	.LVL85:
+ 1343 015c 87E0      		ldi r24,lo8(7)	 ;  318	*movhi/4	[length = 2]
+ 1344 015e 90E0      		ldi r25,hi8(7)
+ 1345 0160 A80E      		add r10,r24	 ;  157	*addhi3/1	[length = 2]
+ 1346 0162 B91E      		adc r11,r25
+ 1347               	.LVL86:
+ 1348               	.L40:
+ 248:bertos/net/ax25.c **** 	for (size_t i = 0; i < path_len; i++)
+ 1349               		.loc 1 248 0 is_stmt 0 discriminator 1
+ 1350 0164 8214      		cp r8,r2	 ;  162	*cmphi/3	[length = 2]
+ 1351 0166 9304      		cpc r9,r3
+ 1352 0168 01F0      		breq .+2	 ;  163	branch	[length = 2]
+ 1353 016a 00C0      		rjmp .L49
+ 1354               	.LBE106:
+ 251:bertos/net/ax25.c **** 	ax25_putchar(ctx, AX25_CTRL_UI);
+ 1355               		.loc 1 251 0 is_stmt 1
+ 1356 016c C601      		movw r24,r12	 ;  166	*movhi/1	[length = 1]
+ 1357 016e 63E0      		ldi r22,lo8(3)	 ;  167	*movqi/2	[length = 1]
+ 1358 0170 0E94 0000 		call ax25_putchar	 ;  168	call_insn/3	[length = 2]
+ 252:bertos/net/ax25.c **** 	ax25_putchar(ctx, AX25_PID_NOLAYER3);
+ 1359               		.loc 1 252 0
+ 1360 0174 C601      		movw r24,r12	 ;  170	*movhi/1	[length = 1]
+ 1361 0176 60EF      		ldi r22,lo8(-16)	 ;  171	*movqi/2	[length = 1]
+ 1362 0178 0E94 0000 		call ax25_putchar	 ;  172	call_insn/3	[length = 2]
+ 239:bertos/net/ax25.c **** 	const uint8_t *buf = (const uint8_t *)_buf;
+ 1363               		.loc 1 239 0
+ 1364 017c 0981      		ldd r16,Y+1	 ;  270	*movqi/4	[length = 1]
+ 1365 017e 1A81      		ldd r17,Y+2	 ;  271	*movqi/4	[length = 1]
+ 254:bertos/net/ax25.c **** 	while (len--)
+ 1366               		.loc 1 254 0
+ 1367 0180 00C0      		rjmp .L50	 ;  388	jump	[length = 1]
+ 1368               	.LVL87:
+ 1369               	.L51:
+ 255:bertos/net/ax25.c **** 		ax25_putchar(ctx, *buf++);
+ 1370               		.loc 1 255 0
+ 1371 0182 D801      		movw r26,r16	 ;  319	*movhi/1	[length = 1]
+ 1372 0184 6D91      		ld r22,X+	 ;  176	*movqi/4	[length = 1]
+ 1373 0186 8D01      		movw r16,r26	 ;  320	*movhi/1	[length = 1]
+ 1374               	.LVL88:
+ 1375 0188 C601      		movw r24,r12	 ;  180	*movhi/1	[length = 1]
+ 1376 018a 0E94 0000 		call ax25_putchar	 ;  182	call_insn/3	[length = 2]
+ 1377               	.LVL89:
+ 1378 018e 0894      		sec	 ;  183	*addhi3/6	[length = 3]
+ 1379 0190 4108      		sbc r4,__zero_reg__
+ 1380 0192 5108      		sbc r5,__zero_reg__
+ 1381               	.LVL90:
+ 1382               	.L50:
+ 254:bertos/net/ax25.c **** 	while (len--)
+ 1383               		.loc 1 254 0 discriminator 1
+ 1384 0194 4114      		cp r4,__zero_reg__	 ;  190	*cmphi/2	[length = 2]
+ 1385 0196 5104      		cpc r5,__zero_reg__
+ 1386 0198 01F4      		brne .L51	 ;  191	branch	[length = 1]
+ 261:bertos/net/ax25.c **** 	uint8_t crcl = (ctx->crc_out & 0xff) ^ 0xff;
+ 1387               		.loc 1 261 0
+ 1388 019a 60E5      		ldi r22,lo8(336)	 ;  376	*reload_inhi	[length = 4]
+ 1389 019c E62E      		mov r14,r22
+ 1390 019e 61E0      		ldi r22,hi8(336)
+ 1391 01a0 F62E      		mov r15,r22
+ 1392 01a2 EC0C      		add r14,r12	 ;  193	*addhi3/1	[length = 2]
+ 1393 01a4 FD1C      		adc r15,r13
+ 1394 01a6 F701      		movw r30,r14	 ;  322	*movhi/1	[length = 1]
+ 1395 01a8 6081      		ld r22,Z	 ;  272	*movqi/4	[length = 1]
+ 1396 01aa 0181      		ldd r16,Z+1	 ;  273	*movqi/4	[length = 1]
+ 1397               	.LVL91:
+ 1398 01ac 6095      		com r22	 ;  198	one_cmplqi2	[length = 1]
+ 263:bertos/net/ax25.c **** 	ax25_putchar(ctx, crcl);
+ 1399               		.loc 1 263 0
+ 1400 01ae C601      		movw r24,r12	 ;  199	*movhi/1	[length = 1]
+ 1401 01b0 0E94 0000 		call ax25_putchar	 ;  201	call_insn/3	[length = 2]
+ 1402               	.LVL92:
+ 262:bertos/net/ax25.c **** 	uint8_t crch = (ctx->crc_out >> 8) ^ 0xff;
+ 1403               		.loc 1 262 0
+ 1404 01b4 602F      		mov r22,r16	 ;  323	*movqi/1	[length = 1]
+ 1405 01b6 6095      		com r22	 ;  204	one_cmplqi2	[length = 1]
+ 264:bertos/net/ax25.c **** 	ax25_putchar(ctx, crch);
+ 1406               		.loc 1 264 0
+ 1407 01b8 C601      		movw r24,r12	 ;  205	*movhi/1	[length = 1]
+ 1408 01ba 0E94 0000 		call ax25_putchar	 ;  207	call_insn/3	[length = 2]
+ 266:bertos/net/ax25.c **** 	ASSERT(ctx->crc_out == AX25_CRC_CORRECT);
+ 1409               		.loc 1 266 0
+ 1410 01be D701      		movw r26,r14	 ;  324	*movhi/1	[length = 1]
+ 1411 01c0 8D91      		ld r24,X+	 ;  209	*movhi/2	[length = 3]
+ 1412 01c2 9C91      		ld r25,X
+ 1413 01c4 1197      		sbiw r26,1
+ 1414 01c6 B0EF      		ldi r27,hi8(-3912)	 ;  210	*cmphi/5	[length = 3]
+ 1415 01c8 883B      		cpi r24,lo8(-3912)
+ 1416 01ca 9B07      		cpc r25,r27
+ 1417 01cc 01F0      		breq .L52	 ;  211	branch	[length = 1]
+ 266:bertos/net/ax25.c **** 	ASSERT(ctx->crc_out == AX25_CRC_CORRECT);
+ 1418               		.loc 1 266 0 is_stmt 0 discriminator 1
+ 1419 01ce 80E0      		ldi r24,lo8(__c.1792)	 ;  216	*movhi/4	[length = 2]
+ 1420 01d0 90E0      		ldi r25,hi8(__c.1792)
+ 1421 01d2 60E0      		ldi r22,lo8(__c.1794)	 ;  217	*movhi/4	[length = 2]
+ 1422 01d4 70E0      		ldi r23,hi8(__c.1794)
+ 1423 01d6 4AE0      		ldi r20,lo8(266)	 ;  218	*movhi/4	[length = 2]
+ 1424 01d8 51E0      		ldi r21,hi8(266)
+ 1425 01da 0E94 0000 		call __bassert_P	 ;  219	call_value_insn/3	[length = 2]
+ 1426               	.L52:
+ 268:bertos/net/ax25.c **** 	kfile_putc(HDLC_FLAG, ctx->ch);
+ 1427               		.loc 1 268 0 is_stmt 1
+ 1428 01de F601      		movw r30,r12	 ;  325	*movhi/1	[length = 1]
+ 1429 01e0 E65B      		subi r30,lo8(-(330))	 ;  223	*addhi3/4	[length = 2]
+ 1430 01e2 FE4F      		sbci r31,hi8(-(330))
+ 1431 01e4 6081      		ld r22,Z	 ;  224	*movhi/2	[length = 2]
+ 1432 01e6 7181      		ldd r23,Z+1
+ 1433 01e8 8EE7      		ldi r24,lo8(126)	 ;  225	*movhi/4	[length = 2]
+ 1434 01ea 90E0      		ldi r25,hi8(126)
+ 1435 01ec 0E94 0000 		call kfile_putc	 ;  227	call_value_insn/3	[length = 2]
+ 1436               	/* epilogue start */
+ 269:bertos/net/ax25.c **** }
+ 1437               		.loc 1 269 0
+ 1438 01f0 0F90      		pop __tmp_reg__	 ;  355	*addhi3_sp_R_pc2	[length = 5]
+ 1439 01f2 0F90      		pop __tmp_reg__
+ 1440 01f4 0F90      		pop __tmp_reg__
+ 1441 01f6 0F90      		pop __tmp_reg__
+ 1442 01f8 0F90      		pop __tmp_reg__
+ 1443 01fa DF91      		pop r29	 ;  356	popqi	[length = 1]
+ 1444 01fc CF91      		pop r28	 ;  357	popqi	[length = 1]
+ 1445 01fe 1F91      		pop r17	 ;  358	popqi	[length = 1]
+ 1446 0200 0F91      		pop r16	 ;  359	popqi	[length = 1]
+ 1447               	.LVL93:
+ 1448 0202 FF90      		pop r15	 ;  360	popqi	[length = 1]
+ 1449 0204 EF90      		pop r14	 ;  361	popqi	[length = 1]
+ 1450 0206 DF90      		pop r13	 ;  362	popqi	[length = 1]
+ 1451 0208 CF90      		pop r12	 ;  363	popqi	[length = 1]
+ 1452               	.LVL94:
+ 1453 020a BF90      		pop r11	 ;  364	popqi	[length = 1]
+ 1454 020c AF90      		pop r10	 ;  365	popqi	[length = 1]
+ 1455 020e 9F90      		pop r9	 ;  366	popqi	[length = 1]
+ 1456 0210 8F90      		pop r8	 ;  367	popqi	[length = 1]
+ 1457               	.LVL95:
+ 1458 0212 7F90      		pop r7	 ;  368	popqi	[length = 1]
+ 1459 0214 6F90      		pop r6	 ;  369	popqi	[length = 1]
+ 1460 0216 5F90      		pop r5	 ;  370	popqi	[length = 1]
+ 1461 0218 4F90      		pop r4	 ;  371	popqi	[length = 1]
+ 1462 021a 3F90      		pop r3	 ;  372	popqi	[length = 1]
+ 1463 021c 2F90      		pop r2	 ;  373	popqi	[length = 1]
+ 1464               	.LVL96:
+ 1465 021e 0895      		ret	 ;  374	return_from_epilogue	[length = 1]
+ 1466               		.cfi_endproc
+ 1467               	.LFE14:
+ 1469               		.data
+ 1470               	.LC4:
+ 1471 0012 3A25 2E2A 		.string	":%.*s\n"
+ 1471      730A 00
+ 1472               		.section	.text.ax25_print,"ax",@progbits
+ 1473               	.global	ax25_print
+ 1475               	ax25_print:
+ 1476               	.LFB16:
+ 277:bertos/net/ax25.c **** 
+ 278:bertos/net/ax25.c **** /**
+ 279:bertos/net/ax25.c ****  * Print a AX25 message in TNC-2 packet monitor format.
+ 280:bertos/net/ax25.c ****  * \param ch a kfile channel where the message will be printed.
+ 281:bertos/net/ax25.c ****  * \param msg the message to be printed.
+ 282:bertos/net/ax25.c ****  */
+ 283:bertos/net/ax25.c **** void ax25_print(KFile *ch, const AX25Msg *msg)
+ 284:bertos/net/ax25.c **** {
+ 1477               		.loc 1 284 0
+ 1478               		.cfi_startproc
+ 1479               	.LVL97:
+ 1480 0000 CF92      		push r12	 ;  90	*pushqi/1	[length = 1]
+ 1481               	.LCFI50:
+ 1482               		.cfi_def_cfa_offset 3
+ 1483               		.cfi_offset 12, -2
+ 1484 0002 DF92      		push r13	 ;  91	*pushqi/1	[length = 1]
+ 1485               	.LCFI51:
+ 1486               		.cfi_def_cfa_offset 4
+ 1487               		.cfi_offset 13, -3
+ 1488 0004 EF92      		push r14	 ;  92	*pushqi/1	[length = 1]
+ 1489               	.LCFI52:
+ 1490               		.cfi_def_cfa_offset 5
+ 1491               		.cfi_offset 14, -4
+ 1492 0006 FF92      		push r15	 ;  93	*pushqi/1	[length = 1]
+ 1493               	.LCFI53:
+ 1494               		.cfi_def_cfa_offset 6
+ 1495               		.cfi_offset 15, -5
+ 1496 0008 0F93      		push r16	 ;  94	*pushqi/1	[length = 1]
+ 1497               	.LCFI54:
+ 1498               		.cfi_def_cfa_offset 7
+ 1499               		.cfi_offset 16, -6
+ 1500 000a 1F93      		push r17	 ;  95	*pushqi/1	[length = 1]
+ 1501               	.LCFI55:
+ 1502               		.cfi_def_cfa_offset 8
+ 1503               		.cfi_offset 17, -7
+ 1504 000c CF93      		push r28	 ;  96	*pushqi/1	[length = 1]
+ 1505               	.LCFI56:
+ 1506               		.cfi_def_cfa_offset 9
+ 1507               		.cfi_offset 28, -8
+ 1508 000e DF93      		push r29	 ;  97	*pushqi/1	[length = 1]
+ 1509               	.LCFI57:
+ 1510               		.cfi_def_cfa_offset 10
+ 1511               		.cfi_offset 29, -9
+ 1512               	/* prologue: function */
+ 1513               	/* frame size = 0 */
+ 1514               	/* stack size = 8 */
+ 1515               	.L__stack_usage = 8
+ 1516 0010 8C01      		movw r16,r24	 ;  2	*movhi/1	[length = 1]
+ 1517 0012 7B01      		movw r14,r22	 ;  3	*movhi/1	[length = 1]
+ 285:bertos/net/ax25.c **** 	print_call(ch, &msg->src);
+ 1518               		.loc 1 285 0
+ 1519 0014 0E94 0000 		call print_call	 ;  11	call_insn/3	[length = 2]
+ 1520               	.LVL98:
+ 286:bertos/net/ax25.c **** 	kfile_putc('>', ch);
+ 1521               		.loc 1 286 0
+ 1522 0018 8EE3      		ldi r24,lo8(62)	 ;  13	*movhi/4	[length = 2]
+ 1523 001a 90E0      		ldi r25,hi8(62)
+ 1524 001c B801      		movw r22,r16	 ;  14	*movhi/1	[length = 1]
+ 1525 001e 0E94 0000 		call kfile_putc	 ;  15	call_value_insn/3	[length = 2]
+ 287:bertos/net/ax25.c **** 	print_call(ch, &msg->dst);
+ 1526               		.loc 1 287 0
+ 1527 0022 B701      		movw r22,r14	 ;  76	*movhi/1	[length = 1]
+ 1528 0024 695F      		subi r22,lo8(-(7))	 ;  17	*addhi3/4	[length = 2]
+ 1529 0026 7F4F      		sbci r23,hi8(-(7))
+ 1530 0028 C801      		movw r24,r16	 ;  18	*movhi/1	[length = 1]
+ 1531 002a 0E94 0000 		call print_call	 ;  20	call_insn/3	[length = 2]
+ 1532               	.LVL99:
+ 1533               	.LBB114:
+ 288:bertos/net/ax25.c **** 
+ 289:bertos/net/ax25.c **** 	#if CONFIG_AX25_RPT_LST
+ 290:bertos/net/ax25.c **** 	for (int i = 0; i < msg->rpt_cnt; i++)
+ 1534               		.loc 1 290 0
+ 1535 002e C0E0      		ldi r28,lo8(0)	 ;  5	*movhi/4	[length = 2]
+ 1536 0030 D0E0      		ldi r29,hi8(0)
+ 1537 0032 AEE4      		ldi r26,lo8(78)	 ;  111	*reload_inhi	[length = 3]
+ 1538 0034 CA2E      		mov r12,r26
+ 1539 0036 D12C      		mov r13,__zero_reg__
+ 1540 0038 CE0C      		add r12,r14	 ;  45	*addhi3/1	[length = 2]
+ 1541 003a DF1C      		adc r13,r15
+ 1542 003c 00C0      		rjmp .L55	 ;  112	jump	[length = 1]
+ 1543               	.LVL100:
+ 1544               	.L56:
+ 291:bertos/net/ax25.c **** 	{
+ 292:bertos/net/ax25.c **** 		kfile_putc(',', ch);
+ 1545               		.loc 1 292 0 discriminator 2
+ 1546 003e 8CE2      		ldi r24,lo8(44)	 ;  26	*movhi/4	[length = 2]
+ 1547 0040 90E0      		ldi r25,hi8(44)
+ 1548 0042 B801      		movw r22,r16	 ;  27	*movhi/1	[length = 1]
+ 1549 0044 0E94 0000 		call kfile_putc	 ;  28	call_value_insn/3	[length = 2]
+ 293:bertos/net/ax25.c **** 		print_call(ch, &msg->rpt_lst[i]);
+ 1550               		.loc 1 293 0 discriminator 2
+ 1551 0048 BE01      		movw r22,r28	 ;  78	*movhi/1	[length = 1]
+ 1552 004a F3E0      		ldi r31,3	 ;  110	*ashlhi3_const/5	[length = 5]
+ 1553 004c 660F      	1:	lsl r22
+ 1554 004e 771F      		rol r23
+ 1555 0050 FA95      		dec r31
+ 1556 0052 01F4      		brne 1b
+ 1557 0054 6C1B      		sub r22,r28	 ;  33	subhi3/1	[length = 2]
+ 1558 0056 7D0B      		sbc r23,r29
+ 1559 0058 625F      		subi r22,lo8(-(14))	 ;  34	*addhi3/4	[length = 2]
+ 1560 005a 7F4F      		sbci r23,hi8(-(14))
+ 1561 005c 6E0D      		add r22,r14	 ;  35	*addhi3/1	[length = 2]
+ 1562 005e 7F1D      		adc r23,r15
+ 1563 0060 C801      		movw r24,r16	 ;  36	*movhi/1	[length = 1]
+ 1564 0062 0E94 0000 		call print_call	 ;  38	call_insn/3	[length = 2]
+ 290:bertos/net/ax25.c **** 	for (int i = 0; i < msg->rpt_cnt; i++)
+ 1565               		.loc 1 290 0 discriminator 2
+ 1566 0066 2196      		adiw r28,1	 ;  39	*addhi3/2	[length = 1]
+ 1567               	.LVL101:
+ 1568               	.L55:
+ 290:bertos/net/ax25.c **** 	for (int i = 0; i < msg->rpt_cnt; i++)
+ 1569               		.loc 1 290 0 is_stmt 0 discriminator 1
+ 1570 0068 D601      		movw r26,r12	 ;  79	*movhi/1	[length = 1]
+ 1571 006a 8C91      		ld r24,X	 ;  46	*movqi/4	[length = 1]
+ 1572 006c 90E0      		ldi r25,lo8(0)	 ;  89	*movqi/2	[length = 1]
+ 1573 006e C817      		cp r28,r24	 ;  48	*cmphi/3	[length = 2]
+ 1574 0070 D907      		cpc r29,r25
+ 1575 0072 04F0      		brlt .L56	 ;  49	branch	[length = 1]
+ 1576               	.LBE114:
+ 294:bertos/net/ax25.c **** 		// TODO: add * to the trasmitting digi
+ 295:bertos/net/ax25.c **** 	}
+ 296:bertos/net/ax25.c **** 	#endif
+ 297:bertos/net/ax25.c **** 
+ 298:bertos/net/ax25.c **** 	kfile_printf(ch, ":%.*s\n", msg->len, msg->info);
+ 1577               		.loc 1 298 0 is_stmt 1
+ 1578 0074 EDB7      		in r30,__SP_L__	 ;  80	*movhi_sp/2	[length = 2]
+ 1579 0076 FEB7      		in r31,__SP_H__
+ 1580 0078 3897      		sbiw r30,8	 ;  51	*addhi3/3	[length = 1]
+ 1581 007a 0FB6      		in __tmp_reg__,__SREG__	 ;  81	*movhi_sp/1	[length = 5]
+ 1582 007c F894      		cli
+ 1583 007e FEBF      		out __SP_H__,r31
+ 1584 0080 0FBE      		out __SREG__,__tmp_reg__
+ 1585 0082 EDBF      		out __SP_L__,r30
+ 1586 0084 3196      		adiw r30,1	 ;  71	*addhi3/2	[length = 1]
+ 1587 0086 ADB7      		in r26,__SP_L__	 ;  83	*movhi_sp/2	[length = 2]
+ 1588 0088 BEB7      		in r27,__SP_H__
+ 1589 008a 1296      		adiw r26,1+1	 ;  53	*movhi/3	[length = 4]
+ 1590 008c 1C93      		st X,r17
+ 1591 008e 0E93      		st -X,r16
+ 1592 0090 1197      		sbiw r26,1
+ 1593 0092 80E0      		ldi r24,lo8(.LC4)	 ;  54	*movhi/4	[length = 2]
+ 1594 0094 90E0      		ldi r25,hi8(.LC4)
+ 1595 0096 9383      		std Z+3,r25	 ;  55	*movhi/3	[length = 2]
+ 1596 0098 8283      		std Z+2,r24
+ 1597 009a D701      		movw r26,r14	 ;  84	*movhi/1	[length = 1]
+ 1598 009c AC5A      		subi r26,lo8(-(84))	 ;  56	*addhi3/4	[length = 2]
+ 1599 009e BF4F      		sbci r27,hi8(-(84))
+ 1600 00a0 8D91      		ld r24,X+	 ;  57	*movhi/2	[length = 2]
+ 1601 00a2 9C91      		ld r25,X
+ 1602 00a4 9583      		std Z+5,r25	 ;  58	*movhi/3	[length = 2]
+ 1603 00a6 8483      		std Z+4,r24
+ 1604 00a8 D701      		movw r26,r14	 ;  85	*movhi/1	[length = 1]
+ 1605 00aa AE5A      		subi r26,lo8(-(82))	 ;  59	*addhi3/4	[length = 2]
+ 1606 00ac BF4F      		sbci r27,hi8(-(82))
+ 1607 00ae 8D91      		ld r24,X+	 ;  60	*movhi/2	[length = 2]
+ 1608 00b0 9C91      		ld r25,X
+ 1609 00b2 9783      		std Z+7,r25	 ;  61	*movhi/3	[length = 2]
+ 1610 00b4 8683      		std Z+6,r24
+ 1611 00b6 0E94 0000 		call kfile_printf	 ;  62	call_value_insn/3	[length = 2]
+ 1612 00ba EDB7      		in r30,__SP_L__	 ;  86	*movhi_sp/2	[length = 2]
+ 1613 00bc FEB7      		in r31,__SP_H__
+ 1614 00be 3896      		adiw r30,8	 ;  63	*addhi3/2	[length = 1]
+ 1615 00c0 0FB6      		in __tmp_reg__,__SREG__	 ;  87	*movhi_sp/1	[length = 5]
+ 1616 00c2 F894      		cli
+ 1617 00c4 FEBF      		out __SP_H__,r31
+ 1618 00c6 0FBE      		out __SREG__,__tmp_reg__
+ 1619 00c8 EDBF      		out __SP_L__,r30
+ 1620               	/* epilogue start */
+ 299:bertos/net/ax25.c **** }
+ 1621               		.loc 1 299 0
+ 1622 00ca DF91      		pop r29	 ;  100	popqi	[length = 1]
+ 1623 00cc CF91      		pop r28	 ;  101	popqi	[length = 1]
+ 1624               	.LVL102:
+ 1625 00ce 1F91      		pop r17	 ;  102	popqi	[length = 1]
+ 1626 00d0 0F91      		pop r16	 ;  103	popqi	[length = 1]
+ 1627               	.LVL103:
+ 1628 00d2 FF90      		pop r15	 ;  104	popqi	[length = 1]
+ 1629 00d4 EF90      		pop r14	 ;  105	popqi	[length = 1]
  1630               	.LVL104:
- 1631 0000 EF92      		push r14	 ;  55	*pushqi/1	[length = 1]
- 1632               	.LCFI58:
- 1633               		.cfi_def_cfa_offset 3
- 1634               		.cfi_offset 14, -2
- 1635 0002 FF92      		push r15	 ;  56	*pushqi/1	[length = 1]
- 1636               	.LCFI59:
- 1637               		.cfi_def_cfa_offset 4
- 1638               		.cfi_offset 15, -3
- 1639 0004 0F93      		push r16	 ;  57	*pushqi/1	[length = 1]
- 1640               	.LCFI60:
- 1641               		.cfi_def_cfa_offset 5
- 1642               		.cfi_offset 16, -4
- 1643 0006 1F93      		push r17	 ;  58	*pushqi/1	[length = 1]
- 1644               	.LCFI61:
- 1645               		.cfi_def_cfa_offset 6
- 1646               		.cfi_offset 17, -5
- 1647 0008 CF93      		push r28	 ;  59	*pushqi/1	[length = 1]
- 1648               	.LCFI62:
- 1649               		.cfi_def_cfa_offset 7
- 1650               		.cfi_offset 28, -6
- 1651 000a DF93      		push r29	 ;  60	*pushqi/1	[length = 1]
- 1652               	.LCFI63:
- 1653               		.cfi_def_cfa_offset 8
- 1654               		.cfi_offset 29, -7
- 1655               	/* prologue: function */
- 1656               	/* frame size = 0 */
- 1657               	/* stack size = 6 */
- 1658               	.L__stack_usage = 6
- 1659 000c EC01      		movw r28,r24	 ;  2	*movhi/1	[length = 1]
- 1660 000e 8B01      		movw r16,r22	 ;  3	*movhi/1	[length = 1]
- 1661 0010 7A01      		movw r14,r20	 ;  4	*movhi/1	[length = 1]
- 301:bertos/net/ax25.c **** 	ASSERT(ctx);
- 1662               		.loc 1 301 0
- 1663 0012 0097      		sbiw r24,0	 ;  8	*cmphi/1	[length = 1]
- 1664 0014 01F4      		brne .L58	 ;  9	branch	[length = 1]
- 1665               	.LVL105:
- 1666               		.loc 1 301 0 is_stmt 0 discriminator 1
- 1667 0016 80E0      		ldi r24,lo8(__c.1812)	 ;  14	*movhi/4	[length = 2]
- 1668 0018 90E0      		ldi r25,hi8(__c.1812)
- 1669               	.LVL106:
- 1670 001a 60E0      		ldi r22,lo8(__c.1814)	 ;  15	*movhi/4	[length = 2]
- 1671 001c 70E0      		ldi r23,hi8(__c.1814)
- 1672 001e 4DE2      		ldi r20,lo8(301)	 ;  16	*movhi/4	[length = 2]
- 1673 0020 51E0      		ldi r21,hi8(301)
- 1674 0022 0E94 0000 		call __bassert_P	 ;  17	call_value_insn/3	[length = 2]
- 1675               	.L58:
- 302:bertos/net/ax25.c **** 	ASSERT(channel);
- 1676               		.loc 1 302 0 is_stmt 1
- 1677 0026 0115      		cp r16,__zero_reg__	 ;  20	*cmphi/2	[length = 2]
- 1678 0028 1105      		cpc r17,__zero_reg__
- 1679 002a 01F4      		brne .L59	 ;  21	branch	[length = 1]
- 1680               		.loc 1 302 0 is_stmt 0 discriminator 1
- 1681 002c 80E0      		ldi r24,lo8(__c.1816)	 ;  26	*movhi/4	[length = 2]
- 1682 002e 90E0      		ldi r25,hi8(__c.1816)
- 1683 0030 60E0      		ldi r22,lo8(__c.1818)	 ;  27	*movhi/4	[length = 2]
- 1684 0032 70E0      		ldi r23,hi8(__c.1818)
- 1685 0034 4EE2      		ldi r20,lo8(302)	 ;  28	*movhi/4	[length = 2]
- 1686 0036 51E0      		ldi r21,hi8(302)
- 1687 0038 0E94 0000 		call __bassert_P	 ;  29	call_value_insn/3	[length = 2]
- 1688               	.L59:
- 303:bertos/net/ax25.c **** 
- 304:bertos/net/ax25.c **** 	memset(ctx, 0, sizeof(*ctx));
- 1689               		.loc 1 304 0 is_stmt 1
- 1690 003c 86E5      		ldi r24,lo8(342)	 ;  32	*movhi/4	[length = 2]
- 1691 003e 91E0      		ldi r25,hi8(342)
- 1692 0040 FE01      		movw r30,r28	 ;  50	*movhi/1	[length = 1]
- 1693 0042 9C01      		movw r18,r24	 ;  51	*movhi/1	[length = 1]
- 1694 0044 1192      		st Z+,__zero_reg__	 ;  34	*clrmemhi/2	[length = 4]
- 1695 0046 2150      		subi r18,1
- 1696 0048 3040      		sbci r19,0
- 1697 004a 01F4      		brne .-8
- 305:bertos/net/ax25.c **** 	ctx->ch = channel;
- 1698               		.loc 1 305 0
- 1699 004c FE01      		movw r30,r28	 ;  52	*movhi/1	[length = 1]
- 1700 004e E65B      		subi r30,lo8(-(330))	 ;  35	*addhi3/4	[length = 2]
- 1701 0050 FE4F      		sbci r31,hi8(-(330))
- 1702 0052 1183      		std Z+1,r17	 ;  36	*movhi/3	[length = 2]
- 1703 0054 0083      		st Z,r16
- 306:bertos/net/ax25.c **** 	ctx->hook = hook;
- 1704               		.loc 1 306 0
- 1705 0056 FE01      		movw r30,r28	 ;  53	*movhi/1	[length = 1]
- 1706 0058 EE5A      		subi r30,lo8(-(338))	 ;  37	*addhi3/4	[length = 2]
- 1707 005a FE4F      		sbci r31,hi8(-(338))
- 1708 005c F182      		std Z+1,r15	 ;  38	*movhi/3	[length = 2]
- 1709 005e E082      		st Z,r14
- 307:bertos/net/ax25.c **** 	ctx->crc_in = ctx->crc_out = CRC_CCITT_INIT_VAL;
- 1710               		.loc 1 307 0
- 1711 0060 FE01      		movw r30,r28	 ;  54	*movhi/1	[length = 1]
- 1712 0062 E05B      		subi r30,lo8(-(336))	 ;  39	*addhi3/4	[length = 2]
- 1713 0064 FE4F      		sbci r31,hi8(-(336))
- 1714 0066 8FEF      		ldi r24,lo8(-1)	 ;  40	*movhi/4	[length = 2]
- 1715 0068 9FEF      		ldi r25,hi8(-1)
- 1716 006a 9183      		std Z+1,r25	 ;  41	*movhi/3	[length = 2]
- 1717 006c 8083      		st Z,r24
- 1718 006e C25B      		subi r28,lo8(-(334))	 ;  42	*addhi3/4	[length = 2]
- 1719 0070 DE4F      		sbci r29,hi8(-(334))
- 1720               	.LVL107:
- 1721 0072 9983      		std Y+1,r25	 ;  44	*movhi/3	[length = 2]
- 1722 0074 8883      		st Y,r24
- 1723               	/* epilogue start */
- 308:bertos/net/ax25.c **** }
- 1724               		.loc 1 308 0
- 1725 0076 DF91      		pop r29	 ;  63	popqi	[length = 1]
- 1726 0078 CF91      		pop r28	 ;  64	popqi	[length = 1]
- 1727 007a 1F91      		pop r17	 ;  65	popqi	[length = 1]
- 1728 007c 0F91      		pop r16	 ;  66	popqi	[length = 1]
- 1729               	.LVL108:
- 1730 007e FF90      		pop r15	 ;  67	popqi	[length = 1]
- 1731 0080 EF90      		pop r14	 ;  68	popqi	[length = 1]
- 1732               	.LVL109:
- 1733 0082 0895      		ret	 ;  69	return_from_epilogue	[length = 1]
- 1734               		.cfi_endproc
- 1735               	.LFE17:
- 1737               		.section	.progmem.data,"a",@progbits
- 1740               	__c.1462:
- 1741 0000 6664 2D3E 		.string	"fd->error"
- 1741      6572 726F 
- 1741      7200 
- 1744               	__c.1464:
- 1745 000a 6265 7274 		.string	"bertos/kern/kfile.h"
- 1745      6F73 2F6B 
- 1745      6572 6E2F 
- 1745      6B66 696C 
- 1745      652E 6800 
- 1748               	__c.1735:
- 1749 001e 2573 3A20 		.string	"%s: Channel error [%04x]\n"
- 1749      4368 616E 
- 1749      6E65 6C20 
- 1749      6572 726F 
- 1749      7220 5B25 
- 1752               	__c.1469:
- 1753 0038 6664 2D3E 		.string	"fd->clearerr"
- 1753      636C 6561 
- 1753      7265 7272 
- 1753      00
- 1756               	__c.1471:
- 1757 0045 6265 7274 		.string	"bertos/kern/kfile.h"
- 1757      6F73 2F6B 
- 1757      6572 6E2F 
- 1757      6B66 696C 
- 1757      652E 6800 
- 1760               	__c.1724:
- 1761 0059 2573 3A20 		.string	"%s: Only UI frames are handled, got [%02X]\n"
- 1761      4F6E 6C79 
- 1761      2055 4920 
- 1761      6672 616D 
- 1761      6573 2061 
- 1764               	__c.1726:
- 1765 0085 2573 3A20 		.string	"%s: Only frames without layer3 protocol are handled, got [%02X]\n"
- 1765      4F6E 6C79 
- 1765      2066 7261 
- 1765      6D65 7320 
- 1765      7769 7468 
- 1768               	__c.1774:
- 1769 00c6 7061 7468 		.string	"path"
- 1769      00
- 1772               	__c.1776:
- 1773 00cb 6265 7274 		.string	"bertos/net/ax25.c"
- 1773      6F73 2F6E 
- 1773      6574 2F61 
- 1773      7832 352E 
- 1773      6300 
- 1776               	__c.1778:
- 1777 00dd 7061 7468 		.string	"path_len >= 2"
- 1777      5F6C 656E 
- 1777      203E 3D20 
- 1777      3200 
- 1780               	__c.1780:
- 1781 00eb 6265 7274 		.string	"bertos/net/ax25.c"
- 1781      6F73 2F6E 
- 1781      6574 2F61 
- 1781      7832 352E 
- 1781      6300 
- 1784               	__c.1791:
- 1785 00fd 6374 782D 		.string	"ctx->crc_out == AX25_CRC_CORRECT"
- 1785      3E63 7263 
- 1785      5F6F 7574 
- 1785      203D 3D20 
- 1785      4158 3235 
- 1788               	__c.1793:
- 1789 011e 6265 7274 		.string	"bertos/net/ax25.c"
- 1789      6F73 2F6E 
- 1789      6574 2F61 
- 1789      7832 352E 
- 1789      6300 
- 1792               	__c.1754:
- 1793 0130 6973 616C 		.string	"isalnum(c) || c == ' '"
- 1793      6E75 6D28 
- 1793      6329 207C 
- 1793      7C20 6320 
- 1793      3D3D 2027 
- 1796               	__c.1756:
- 1797 0147 6265 7274 		.string	"bertos/net/ax25.c"
- 1797      6F73 2F6E 
- 1797      6574 2F61 
- 1797      7832 352E 
- 1797      6300 
- 1800               	__c.1812:
- 1801 0159 6374 7800 		.string	"ctx"
- 1804               	__c.1814:
- 1805 015d 6265 7274 		.string	"bertos/net/ax25.c"
- 1805      6F73 2F6E 
- 1805      6574 2F61 
- 1805      7832 352E 
- 1805      6300 
- 1808               	__c.1816:
- 1809 016f 6368 616E 		.string	"channel"
- 1809      6E65 6C00 
- 1812               	__c.1818:
- 1813 0177 6265 7274 		.string	"bertos/net/ax25.c"
- 1813      6F73 2F6E 
- 1813      6574 2F61 
- 1813      7832 352E 
- 1813      6300 
- 1814               		.text
- 1815               	.Letext0:
- 1816               		.file 4 "/usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/include/stddef.h"
- 1817               		.file 5 "/usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/include/stdint.h"
- 1818               		.file 6 "bertos/cfg/macros.h"
- 1819               		.file 7 "bertos/net/ax25.h"
- 1820               		.file 8 "bertos/cfg/log.h"
- 1821               		.file 9 "bertos/cpu/types.h"
+ 1631 00d6 DF90      		pop r13	 ;  106	popqi	[length = 1]
+ 1632 00d8 CF90      		pop r12	 ;  107	popqi	[length = 1]
+ 1633 00da 0895      		ret	 ;  108	return_from_epilogue	[length = 1]
+ 1634               		.cfi_endproc
+ 1635               	.LFE16:
+ 1637               		.section	.text.ax25_init,"ax",@progbits
+ 1638               	.global	ax25_init
+ 1640               	ax25_init:
+ 1641               	.LFB17:
+ 300:bertos/net/ax25.c **** 
+ 301:bertos/net/ax25.c **** 
+ 302:bertos/net/ax25.c **** /**
+ 303:bertos/net/ax25.c ****  * Init the AX25 protocol decoder.
+ 304:bertos/net/ax25.c ****  *
+ 305:bertos/net/ax25.c ****  * \param ctx AX25 context to init.
+ 306:bertos/net/ax25.c ****  * \param channel Used to gain access to the physical medium
+ 307:bertos/net/ax25.c ****  * \param hook Callback function called when a message is received
+ 308:bertos/net/ax25.c ****  */
+ 309:bertos/net/ax25.c **** void ax25_init(AX25Ctx *ctx, KFile *channel, ax25_callback_t hook)
+ 310:bertos/net/ax25.c **** {
+ 1642               		.loc 1 310 0
+ 1643               		.cfi_startproc
+ 1644               	.LVL105:
+ 1645 0000 EF92      		push r14	 ;  55	*pushqi/1	[length = 1]
+ 1646               	.LCFI58:
+ 1647               		.cfi_def_cfa_offset 3
+ 1648               		.cfi_offset 14, -2
+ 1649 0002 FF92      		push r15	 ;  56	*pushqi/1	[length = 1]
+ 1650               	.LCFI59:
+ 1651               		.cfi_def_cfa_offset 4
+ 1652               		.cfi_offset 15, -3
+ 1653 0004 0F93      		push r16	 ;  57	*pushqi/1	[length = 1]
+ 1654               	.LCFI60:
+ 1655               		.cfi_def_cfa_offset 5
+ 1656               		.cfi_offset 16, -4
+ 1657 0006 1F93      		push r17	 ;  58	*pushqi/1	[length = 1]
+ 1658               	.LCFI61:
+ 1659               		.cfi_def_cfa_offset 6
+ 1660               		.cfi_offset 17, -5
+ 1661 0008 CF93      		push r28	 ;  59	*pushqi/1	[length = 1]
+ 1662               	.LCFI62:
+ 1663               		.cfi_def_cfa_offset 7
+ 1664               		.cfi_offset 28, -6
+ 1665 000a DF93      		push r29	 ;  60	*pushqi/1	[length = 1]
+ 1666               	.LCFI63:
+ 1667               		.cfi_def_cfa_offset 8
+ 1668               		.cfi_offset 29, -7
+ 1669               	/* prologue: function */
+ 1670               	/* frame size = 0 */
+ 1671               	/* stack size = 6 */
+ 1672               	.L__stack_usage = 6
+ 1673 000c EC01      		movw r28,r24	 ;  2	*movhi/1	[length = 1]
+ 1674 000e 8B01      		movw r16,r22	 ;  3	*movhi/1	[length = 1]
+ 1675 0010 7A01      		movw r14,r20	 ;  4	*movhi/1	[length = 1]
+ 311:bertos/net/ax25.c **** 	ASSERT(ctx);
+ 1676               		.loc 1 311 0
+ 1677 0012 0097      		sbiw r24,0	 ;  8	*cmphi/1	[length = 1]
+ 1678 0014 01F4      		brne .L58	 ;  9	branch	[length = 1]
+ 1679               	.LVL106:
+ 1680               		.loc 1 311 0 is_stmt 0 discriminator 1
+ 1681 0016 80E0      		ldi r24,lo8(__c.1813)	 ;  14	*movhi/4	[length = 2]
+ 1682 0018 90E0      		ldi r25,hi8(__c.1813)
+ 1683               	.LVL107:
+ 1684 001a 60E0      		ldi r22,lo8(__c.1815)	 ;  15	*movhi/4	[length = 2]
+ 1685 001c 70E0      		ldi r23,hi8(__c.1815)
+ 1686 001e 47E3      		ldi r20,lo8(311)	 ;  16	*movhi/4	[length = 2]
+ 1687 0020 51E0      		ldi r21,hi8(311)
+ 1688 0022 0E94 0000 		call __bassert_P	 ;  17	call_value_insn/3	[length = 2]
+ 1689               	.L58:
+ 312:bertos/net/ax25.c **** 	ASSERT(channel);
+ 1690               		.loc 1 312 0 is_stmt 1
+ 1691 0026 0115      		cp r16,__zero_reg__	 ;  20	*cmphi/2	[length = 2]
+ 1692 0028 1105      		cpc r17,__zero_reg__
+ 1693 002a 01F4      		brne .L59	 ;  21	branch	[length = 1]
+ 1694               		.loc 1 312 0 is_stmt 0 discriminator 1
+ 1695 002c 80E0      		ldi r24,lo8(__c.1817)	 ;  26	*movhi/4	[length = 2]
+ 1696 002e 90E0      		ldi r25,hi8(__c.1817)
+ 1697 0030 60E0      		ldi r22,lo8(__c.1819)	 ;  27	*movhi/4	[length = 2]
+ 1698 0032 70E0      		ldi r23,hi8(__c.1819)
+ 1699 0034 48E3      		ldi r20,lo8(312)	 ;  28	*movhi/4	[length = 2]
+ 1700 0036 51E0      		ldi r21,hi8(312)
+ 1701 0038 0E94 0000 		call __bassert_P	 ;  29	call_value_insn/3	[length = 2]
+ 1702               	.L59:
+ 313:bertos/net/ax25.c **** 
+ 314:bertos/net/ax25.c **** 	memset(ctx, 0, sizeof(*ctx));
+ 1703               		.loc 1 314 0 is_stmt 1
+ 1704 003c 86E5      		ldi r24,lo8(342)	 ;  32	*movhi/4	[length = 2]
+ 1705 003e 91E0      		ldi r25,hi8(342)
+ 1706 0040 FE01      		movw r30,r28	 ;  50	*movhi/1	[length = 1]
+ 1707 0042 9C01      		movw r18,r24	 ;  51	*movhi/1	[length = 1]
+ 1708 0044 1192      		st Z+,__zero_reg__	 ;  34	*clrmemhi/2	[length = 4]
+ 1709 0046 2150      		subi r18,1
+ 1710 0048 3040      		sbci r19,0
+ 1711 004a 01F4      		brne .-8
+ 315:bertos/net/ax25.c **** 	ctx->ch = channel;
+ 1712               		.loc 1 315 0
+ 1713 004c FE01      		movw r30,r28	 ;  52	*movhi/1	[length = 1]
+ 1714 004e E65B      		subi r30,lo8(-(330))	 ;  35	*addhi3/4	[length = 2]
+ 1715 0050 FE4F      		sbci r31,hi8(-(330))
+ 1716 0052 1183      		std Z+1,r17	 ;  36	*movhi/3	[length = 2]
+ 1717 0054 0083      		st Z,r16
+ 316:bertos/net/ax25.c **** 	ctx->hook = hook;
+ 1718               		.loc 1 316 0
+ 1719 0056 FE01      		movw r30,r28	 ;  53	*movhi/1	[length = 1]
+ 1720 0058 EE5A      		subi r30,lo8(-(338))	 ;  37	*addhi3/4	[length = 2]
+ 1721 005a FE4F      		sbci r31,hi8(-(338))
+ 1722 005c F182      		std Z+1,r15	 ;  38	*movhi/3	[length = 2]
+ 1723 005e E082      		st Z,r14
+ 317:bertos/net/ax25.c **** 	ctx->crc_in = ctx->crc_out = CRC_CCITT_INIT_VAL;
+ 1724               		.loc 1 317 0
+ 1725 0060 FE01      		movw r30,r28	 ;  54	*movhi/1	[length = 1]
+ 1726 0062 E05B      		subi r30,lo8(-(336))	 ;  39	*addhi3/4	[length = 2]
+ 1727 0064 FE4F      		sbci r31,hi8(-(336))
+ 1728 0066 8FEF      		ldi r24,lo8(-1)	 ;  40	*movhi/4	[length = 2]
+ 1729 0068 9FEF      		ldi r25,hi8(-1)
+ 1730 006a 9183      		std Z+1,r25	 ;  41	*movhi/3	[length = 2]
+ 1731 006c 8083      		st Z,r24
+ 1732 006e C25B      		subi r28,lo8(-(334))	 ;  42	*addhi3/4	[length = 2]
+ 1733 0070 DE4F      		sbci r29,hi8(-(334))
+ 1734               	.LVL108:
+ 1735 0072 9983      		std Y+1,r25	 ;  44	*movhi/3	[length = 2]
+ 1736 0074 8883      		st Y,r24
+ 1737               	/* epilogue start */
+ 318:bertos/net/ax25.c **** }
+ 1738               		.loc 1 318 0
+ 1739 0076 DF91      		pop r29	 ;  63	popqi	[length = 1]
+ 1740 0078 CF91      		pop r28	 ;  64	popqi	[length = 1]
+ 1741 007a 1F91      		pop r17	 ;  65	popqi	[length = 1]
+ 1742 007c 0F91      		pop r16	 ;  66	popqi	[length = 1]
+ 1743               	.LVL109:
+ 1744 007e FF90      		pop r15	 ;  67	popqi	[length = 1]
+ 1745 0080 EF90      		pop r14	 ;  68	popqi	[length = 1]
+ 1746               	.LVL110:
+ 1747 0082 0895      		ret	 ;  69	return_from_epilogue	[length = 1]
+ 1748               		.cfi_endproc
+ 1749               	.LFE17:
+ 1751               		.section	.progmem.data,"a",@progbits
+ 1754               	__c.1462:
+ 1755 0000 6664 2D3E 		.string	"fd->error"
+ 1755      6572 726F 
+ 1755      7200 
+ 1758               	__c.1464:
+ 1759 000a 6265 7274 		.string	"bertos/kern/kfile.h"
+ 1759      6F73 2F6B 
+ 1759      6572 6E2F 
+ 1759      6B66 696C 
+ 1759      652E 6800 
+ 1762               	__c.1736:
+ 1763 001e 2573 3A20 		.string	"%s: Channel error [%04x]\n"
+ 1763      4368 616E 
+ 1763      6E65 6C20 
+ 1763      6572 726F 
+ 1763      7220 5B25 
+ 1766               	__c.1469:
+ 1767 0038 6664 2D3E 		.string	"fd->clearerr"
+ 1767      636C 6561 
+ 1767      7265 7272 
+ 1767      00
+ 1770               	__c.1471:
+ 1771 0045 6265 7274 		.string	"bertos/kern/kfile.h"
+ 1771      6F73 2F6B 
+ 1771      6572 6E2F 
+ 1771      6B66 696C 
+ 1771      652E 6800 
+ 1774               	__c.1725:
+ 1775 0059 2573 3A20 		.string	"%s: Only UI frames are handled, got [%02X]\n"
+ 1775      4F6E 6C79 
+ 1775      2055 4920 
+ 1775      6672 616D 
+ 1775      6573 2061 
+ 1778               	__c.1727:
+ 1779 0085 2573 3A20 		.string	"%s: Only frames without layer3 protocol are handled, got [%02X]\n"
+ 1779      4F6E 6C79 
+ 1779      2066 7261 
+ 1779      6D65 7320 
+ 1779      7769 7468 
+ 1782               	__c.1775:
+ 1783 00c6 7061 7468 		.string	"path"
+ 1783      00
+ 1786               	__c.1777:
+ 1787 00cb 6265 7274 		.string	"bertos/net/ax25.c"
+ 1787      6F73 2F6E 
+ 1787      6574 2F61 
+ 1787      7832 352E 
+ 1787      6300 
+ 1790               	__c.1779:
+ 1791 00dd 7061 7468 		.string	"path_len >= 2"
+ 1791      5F6C 656E 
+ 1791      203E 3D20 
+ 1791      3200 
+ 1794               	__c.1781:
+ 1795 00eb 6265 7274 		.string	"bertos/net/ax25.c"
+ 1795      6F73 2F6E 
+ 1795      6574 2F61 
+ 1795      7832 352E 
+ 1795      6300 
+ 1798               	__c.1792:
+ 1799 00fd 6374 782D 		.string	"ctx->crc_out == AX25_CRC_CORRECT"
+ 1799      3E63 7263 
+ 1799      5F6F 7574 
+ 1799      203D 3D20 
+ 1799      4158 3235 
+ 1802               	__c.1794:
+ 1803 011e 6265 7274 		.string	"bertos/net/ax25.c"
+ 1803      6F73 2F6E 
+ 1803      6574 2F61 
+ 1803      7832 352E 
+ 1803      6300 
+ 1806               	__c.1755:
+ 1807 0130 6973 616C 		.string	"isalnum(c) || c == ' '"
+ 1807      6E75 6D28 
+ 1807      6329 207C 
+ 1807      7C20 6320 
+ 1807      3D3D 2027 
+ 1810               	__c.1757:
+ 1811 0147 6265 7274 		.string	"bertos/net/ax25.c"
+ 1811      6F73 2F6E 
+ 1811      6574 2F61 
+ 1811      7832 352E 
+ 1811      6300 
+ 1814               	__c.1813:
+ 1815 0159 6374 7800 		.string	"ctx"
+ 1818               	__c.1815:
+ 1819 015d 6265 7274 		.string	"bertos/net/ax25.c"
+ 1819      6F73 2F6E 
+ 1819      6574 2F61 
+ 1819      7832 352E 
+ 1819      6300 
+ 1822               	__c.1817:
+ 1823 016f 6368 616E 		.string	"channel"
+ 1823      6E65 6C00 
+ 1826               	__c.1819:
+ 1827 0177 6265 7274 		.string	"bertos/net/ax25.c"
+ 1827      6F73 2F6E 
+ 1827      6574 2F61 
+ 1827      7832 352E 
+ 1827      6300 
+ 1828               		.text
+ 1829               	.Letext0:
+ 1830               		.file 4 "/usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/include/stddef.h"
+ 1831               		.file 5 "/usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/include/stdint.h"
+ 1832               		.file 6 "bertos/cfg/macros.h"
+ 1833               		.file 7 "bertos/net/ax25.h"
+ 1834               		.file 8 "bertos/cfg/log.h"
+ 1835               		.file 9 "bertos/cpu/types.h"
 DEFINED SYMBOLS
                             *ABS*:00000000 ax25.c
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cc6HqIys.s:2      *ABS*:0000003f __SREG__
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cc6HqIys.s:3      *ABS*:0000003e __SP_H__
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cc6HqIys.s:4      *ABS*:0000003d __SP_L__
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cc6HqIys.s:5      *ABS*:00000034 __CCP__
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cc6HqIys.s:6      *ABS*:00000000 __tmp_reg__
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cc6HqIys.s:7      *ABS*:00000001 __zero_reg__
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cc6HqIys.s:15     .text.ax25_putchar:00000000 ax25_putchar
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cc6HqIys.s:130    .text.print_call:00000000 print_call
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cc6HqIys.s:248    .text.ax25_poll:00000000 ax25_poll
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cc6HqIys.s:1760   .progmem.data:00000059 __c.1724
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cc6HqIys.s:1764   .progmem.data:00000085 __c.1726
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cc6HqIys.s:1740   .progmem.data:00000000 __c.1462
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cc6HqIys.s:1744   .progmem.data:0000000a __c.1464
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cc6HqIys.s:1748   .progmem.data:0000001e __c.1735
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cc6HqIys.s:1752   .progmem.data:00000038 __c.1469
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cc6HqIys.s:1756   .progmem.data:00000045 __c.1471
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cc6HqIys.s:1025   .text.ax25_sendVia:00000000 ax25_sendVia
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cc6HqIys.s:1768   .progmem.data:000000c6 __c.1774
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cc6HqIys.s:1772   .progmem.data:000000cb __c.1776
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cc6HqIys.s:1776   .progmem.data:000000dd __c.1778
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cc6HqIys.s:1780   .progmem.data:000000eb __c.1780
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cc6HqIys.s:1792   .progmem.data:00000130 __c.1754
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cc6HqIys.s:1796   .progmem.data:00000147 __c.1756
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cc6HqIys.s:1784   .progmem.data:000000fd __c.1791
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cc6HqIys.s:1788   .progmem.data:0000011e __c.1793
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cc6HqIys.s:1461   .text.ax25_print:00000000 ax25_print
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cc6HqIys.s:1626   .text.ax25_init:00000000 ax25_init
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cc6HqIys.s:1800   .progmem.data:00000159 __c.1812
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cc6HqIys.s:1804   .progmem.data:0000015d __c.1814
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cc6HqIys.s:1808   .progmem.data:0000016f __c.1816
-/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//cc6HqIys.s:1812   .progmem.data:00000177 __c.1818
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccPNMbb6.s:2      *ABS*:0000003f __SREG__
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccPNMbb6.s:3      *ABS*:0000003e __SP_H__
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccPNMbb6.s:4      *ABS*:0000003d __SP_L__
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccPNMbb6.s:5      *ABS*:00000034 __CCP__
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccPNMbb6.s:6      *ABS*:00000000 __tmp_reg__
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccPNMbb6.s:7      *ABS*:00000001 __zero_reg__
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccPNMbb6.s:15     .text.ax25_putchar:00000000 ax25_putchar
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccPNMbb6.s:130    .text.print_call:00000000 print_call
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccPNMbb6.s:248    .text.ax25_poll:00000000 ax25_poll
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccPNMbb6.s:1774   .progmem.data:00000059 __c.1725
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccPNMbb6.s:1778   .progmem.data:00000085 __c.1727
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccPNMbb6.s:1754   .progmem.data:00000000 __c.1462
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccPNMbb6.s:1758   .progmem.data:0000000a __c.1464
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccPNMbb6.s:1762   .progmem.data:0000001e __c.1736
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccPNMbb6.s:1766   .progmem.data:00000038 __c.1469
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccPNMbb6.s:1770   .progmem.data:00000045 __c.1471
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccPNMbb6.s:1039   .text.ax25_sendVia:00000000 ax25_sendVia
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccPNMbb6.s:1782   .progmem.data:000000c6 __c.1775
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccPNMbb6.s:1786   .progmem.data:000000cb __c.1777
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccPNMbb6.s:1790   .progmem.data:000000dd __c.1779
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccPNMbb6.s:1794   .progmem.data:000000eb __c.1781
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccPNMbb6.s:1806   .progmem.data:00000130 __c.1755
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccPNMbb6.s:1810   .progmem.data:00000147 __c.1757
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccPNMbb6.s:1798   .progmem.data:000000fd __c.1792
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccPNMbb6.s:1802   .progmem.data:0000011e __c.1794
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccPNMbb6.s:1475   .text.ax25_print:00000000 ax25_print
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccPNMbb6.s:1640   .text.ax25_init:00000000 ax25_init
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccPNMbb6.s:1814   .progmem.data:00000159 __c.1813
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccPNMbb6.s:1818   .progmem.data:0000015d __c.1815
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccPNMbb6.s:1822   .progmem.data:0000016f __c.1817
+/var/folders/yq/1c5lpctj6dd1dv230ntn69lm0000gn/T//ccPNMbb6.s:1826   .progmem.data:00000177 __c.1819
 
 UNDEFINED SYMBOLS
 __do_copy_data

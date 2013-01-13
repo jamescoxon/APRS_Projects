@@ -60,10 +60,6 @@ Archive member included because of file (symbol)
                               /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libc.a(isalnum.o) (isalpha)
 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libc.a(toupper.o)
                               obj/aprs/bertos/net/ax25.o (toupper)
-/usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libc.a(strcat.o)
-                              obj/aprs/aprs/main.o (strcat)
-/usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libc.a(strncat.o)
-                              obj/aprs/aprs/main.o (strncat)
 
 Allocating common symbols
 Common symbol       size              file
@@ -239,10 +235,6 @@ Discarded input sections
  .bss           0x00000000        0x0 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libc.a(toupper.o)
  .text.avr-libc
                 0x00000000       0x10 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libc.a(toupper.o)
- .text          0x00000000        0x0 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libc.a(strcat.o)
- .bss           0x00000000        0x0 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libc.a(strcat.o)
- .text          0x00000000        0x0 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libc.a(strncat.o)
- .bss           0x00000000        0x0 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libc.a(strncat.o)
 
 Memory Configuration
 
@@ -369,7 +361,7 @@ LOAD /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/avr5/libgcc.a
 .rela.plt
  *(.rela.plt)
 
-.text           0x00000000     0x50de
+.text           0x00000000     0x4fbe
  *(.vectors)
  .vectors       0x00000000       0x68 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/crtm328p.o
                 0x00000000                __vectors
@@ -493,217 +485,208 @@ LOAD /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/avr5/libgcc.a
                 0x0000133a      0x11e obj/aprs/bertos/net/afsk.o
                 0x0000133a                afsk_init
  .text.ax25_poll
-                0x00001458      0x408 obj/aprs/bertos/net/ax25.o
+                0x00001458      0x420 obj/aprs/bertos/net/ax25.o
                 0x00001458                ax25_poll
  .text.ax25_init
-                0x00001860       0x84 obj/aprs/bertos/net/ax25.o
-                0x00001860                ax25_init
+                0x00001878       0x84 obj/aprs/bertos/net/ax25.o
+                0x00001878                ax25_init
  .text._formatted_write
-                0x000018e4     0x1084 obj/aprs/bertos/mware/formatwr.o
-                0x000018e4                _formatted_write
+                0x000018fc     0x1084 obj/aprs/bertos/mware/formatwr.o
+                0x000018fc                _formatted_write
  .text.__vector_14
-                0x00002968      0x104 obj/aprs/bertos/drv/timer.o
-                0x00002968                __vector_14
+                0x00002980      0x104 obj/aprs/bertos/drv/timer.o
+                0x00002980                __vector_14
  .text.timer_init
-                0x00002a6c       0x5e obj/aprs/bertos/drv/timer.o
-                0x00002a6c                timer_init
+                0x00002a84       0x5e obj/aprs/bertos/drv/timer.o
+                0x00002a84                timer_init
  .text.uart0_init
-                0x00002aca        0x8 obj/aprs/bertos/cpu/avr/drv/ser_avr.o
+                0x00002ae2        0x8 obj/aprs/bertos/cpu/avr/drv/ser_avr.o
  .text.uart0_cleanup
-                0x00002ad2        0x6 obj/aprs/bertos/cpu/avr/drv/ser_avr.o
+                0x00002aea        0x6 obj/aprs/bertos/cpu/avr/drv/ser_avr.o
  .text.uart0_enabletxirq
-                0x00002ad8       0x14 obj/aprs/bertos/cpu/avr/drv/ser_avr.o
+                0x00002af0       0x14 obj/aprs/bertos/cpu/avr/drv/ser_avr.o
  .text.uart0_setbaudrate
-                0x00002aec       0x2e obj/aprs/bertos/cpu/avr/drv/ser_avr.o
+                0x00002b04       0x2e obj/aprs/bertos/cpu/avr/drv/ser_avr.o
  .text.uart0_setparity
-                0x00002b1a       0x18 obj/aprs/bertos/cpu/avr/drv/ser_avr.o
+                0x00002b32       0x18 obj/aprs/bertos/cpu/avr/drv/ser_avr.o
  .text.spi_init
-                0x00002b32       0x2e obj/aprs/bertos/cpu/avr/drv/ser_avr.o
+                0x00002b4a       0x2e obj/aprs/bertos/cpu/avr/drv/ser_avr.o
  .text.spi_cleanup
-                0x00002b60       0x10 obj/aprs/bertos/cpu/avr/drv/ser_avr.o
+                0x00002b78       0x10 obj/aprs/bertos/cpu/avr/drv/ser_avr.o
  .text.spi_setbaudrate
-                0x00002b70        0x2 obj/aprs/bertos/cpu/avr/drv/ser_avr.o
+                0x00002b88        0x2 obj/aprs/bertos/cpu/avr/drv/ser_avr.o
  .text.spi_setparity
-                0x00002b72        0x2 obj/aprs/bertos/cpu/avr/drv/ser_avr.o
+                0x00002b8a        0x2 obj/aprs/bertos/cpu/avr/drv/ser_avr.o
  .text.tx_sending
-                0x00002b74        0x6 obj/aprs/bertos/cpu/avr/drv/ser_avr.o
+                0x00002b8c        0x6 obj/aprs/bertos/cpu/avr/drv/ser_avr.o
  .text.spi_starttx
-                0x00002b7a       0x56 obj/aprs/bertos/cpu/avr/drv/ser_avr.o
+                0x00002b92       0x56 obj/aprs/bertos/cpu/avr/drv/ser_avr.o
  .text.ser_hw_getdesc
-                0x00002bd0       0x38 obj/aprs/bertos/cpu/avr/drv/ser_avr.o
-                0x00002bd0                ser_hw_getdesc
+                0x00002be8       0x38 obj/aprs/bertos/cpu/avr/drv/ser_avr.o
+                0x00002be8                ser_hw_getdesc
  .text.__vector_19
-                0x00002c08       0x7e obj/aprs/bertos/cpu/avr/drv/ser_avr.o
-                0x00002c08                __vector_19
+                0x00002c20       0x7e obj/aprs/bertos/cpu/avr/drv/ser_avr.o
+                0x00002c20                __vector_19
  .text.__vector_18
-                0x00002c86       0xac obj/aprs/bertos/cpu/avr/drv/ser_avr.o
-                0x00002c86                __vector_18
+                0x00002c9e       0xac obj/aprs/bertos/cpu/avr/drv/ser_avr.o
+                0x00002c9e                __vector_18
  .text.__vector_17
-                0x00002d32       0xec obj/aprs/bertos/cpu/avr/drv/ser_avr.o
-                0x00002d32                __vector_17
+                0x00002d4a       0xec obj/aprs/bertos/cpu/avr/drv/ser_avr.o
+                0x00002d4a                __vector_17
  .text.ser_putchar
-                0x00002e1e       0x9a obj/aprs/bertos/drv/ser.o
+                0x00002e36       0x9a obj/aprs/bertos/drv/ser.o
  .text.ser_getchar
-                0x00002eb8       0x6a obj/aprs/bertos/drv/ser.o
+                0x00002ed0       0x6a obj/aprs/bertos/drv/ser.o
  .text.ser_read
-                0x00002f22       0x7c obj/aprs/bertos/drv/ser.o
+                0x00002f3a       0x7c obj/aprs/bertos/drv/ser.o
  .text.ser_write
-                0x00002f9e       0x7e obj/aprs/bertos/drv/ser.o
+                0x00002fb6       0x7e obj/aprs/bertos/drv/ser.o
  .text.ser_error
-                0x0000301c       0x38 obj/aprs/bertos/drv/ser.o
+                0x00003034       0x38 obj/aprs/bertos/drv/ser.o
  .text.ser_clearerr
-                0x00003054       0x36 obj/aprs/bertos/drv/ser.o
+                0x0000306c       0x36 obj/aprs/bertos/drv/ser.o
  .text.ser_flush
-                0x0000308a       0x5c obj/aprs/bertos/drv/ser.o
+                0x000030a2       0x5c obj/aprs/bertos/drv/ser.o
  .text.ser_open
-                0x000030e6      0x15e obj/aprs/bertos/drv/ser.o
+                0x000030fe      0x15e obj/aprs/bertos/drv/ser.o
  .text.ser_setbaudrate
-                0x00003244       0x1a obj/aprs/bertos/drv/ser.o
-                0x00003244                ser_setbaudrate
+                0x0000325c       0x1a obj/aprs/bertos/drv/ser.o
+                0x0000325c                ser_setbaudrate
  .text.ser_purgeRx
-                0x0000325e       0x12 obj/aprs/bertos/drv/ser.o
-                0x0000325e                ser_purgeRx
+                0x00003276       0x12 obj/aprs/bertos/drv/ser.o
+                0x00003276                ser_purgeRx
  .text.ser_purgeTx
-                0x00003270       0x12 obj/aprs/bertos/drv/ser.o
-                0x00003270                ser_purgeTx
+                0x00003288       0x12 obj/aprs/bertos/drv/ser.o
+                0x00003288                ser_purgeTx
  .text.ser_purge
-                0x00003282       0x16 obj/aprs/bertos/drv/ser.o
-                0x00003282                ser_purge
+                0x0000329a       0x16 obj/aprs/bertos/drv/ser.o
+                0x0000329a                ser_purge
  .text.ser_close
-                0x00003298       0x72 obj/aprs/bertos/drv/ser.o
+                0x000032b0       0x72 obj/aprs/bertos/drv/ser.o
  .text.ser_reopen
-                0x0000330a       0x46 obj/aprs/bertos/drv/ser.o
+                0x00003322       0x46 obj/aprs/bertos/drv/ser.o
  .text.ser_init
-                0x00003350       0x5c obj/aprs/bertos/drv/ser.o
-                0x00003350                ser_init
- .text.KISS_ify
-                0x000033ac       0x6a obj/aprs/aprs/main.o
-                0x000033ac                KISS_ify
+                0x00003368       0x5c obj/aprs/bertos/drv/ser.o
+                0x00003368                ser_init
  .text.message_callback
-                0x00003416      0x224 obj/aprs/aprs/main.o
+                0x000033c4      0x18c obj/aprs/aprs/main.o
  .text.startup.main
-                0x0000363a      0x124 obj/aprs/aprs/main.o
-                0x0000363a                main
+                0x00003550      0x124 obj/aprs/aprs/main.o
+                0x00003550                main
  .text.hw_afsk_adcInit
-                0x0000375e       0x80 obj/aprs/aprs/hw/hw_afsk.o
-                0x0000375e                hw_afsk_adcInit
+                0x00003674       0x80 obj/aprs/aprs/hw/hw_afsk.o
+                0x00003674                hw_afsk_adcInit
  .text.__vector_21
-                0x000037de       0x82 obj/aprs/aprs/hw/hw_afsk.o
-                0x000037de                __vector_21
+                0x000036f4       0x82 obj/aprs/aprs/hw/hw_afsk.o
+                0x000036f4                __vector_21
  .text._formatted_write_P
-                0x00003860     0x1140 obj/aprs/bertos/mware/formatwr_P.o
-                0x00003860                _formatted_write_P
+                0x00003776     0x1140 obj/aprs/bertos/mware/formatwr_P.o
+                0x00003776                _formatted_write_P
  .text.__kputchar
-                0x000049a0       0x34 obj/aprs/bertos/drv/kdebug_P.o
+                0x000048b6       0x34 obj/aprs/bertos/drv/kdebug_P.o
  .text.kvprintf_P
-                0x000049d4       0x38 obj/aprs/bertos/drv/kdebug_P.o
+                0x000048ea       0x38 obj/aprs/bertos/drv/kdebug_P.o
  .text.kputchar
-                0x00004a0c       0x32 obj/aprs/bertos/drv/kdebug_P.o
-                0x00004a0c                kputchar
+                0x00004922       0x32 obj/aprs/bertos/drv/kdebug_P.o
+                0x00004922                kputchar
  .text.kprintf_P
-                0x00004a3e       0x1c obj/aprs/bertos/drv/kdebug_P.o
-                0x00004a3e                kprintf_P
- .text.kputs_P  0x00004a5a       0x48 obj/aprs/bertos/drv/kdebug_P.o
-                0x00004a5a                kputs_P
+                0x00004954       0x1c obj/aprs/bertos/drv/kdebug_P.o
+                0x00004954                kprintf_P
+ .text.kputs_P  0x00004970       0x48 obj/aprs/bertos/drv/kdebug_P.o
+                0x00004970                kputs_P
  .text.kdbg_init
-                0x00004aa2       0x1a obj/aprs/bertos/drv/kdebug_P.o
-                0x00004aa2                kdbg_init
- .text.kputnum  0x00004abc       0x80 obj/aprs/bertos/drv/kdebug_P.o
-                0x00004abc                kputnum
+                0x000049b8       0x1a obj/aprs/bertos/drv/kdebug_P.o
+                0x000049b8                kdbg_init
+ .text.kputnum  0x000049d2       0x80 obj/aprs/bertos/drv/kdebug_P.o
+                0x000049d2                kputnum
  .text.klocation
-                0x00004b3c       0x24 obj/aprs/bertos/drv/kdebug_P.o
+                0x00004a52       0x24 obj/aprs/bertos/drv/kdebug_P.o
  .text.__bassert_P
-                0x00004b60       0x2c obj/aprs/bertos/drv/kdebug_P.o
-                0x00004b60                __bassert_P
+                0x00004a76       0x2c obj/aprs/bertos/drv/kdebug_P.o
+                0x00004a76                __bassert_P
  .text.__invalid_ptr_P
-                0x00004b8c       0x50 obj/aprs/bertos/drv/kdebug_P.o
-                0x00004b8c                __invalid_ptr_P
+                0x00004aa2       0x50 obj/aprs/bertos/drv/kdebug_P.o
+                0x00004aa2                __invalid_ptr_P
  .text.avr-libc.fplib
-                0x00004bdc        0xa /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libm.a(addsf3.o)
-                0x00004bdc                __subsf3
-                0x00004bde                __addsf3
+                0x00004af2        0xa /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libm.a(addsf3.o)
+                0x00004af2                __subsf3
+                0x00004af4                __addsf3
  .text.avr-libc.fplib
-                0x00004be6       0xc0 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libm.a(addsf3x.o)
-                0x00004c00                __addsf3x
+                0x00004afc       0xc0 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libm.a(addsf3x.o)
+                0x00004b16                __addsf3x
  .text.avr-libc.fplib
-                0x00004ca6        0x8 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libm.a(cmpsf2.o)
-                0x00004ca6                __lesf2
-                0x00004ca6                __nesf2
-                0x00004ca6                __eqsf2
-                0x00004ca6                __cmpsf2
-                0x00004ca6                __ltsf2
+                0x00004bbc        0x8 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libm.a(cmpsf2.o)
+                0x00004bbc                __lesf2
+                0x00004bbc                __nesf2
+                0x00004bbc                __eqsf2
+                0x00004bbc                __cmpsf2
+                0x00004bbc                __ltsf2
  .text.avr-libc.fplib
-                0x00004cae        0x4 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libm.a(divsf3.o)
-                0x00004cae                __divsf3
+                0x00004bc4        0x4 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libm.a(divsf3.o)
+                0x00004bc4                __divsf3
  .text.avr-libc.fplib
-                0x00004cb2       0xcc /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libm.a(divsf3x.o)
-                0x00004cc8                __divsf3x
-                0x00004ccc                __divsf3_pse
+                0x00004bc8       0xcc /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libm.a(divsf3x.o)
+                0x00004bde                __divsf3x
+                0x00004be2                __divsf3_pse
  .text.avr-libc.fplib
-                0x00004d7e        0xa /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libm.a(fixsfsi.o)
-                0x00004d7e                __fixsfsi
+                0x00004c94        0xa /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libm.a(fixsfsi.o)
+                0x00004c94                __fixsfsi
  .text.avr-libc.fplib
-                0x00004d88       0x58 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libm.a(fixunssfsi.o)
-                0x00004d88                __fixunssfsi
+                0x00004c9e       0x58 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libm.a(fixunssfsi.o)
+                0x00004c9e                __fixunssfsi
  .text.avr-libc.fplib
-                0x00004de0       0x7a /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libm.a(floatsisf.o)
-                0x00004de0                __floatunsisf
-                0x00004de4                __floatsisf
+                0x00004cf6       0x7a /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libm.a(floatsisf.o)
+                0x00004cf6                __floatunsisf
+                0x00004cfa                __floatsisf
  .text.avr-libc.fplib
-                0x00004e5a       0x48 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libm.a(fp_cmp.o)
-                0x00004e5a                __fp_cmp
+                0x00004d70       0x48 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libm.a(fp_cmp.o)
+                0x00004d70                __fp_cmp
  .text.avr-libc.fplib
-                0x00004ea2        0xc /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libm.a(fp_inf.o)
-                0x00004ea2                __fp_inf
+                0x00004db8        0xc /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libm.a(fp_inf.o)
+                0x00004db8                __fp_inf
  .text.avr-libc.fplib
-                0x00004eae        0x6 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libm.a(fp_nan.o)
-                0x00004eae                __fp_nan
+                0x00004dc4        0x6 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libm.a(fp_nan.o)
+                0x00004dc4                __fp_nan
  .text.avr-libc.fplib
-                0x00004eb4        0xe /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libm.a(fp_pscA.o)
-                0x00004eb4                __fp_pscA
+                0x00004dca        0xe /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libm.a(fp_pscA.o)
+                0x00004dca                __fp_pscA
  .text.avr-libc.fplib
-                0x00004ec2        0xe /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libm.a(fp_pscB.o)
-                0x00004ec2                __fp_pscB
+                0x00004dd8        0xe /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libm.a(fp_pscB.o)
+                0x00004dd8                __fp_pscB
  .text.avr-libc.fplib
-                0x00004ed0       0x22 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libm.a(fp_round.o)
-                0x00004ed0                __fp_round
+                0x00004de6       0x22 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libm.a(fp_round.o)
+                0x00004de6                __fp_round
  .text.avr-libc.fplib
-                0x00004ef2       0x44 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libm.a(fp_split3.o)
-                0x00004ef2                __fp_split3
-                0x00004f02                __fp_splitA
+                0x00004e08       0x44 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libm.a(fp_split3.o)
+                0x00004e08                __fp_split3
+                0x00004e18                __fp_splitA
  .text.avr-libc.fplib
-                0x00004f36        0xe /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libm.a(fp_zero.o)
-                0x00004f36                __fp_zero
-                0x00004f38                __fp_szero
+                0x00004e4c        0xe /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libm.a(fp_zero.o)
+                0x00004e4c                __fp_zero
+                0x00004e4e                __fp_szero
  .text.avr-libc.fplib
-                0x00004f44        0x8 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libm.a(gesf2.o)
-                0x00004f44                __gtsf2
-                0x00004f44                __gesf2
+                0x00004e5a        0x8 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libm.a(gesf2.o)
+                0x00004e5a                __gtsf2
+                0x00004e5a                __gesf2
  .text.avr-libc.fplib
-                0x00004f4c        0x4 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libm.a(mulsf3.o)
-                0x00004f4c                __mulsf3
+                0x00004e62        0x4 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libm.a(mulsf3.o)
+                0x00004e62                __mulsf3
  .text.avr-libc.fplib
-                0x00004f50       0xc2 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libm.a(mulsf3x.o)
-                0x00004f64                __mulsf3x
-                0x00004f68                __mulsf3_pse
- .text.libgcc   0x00005012       0x26 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/avr5/libgcc.a(_divmodhi4.o)
-                0x00005012                __divmodhi4
-                0x00005012                _div
- .text.libgcc   0x00005038       0x44 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/avr5/libgcc.a(_udivmodsi4.o)
-                0x00005038                __udivmodsi4
- .text.libgcc   0x0000507c       0x28 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/avr5/libgcc.a(_udivmodhi4.o)
-                0x0000507c                __udivmodhi4
- .text.avr-libc
-                0x000050a4       0x16 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libc.a(strcat.o)
-                0x000050a4                strcat
- .text.avr-libc
-                0x000050ba       0x20 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libc.a(strncat.o)
-                0x000050ba                strncat
-                0x000050da                . = ALIGN (0x2)
+                0x00004e66       0xc2 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libm.a(mulsf3x.o)
+                0x00004e7a                __mulsf3x
+                0x00004e7e                __mulsf3_pse
+ .text.libgcc   0x00004f28       0x26 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/avr5/libgcc.a(_divmodhi4.o)
+                0x00004f28                __divmodhi4
+                0x00004f28                _div
+ .text.libgcc   0x00004f4e       0x44 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/avr5/libgcc.a(_udivmodsi4.o)
+                0x00004f4e                __udivmodsi4
+ .text.libgcc   0x00004f92       0x28 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/avr5/libgcc.a(_udivmodhi4.o)
+                0x00004f92                __udivmodhi4
+                0x00004fba                . = ALIGN (0x2)
  *(.fini9)
- .fini9         0x000050da        0x0 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/avr5/libgcc.a(_exit.o)
-                0x000050da                exit
-                0x000050da                _exit
+ .fini9         0x00004fba        0x0 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/avr5/libgcc.a(_exit.o)
+                0x00004fba                exit
+                0x00004fba                _exit
  *(.fini9)
  *(.fini8)
  *(.fini8)
@@ -722,11 +705,11 @@ LOAD /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/avr5/libgcc.a
  *(.fini1)
  *(.fini1)
  *(.fini0)
- .fini0         0x000050da        0x4 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/avr5/libgcc.a(_exit.o)
+ .fini0         0x00004fba        0x4 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/avr5/libgcc.a(_exit.o)
  *(.fini0)
-                0x000050de                _etext = .
+                0x00004fbe                _etext = .
 
-.data           0x00800100       0x98 load address 0x000050de
+.data           0x00800100       0xcc load address 0x00004fbe
                 0x00800100                PROVIDE (__data_start, .)
  *(.data)
  .data          0x00800100        0x0 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/crtm328p.o
@@ -741,108 +724,106 @@ LOAD /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/avr5/libgcc.a
  .data          0x00800119        0x0 obj/aprs/bertos/cpu/avr/drv/ser_avr.o
  .data          0x00800119        0x0 obj/aprs/bertos/drv/ser.o
  .data          0x00800119        0x0 obj/aprs/bertos/mware/hex.o
- .data          0x00800119       0x1b obj/aprs/aprs/main.o
- .data          0x00800134        0x0 obj/aprs/aprs/hw/hw_afsk.o
- .data          0x00800134        0x0 obj/aprs/bertos/mware/formatwr_P.o
- .data          0x00800134        0x0 obj/aprs/bertos/drv/kdebug_P.o
- .data          0x00800134        0x0 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libm.a(addsf3.o)
- .data          0x00800134        0x0 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libm.a(addsf3x.o)
- .data          0x00800134        0x0 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libm.a(cmpsf2.o)
- .data          0x00800134        0x0 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libm.a(divsf3.o)
- .data          0x00800134        0x0 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libm.a(divsf3x.o)
- .data          0x00800134        0x0 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libm.a(fixsfsi.o)
- .data          0x00800134        0x0 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libm.a(fixunssfsi.o)
- .data          0x00800134        0x0 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libm.a(floatsisf.o)
- .data          0x00800134        0x0 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libm.a(fp_cmp.o)
- .data          0x00800134        0x0 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libm.a(fp_inf.o)
- .data          0x00800134        0x0 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libm.a(fp_nan.o)
- .data          0x00800134        0x0 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libm.a(fp_pscA.o)
- .data          0x00800134        0x0 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libm.a(fp_pscB.o)
- .data          0x00800134        0x0 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libm.a(fp_round.o)
- .data          0x00800134        0x0 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libm.a(fp_split3.o)
- .data          0x00800134        0x0 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libm.a(fp_zero.o)
- .data          0x00800134        0x0 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libm.a(gesf2.o)
- .data          0x00800134        0x0 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libm.a(mulsf3.o)
- .data          0x00800134        0x0 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libm.a(mulsf3x.o)
- .data          0x00800134        0x0 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/avr5/libgcc.a(_udivmodqi4.o)
- .data          0x00800134        0x0 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/avr5/libgcc.a(_divmodhi4.o)
- .data          0x00800134        0x0 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/avr5/libgcc.a(_udivmodsi4.o)
- .data          0x00800134        0x0 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/avr5/libgcc.a(_exit.o)
- .data          0x00800134        0x0 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/avr5/libgcc.a(_copy_data.o)
- .data          0x00800134        0x0 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/avr5/libgcc.a(_clear_bss.o)
- .data          0x00800134        0x0 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/avr5/libgcc.a(_udivmodhi4.o)
- .data          0x00800134        0x0 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libc.a(isalnum.o)
- .data          0x00800134        0x0 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libc.a(cty_isfalse.o)
- .data          0x00800134        0x0 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libc.a(isalpha.o)
- .data          0x00800134        0x0 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libc.a(toupper.o)
- .data          0x00800134        0x0 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libc.a(strcat.o)
- .data          0x00800134        0x0 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libc.a(strncat.o)
+ .data          0x00800119       0x4f obj/aprs/aprs/main.o
+ .data          0x00800168        0x0 obj/aprs/aprs/hw/hw_afsk.o
+ .data          0x00800168        0x0 obj/aprs/bertos/mware/formatwr_P.o
+ .data          0x00800168        0x0 obj/aprs/bertos/drv/kdebug_P.o
+ .data          0x00800168        0x0 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libm.a(addsf3.o)
+ .data          0x00800168        0x0 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libm.a(addsf3x.o)
+ .data          0x00800168        0x0 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libm.a(cmpsf2.o)
+ .data          0x00800168        0x0 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libm.a(divsf3.o)
+ .data          0x00800168        0x0 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libm.a(divsf3x.o)
+ .data          0x00800168        0x0 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libm.a(fixsfsi.o)
+ .data          0x00800168        0x0 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libm.a(fixunssfsi.o)
+ .data          0x00800168        0x0 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libm.a(floatsisf.o)
+ .data          0x00800168        0x0 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libm.a(fp_cmp.o)
+ .data          0x00800168        0x0 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libm.a(fp_inf.o)
+ .data          0x00800168        0x0 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libm.a(fp_nan.o)
+ .data          0x00800168        0x0 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libm.a(fp_pscA.o)
+ .data          0x00800168        0x0 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libm.a(fp_pscB.o)
+ .data          0x00800168        0x0 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libm.a(fp_round.o)
+ .data          0x00800168        0x0 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libm.a(fp_split3.o)
+ .data          0x00800168        0x0 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libm.a(fp_zero.o)
+ .data          0x00800168        0x0 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libm.a(gesf2.o)
+ .data          0x00800168        0x0 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libm.a(mulsf3.o)
+ .data          0x00800168        0x0 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libm.a(mulsf3x.o)
+ .data          0x00800168        0x0 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/avr5/libgcc.a(_udivmodqi4.o)
+ .data          0x00800168        0x0 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/avr5/libgcc.a(_divmodhi4.o)
+ .data          0x00800168        0x0 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/avr5/libgcc.a(_udivmodsi4.o)
+ .data          0x00800168        0x0 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/avr5/libgcc.a(_exit.o)
+ .data          0x00800168        0x0 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/avr5/libgcc.a(_copy_data.o)
+ .data          0x00800168        0x0 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/avr5/libgcc.a(_clear_bss.o)
+ .data          0x00800168        0x0 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/avr5/libgcc.a(_udivmodhi4.o)
+ .data          0x00800168        0x0 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libc.a(isalnum.o)
+ .data          0x00800168        0x0 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libc.a(cty_isfalse.o)
+ .data          0x00800168        0x0 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libc.a(isalpha.o)
+ .data          0x00800168        0x0 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libc.a(toupper.o)
  *(.data*)
  .data.null_pointer.1419
-                0x00800134        0x7 obj/aprs/bertos/mware/formatwr.o
+                0x00800168        0x7 obj/aprs/bertos/mware/formatwr.o
  .data.bad_conversion.1418
-                0x0080013b        0x4 obj/aprs/bertos/mware/formatwr.o
+                0x0080016f        0x4 obj/aprs/bertos/mware/formatwr.o
  .data.UARTDescs
-                0x0080013f       0x16 obj/aprs/bertos/cpu/avr/drv/ser_avr.o
+                0x00800173       0x16 obj/aprs/bertos/cpu/avr/drv/ser_avr.o
  .data.null_pointer.1419
-                0x00800155        0x7 obj/aprs/bertos/mware/formatwr_P.o
+                0x00800189        0x7 obj/aprs/bertos/mware/formatwr_P.o
  .data.bad_conversion.1418
-                0x0080015c        0x4 obj/aprs/bertos/mware/formatwr_P.o
+                0x00800190        0x4 obj/aprs/bertos/mware/formatwr_P.o
  *(.rodata)
  *(.rodata*)
  .rodata.UART0_VT
-                0x00800160        0xc obj/aprs/bertos/cpu/avr/drv/ser_avr.o
+                0x00800194        0xc obj/aprs/bertos/cpu/avr/drv/ser_avr.o
  .rodata.SPI_VT
-                0x0080016c        0xc obj/aprs/bertos/cpu/avr/drv/ser_avr.o
+                0x008001a0        0xc obj/aprs/bertos/cpu/avr/drv/ser_avr.o
  .rodata.HEX_tab
-                0x00800178       0x10 obj/aprs/bertos/mware/hex.o
-                0x00800178                HEX_tab
+                0x008001ac       0x10 obj/aprs/bertos/mware/hex.o
+                0x008001ac                HEX_tab
  .rodata.hex_tab
-                0x00800188       0x10 obj/aprs/bertos/mware/hex.o
-                0x00800188                hex_tab
+                0x008001bc       0x10 obj/aprs/bertos/mware/hex.o
+                0x008001bc                hex_tab
  *(.gnu.linkonce.d*)
-                0x00800198                . = ALIGN (0x2)
-                0x00800198                _edata = .
-                0x00800198                PROVIDE (__data_end, .)
+                0x008001cc                . = ALIGN (0x2)
+                0x008001cc                _edata = .
+                0x008001cc                PROVIDE (__data_end, .)
 
-.bss            0x00800198      0x2fa
-                0x00800198                PROVIDE (__bss_start, .)
+.bss            0x008001cc      0x2fa
+                0x008001cc                PROVIDE (__bss_start, .)
  *(.bss)
  *(.bss*)
  .bss.timers_queue
-                0x00800198        0x8 obj/aprs/bertos/drv/timer.o
+                0x008001cc        0x8 obj/aprs/bertos/drv/timer.o
  .bss.uart0_txbuffer
-                0x008001a0       0x20 obj/aprs/bertos/cpu/avr/drv/ser_avr.o
+                0x008001d4       0x20 obj/aprs/bertos/cpu/avr/drv/ser_avr.o
  .bss.uart0_rxbuffer
-                0x008001c0       0x20 obj/aprs/bertos/cpu/avr/drv/ser_avr.o
+                0x008001f4       0x20 obj/aprs/bertos/cpu/avr/drv/ser_avr.o
  .bss.spi_txbuffer
-                0x008001e0       0x20 obj/aprs/bertos/cpu/avr/drv/ser_avr.o
+                0x00800214       0x20 obj/aprs/bertos/cpu/avr/drv/ser_avr.o
  .bss.spi_rxbuffer
-                0x00800200       0x20 obj/aprs/bertos/cpu/avr/drv/ser_avr.o
- .bss.count     0x00800220        0x2 obj/aprs/aprs/main.o
-                0x00800220                count
- .bss.afsk      0x00800222       0xdc obj/aprs/aprs/main.o
- .bss.ax25      0x008002fe      0x156 obj/aprs/aprs/main.o
- .bss.ser       0x00800454       0x32 obj/aprs/aprs/main.o
- .bss.ctx       0x00800486        0x2 obj/aprs/aprs/hw/hw_afsk.o
+                0x00800234       0x20 obj/aprs/bertos/cpu/avr/drv/ser_avr.o
+ .bss.count     0x00800254        0x2 obj/aprs/aprs/main.o
+                0x00800254                count
+ .bss.afsk      0x00800256       0xdc obj/aprs/aprs/main.o
+ .bss.ax25      0x00800332      0x156 obj/aprs/aprs/main.o
+ .bss.ser       0x00800488       0x32 obj/aprs/aprs/main.o
+ .bss.ctx       0x008004ba        0x2 obj/aprs/aprs/hw/hw_afsk.o
  *(COMMON)
- COMMON         0x00800488        0x5 obj/aprs/bertos/drv/timer.o
-                0x00800488                _clock
-                0x0080048c                timer_initialized
- COMMON         0x0080048d        0x4 obj/aprs/bertos/drv/ser.o
-                0x0080048d                ser_handles
- COMMON         0x00800491        0x1 obj/aprs/aprs/hw/hw_afsk.o
-                0x00800491                hw_afsk_dac_isr
-                0x00800492                PROVIDE (__bss_end, .)
-                0x000050de                __data_load_start = LOADADDR (.data)
-                0x00005176                __data_load_end = (__data_load_start + SIZEOF (.data))
+ COMMON         0x008004bc        0x5 obj/aprs/bertos/drv/timer.o
+                0x008004bc                _clock
+                0x008004c0                timer_initialized
+ COMMON         0x008004c1        0x4 obj/aprs/bertos/drv/ser.o
+                0x008004c1                ser_handles
+ COMMON         0x008004c5        0x1 obj/aprs/aprs/hw/hw_afsk.o
+                0x008004c5                hw_afsk_dac_isr
+                0x008004c6                PROVIDE (__bss_end, .)
+                0x00004fbe                __data_load_start = LOADADDR (.data)
+                0x0000508a                __data_load_end = (__data_load_start + SIZEOF (.data))
 
-.noinit         0x00800492        0x0
-                0x00800492                PROVIDE (__noinit_start, .)
+.noinit         0x008004c6        0x0
+                0x008004c6                PROVIDE (__noinit_start, .)
  *(.noinit*)
-                0x00800492                PROVIDE (__noinit_end, .)
-                0x00800492                _end = .
-                0x00800492                PROVIDE (__heap_start, .)
+                0x008004c6                PROVIDE (__noinit_end, .)
+                0x008004c6                _end = .
+                0x008004c6                PROVIDE (__heap_start, .)
 
 .eeprom         0x00810000        0x0
  *(.eeprom*)
@@ -860,7 +841,7 @@ LOAD /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/avr5/libgcc.a
 .signature
  *(.signature*)
 
-.stab           0x00000000     0x261c
+.stab           0x00000000     0x24a8
  *(.stab)
  .stab          0x00000000      0x6cc /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/crtm328p.o
  .stab          0x000006cc       0x78 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libm.a(addsf3.o)
@@ -909,14 +890,10 @@ LOAD /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/avr5/libgcc.a
                                  0xb4 (size before relaxing)
  .stab          0x00002490       0x18 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libc.a(toupper.o)
                                  0xa8 (size before relaxing)
- .stab          0x000024a8       0x9c /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libc.a(strcat.o)
-                                 0xa8 (size before relaxing)
- .stab          0x00002544       0xd8 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libc.a(strncat.o)
-                                 0xe4 (size before relaxing)
 
-.stabstr        0x00000000      0x93d
+.stabstr        0x00000000      0x886
  *(.stabstr)
- .stabstr       0x00000000      0x93d /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/crtm328p.o
+ .stabstr       0x00000000      0x886 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/crtm328p.o
 
 .stab.excl
  *(.stab.excl)
@@ -945,7 +922,7 @@ LOAD /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/avr5/libgcc.a
 .debug_sfnames
  *(.debug_sfnames)
 
-.debug_aranges  0x00000000      0x520
+.debug_aranges  0x00000000      0x518
  *(.debug_aranges)
  .debug_aranges
                 0x00000000       0x68 obj/aprs/bertos/kern/kfile.o
@@ -968,58 +945,58 @@ LOAD /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/avr5/libgcc.a
  .debug_aranges
                 0x00000280       0xb8 obj/aprs/bertos/drv/ser.o
  .debug_aranges
-                0x00000338       0x30 obj/aprs/aprs/main.o
+                0x00000338       0x28 obj/aprs/aprs/main.o
  .debug_aranges
-                0x00000368       0x28 obj/aprs/aprs/hw/hw_afsk.o
+                0x00000360       0x28 obj/aprs/aprs/hw/hw_afsk.o
  .debug_aranges
-                0x00000390       0x20 obj/aprs/bertos/mware/formatwr_P.o
+                0x00000388       0x20 obj/aprs/bertos/mware/formatwr_P.o
  .debug_aranges
-                0x000003b0       0x90 obj/aprs/bertos/drv/kdebug_P.o
+                0x000003a8       0x90 obj/aprs/bertos/drv/kdebug_P.o
  .debug_aranges
-                0x00000440       0x20 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/avr5/libgcc.a(_udivmodqi4.o)
+                0x00000438       0x20 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/avr5/libgcc.a(_udivmodqi4.o)
  .debug_aranges
-                0x00000460       0x20 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/avr5/libgcc.a(_divmodhi4.o)
+                0x00000458       0x20 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/avr5/libgcc.a(_divmodhi4.o)
  .debug_aranges
-                0x00000480       0x20 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/avr5/libgcc.a(_udivmodsi4.o)
+                0x00000478       0x20 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/avr5/libgcc.a(_udivmodsi4.o)
  .debug_aranges
-                0x000004a0       0x20 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/avr5/libgcc.a(_exit.o)
+                0x00000498       0x20 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/avr5/libgcc.a(_exit.o)
  .debug_aranges
-                0x000004c0       0x20 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/avr5/libgcc.a(_copy_data.o)
+                0x000004b8       0x20 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/avr5/libgcc.a(_copy_data.o)
  .debug_aranges
-                0x000004e0       0x20 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/avr5/libgcc.a(_clear_bss.o)
+                0x000004d8       0x20 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/avr5/libgcc.a(_clear_bss.o)
  .debug_aranges
-                0x00000500       0x20 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/avr5/libgcc.a(_udivmodhi4.o)
+                0x000004f8       0x20 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/avr5/libgcc.a(_udivmodhi4.o)
 
 .debug_pubnames
  *(.debug_pubnames)
 
-.debug_info     0x00000000     0x8001
+.debug_info     0x00000000     0x7fb1
  *(.debug_info)
  .debug_info    0x00000000      0xa7b obj/aprs/bertos/kern/kfile.o
  .debug_info    0x00000a7b      0x190 obj/aprs/bertos/cpu/avr/drv/timer_avr.o
  .debug_info    0x00000c0b     0x1355 obj/aprs/bertos/net/afsk.o
- .debug_info    0x00001f60      0xbe2 obj/aprs/bertos/net/ax25.o
- .debug_info    0x00002b42      0x56c obj/aprs/bertos/mware/formatwr.o
- .debug_info    0x000030ae      0x1dc obj/aprs/bertos/algo/crc_ccitt.o
- .debug_info    0x0000328a      0x91e obj/aprs/bertos/drv/timer.o
- .debug_info    0x00003ba8      0x158 obj/aprs/bertos/mware/event.o
- .debug_info    0x00003d00      0xc49 obj/aprs/bertos/cpu/avr/drv/ser_avr.o
- .debug_info    0x00004949     0x127f obj/aprs/bertos/drv/ser.o
- .debug_info    0x00005bc8       0x72 obj/aprs/bertos/mware/hex.o
- .debug_info    0x00005c3a      0xb06 obj/aprs/aprs/main.o
- .debug_info    0x00006740      0x692 obj/aprs/aprs/hw/hw_afsk.o
- .debug_info    0x00006dd2      0x79a obj/aprs/bertos/mware/formatwr_P.o
- .debug_info    0x0000756c      0x555 obj/aprs/bertos/drv/kdebug_P.o
- .debug_info    0x00007ac1       0xc0 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/avr5/libgcc.a(_udivmodqi4.o)
- .debug_info    0x00007b81       0xc0 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/avr5/libgcc.a(_divmodhi4.o)
- .debug_info    0x00007c41       0xc0 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/avr5/libgcc.a(_udivmodsi4.o)
- .debug_info    0x00007d01       0xc0 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/avr5/libgcc.a(_exit.o)
- .debug_info    0x00007dc1       0xc0 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/avr5/libgcc.a(_copy_data.o)
- .debug_info    0x00007e81       0xc0 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/avr5/libgcc.a(_clear_bss.o)
- .debug_info    0x00007f41       0xc0 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/avr5/libgcc.a(_udivmodhi4.o)
+ .debug_info    0x00001f60      0xc02 obj/aprs/bertos/net/ax25.o
+ .debug_info    0x00002b62      0x56c obj/aprs/bertos/mware/formatwr.o
+ .debug_info    0x000030ce      0x1dc obj/aprs/bertos/algo/crc_ccitt.o
+ .debug_info    0x000032aa      0x91e obj/aprs/bertos/drv/timer.o
+ .debug_info    0x00003bc8      0x158 obj/aprs/bertos/mware/event.o
+ .debug_info    0x00003d20      0xc49 obj/aprs/bertos/cpu/avr/drv/ser_avr.o
+ .debug_info    0x00004969     0x127f obj/aprs/bertos/drv/ser.o
+ .debug_info    0x00005be8       0x72 obj/aprs/bertos/mware/hex.o
+ .debug_info    0x00005c5a      0xa96 obj/aprs/aprs/main.o
+ .debug_info    0x000066f0      0x692 obj/aprs/aprs/hw/hw_afsk.o
+ .debug_info    0x00006d82      0x79a obj/aprs/bertos/mware/formatwr_P.o
+ .debug_info    0x0000751c      0x555 obj/aprs/bertos/drv/kdebug_P.o
+ .debug_info    0x00007a71       0xc0 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/avr5/libgcc.a(_udivmodqi4.o)
+ .debug_info    0x00007b31       0xc0 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/avr5/libgcc.a(_divmodhi4.o)
+ .debug_info    0x00007bf1       0xc0 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/avr5/libgcc.a(_udivmodsi4.o)
+ .debug_info    0x00007cb1       0xc0 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/avr5/libgcc.a(_exit.o)
+ .debug_info    0x00007d71       0xc0 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/avr5/libgcc.a(_copy_data.o)
+ .debug_info    0x00007e31       0xc0 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/avr5/libgcc.a(_clear_bss.o)
+ .debug_info    0x00007ef1       0xc0 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/avr5/libgcc.a(_udivmodhi4.o)
  *(.gnu.linkonce.wi.*)
 
-.debug_abbrev   0x00000000     0x1fa6
+.debug_abbrev   0x00000000     0x1f71
  *(.debug_abbrev)
  .debug_abbrev  0x00000000      0x31a obj/aprs/bertos/kern/kfile.o
  .debug_abbrev  0x0000031a       0xc4 obj/aprs/bertos/cpu/avr/drv/timer_avr.o
@@ -1032,44 +1009,44 @@ LOAD /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/avr5/libgcc.a
  .debug_abbrev  0x00001199      0x276 obj/aprs/bertos/cpu/avr/drv/ser_avr.o
  .debug_abbrev  0x0000140f      0x362 obj/aprs/bertos/drv/ser.o
  .debug_abbrev  0x00001771       0x49 obj/aprs/bertos/mware/hex.o
- .debug_abbrev  0x000017ba      0x251 obj/aprs/aprs/main.o
- .debug_abbrev  0x00001a0b      0x156 obj/aprs/aprs/hw/hw_afsk.o
- .debug_abbrev  0x00001b61      0x1d8 obj/aprs/bertos/mware/formatwr_P.o
- .debug_abbrev  0x00001d39      0x1e1 obj/aprs/bertos/drv/kdebug_P.o
- .debug_abbrev  0x00001f1a       0x14 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/avr5/libgcc.a(_udivmodqi4.o)
- .debug_abbrev  0x00001f2e       0x14 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/avr5/libgcc.a(_divmodhi4.o)
- .debug_abbrev  0x00001f42       0x14 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/avr5/libgcc.a(_udivmodsi4.o)
- .debug_abbrev  0x00001f56       0x14 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/avr5/libgcc.a(_exit.o)
- .debug_abbrev  0x00001f6a       0x14 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/avr5/libgcc.a(_copy_data.o)
- .debug_abbrev  0x00001f7e       0x14 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/avr5/libgcc.a(_clear_bss.o)
- .debug_abbrev  0x00001f92       0x14 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/avr5/libgcc.a(_udivmodhi4.o)
+ .debug_abbrev  0x000017ba      0x21c obj/aprs/aprs/main.o
+ .debug_abbrev  0x000019d6      0x156 obj/aprs/aprs/hw/hw_afsk.o
+ .debug_abbrev  0x00001b2c      0x1d8 obj/aprs/bertos/mware/formatwr_P.o
+ .debug_abbrev  0x00001d04      0x1e1 obj/aprs/bertos/drv/kdebug_P.o
+ .debug_abbrev  0x00001ee5       0x14 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/avr5/libgcc.a(_udivmodqi4.o)
+ .debug_abbrev  0x00001ef9       0x14 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/avr5/libgcc.a(_divmodhi4.o)
+ .debug_abbrev  0x00001f0d       0x14 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/avr5/libgcc.a(_udivmodsi4.o)
+ .debug_abbrev  0x00001f21       0x14 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/avr5/libgcc.a(_exit.o)
+ .debug_abbrev  0x00001f35       0x14 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/avr5/libgcc.a(_copy_data.o)
+ .debug_abbrev  0x00001f49       0x14 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/avr5/libgcc.a(_clear_bss.o)
+ .debug_abbrev  0x00001f5d       0x14 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/avr5/libgcc.a(_udivmodhi4.o)
 
-.debug_line     0x00000000     0x289f
+.debug_line     0x00000000     0x2867
  *(.debug_line)
  .debug_line    0x00000000      0x27e obj/aprs/bertos/kern/kfile.o
  .debug_line    0x0000027e      0x10e obj/aprs/bertos/cpu/avr/drv/timer_avr.o
  .debug_line    0x0000038c      0x4e0 obj/aprs/bertos/net/afsk.o
- .debug_line    0x0000086c      0x2e4 obj/aprs/bertos/net/ax25.o
- .debug_line    0x00000b50      0x390 obj/aprs/bertos/mware/formatwr.o
- .debug_line    0x00000ee0      0x11c obj/aprs/bertos/algo/crc_ccitt.o
- .debug_line    0x00000ffc      0x2b0 obj/aprs/bertos/drv/timer.o
- .debug_line    0x000012ac       0x5e obj/aprs/bertos/mware/event.o
- .debug_line    0x0000130a      0x35e obj/aprs/bertos/cpu/avr/drv/ser_avr.o
- .debug_line    0x00001668      0x4e0 obj/aprs/bertos/drv/ser.o
- .debug_line    0x00001b48       0x30 obj/aprs/bertos/mware/hex.o
- .debug_line    0x00001b78      0x245 obj/aprs/aprs/main.o
- .debug_line    0x00001dbd      0x19e obj/aprs/aprs/hw/hw_afsk.o
- .debug_line    0x00001f5b      0x3a1 obj/aprs/bertos/mware/formatwr_P.o
- .debug_line    0x000022fc      0x2c3 obj/aprs/bertos/drv/kdebug_P.o
- .debug_line    0x000025bf       0x66 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/avr5/libgcc.a(_udivmodqi4.o)
- .debug_line    0x00002625       0x6d /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/avr5/libgcc.a(_divmodhi4.o)
- .debug_line    0x00002692       0x7c /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/avr5/libgcc.a(_udivmodsi4.o)
- .debug_line    0x0000270e       0x5c /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/avr5/libgcc.a(_exit.o)
- .debug_line    0x0000276a       0x65 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/avr5/libgcc.a(_copy_data.o)
- .debug_line    0x000027cf       0x62 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/avr5/libgcc.a(_clear_bss.o)
- .debug_line    0x00002831       0x6e /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/avr5/libgcc.a(_udivmodhi4.o)
+ .debug_line    0x0000086c      0x2e7 obj/aprs/bertos/net/ax25.o
+ .debug_line    0x00000b53      0x390 obj/aprs/bertos/mware/formatwr.o
+ .debug_line    0x00000ee3      0x11c obj/aprs/bertos/algo/crc_ccitt.o
+ .debug_line    0x00000fff      0x2b0 obj/aprs/bertos/drv/timer.o
+ .debug_line    0x000012af       0x5e obj/aprs/bertos/mware/event.o
+ .debug_line    0x0000130d      0x35e obj/aprs/bertos/cpu/avr/drv/ser_avr.o
+ .debug_line    0x0000166b      0x4e0 obj/aprs/bertos/drv/ser.o
+ .debug_line    0x00001b4b       0x30 obj/aprs/bertos/mware/hex.o
+ .debug_line    0x00001b7b      0x20a obj/aprs/aprs/main.o
+ .debug_line    0x00001d85      0x19e obj/aprs/aprs/hw/hw_afsk.o
+ .debug_line    0x00001f23      0x3a1 obj/aprs/bertos/mware/formatwr_P.o
+ .debug_line    0x000022c4      0x2c3 obj/aprs/bertos/drv/kdebug_P.o
+ .debug_line    0x00002587       0x66 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/avr5/libgcc.a(_udivmodqi4.o)
+ .debug_line    0x000025ed       0x6d /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/avr5/libgcc.a(_divmodhi4.o)
+ .debug_line    0x0000265a       0x7c /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/avr5/libgcc.a(_udivmodsi4.o)
+ .debug_line    0x000026d6       0x5c /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/avr5/libgcc.a(_exit.o)
+ .debug_line    0x00002732       0x65 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/avr5/libgcc.a(_copy_data.o)
+ .debug_line    0x00002797       0x62 /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/avr5/libgcc.a(_clear_bss.o)
+ .debug_line    0x000027f9       0x6e /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/avr5/libgcc.a(_udivmodhi4.o)
 
-.debug_frame    0x00000000     0x10c0
+.debug_frame    0x00000000     0x1078
  *(.debug_frame)
  .debug_frame   0x00000000      0x180 obj/aprs/bertos/kern/kfile.o
  .debug_frame   0x00000180       0x24 obj/aprs/bertos/cpu/avr/drv/timer_avr.o
@@ -1081,12 +1058,12 @@ LOAD /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/avr5/libgcc.a
  .debug_frame   0x000007c4       0x34 obj/aprs/bertos/mware/event.o
  .debug_frame   0x000007f8      0x1d8 obj/aprs/bertos/cpu/avr/drv/ser_avr.o
  .debug_frame   0x000009d0      0x288 obj/aprs/bertos/drv/ser.o
- .debug_frame   0x00000c58       0xe4 obj/aprs/aprs/main.o
- .debug_frame   0x00000d3c       0x94 obj/aprs/aprs/hw/hw_afsk.o
- .debug_frame   0x00000dd0       0x98 obj/aprs/bertos/mware/formatwr_P.o
- .debug_frame   0x00000e68      0x258 obj/aprs/bertos/drv/kdebug_P.o
+ .debug_frame   0x00000c58       0x9c obj/aprs/aprs/main.o
+ .debug_frame   0x00000cf4       0x94 obj/aprs/aprs/hw/hw_afsk.o
+ .debug_frame   0x00000d88       0x98 obj/aprs/bertos/mware/formatwr_P.o
+ .debug_frame   0x00000e20      0x258 obj/aprs/bertos/drv/kdebug_P.o
 
-.debug_str      0x00000000     0x113e
+.debug_str      0x00000000     0x1116
  *(.debug_str)
  .debug_str     0x00000000      0x361 obj/aprs/bertos/kern/kfile.o
                                 0x3ff (size before relaxing)
@@ -1094,32 +1071,32 @@ LOAD /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/avr5/libgcc.a
                                 0x177 (size before relaxing)
  .debug_str     0x0000038e      0x2fb obj/aprs/bertos/net/afsk.o
                                 0x5c3 (size before relaxing)
- .debug_str     0x00000689      0x1c1 obj/aprs/bertos/net/ax25.o
-                                0x40a (size before relaxing)
- .debug_str     0x0000084a      0x20c obj/aprs/bertos/mware/formatwr.o
+ .debug_str     0x00000689      0x1ca obj/aprs/bertos/net/ax25.o
+                                0x413 (size before relaxing)
+ .debug_str     0x00000853      0x20c obj/aprs/bertos/mware/formatwr.o
                                 0x341 (size before relaxing)
- .debug_str     0x00000a56       0x18 obj/aprs/bertos/algo/crc_ccitt.o
+ .debug_str     0x00000a5f       0x18 obj/aprs/bertos/algo/crc_ccitt.o
                                 0x145 (size before relaxing)
- .debug_str     0x00000a6e      0x178 obj/aprs/bertos/drv/timer.o
+ .debug_str     0x00000a77      0x178 obj/aprs/bertos/drv/timer.o
                                 0x34f (size before relaxing)
- .debug_str     0x00000be6       0x3a obj/aprs/bertos/mware/event.o
+ .debug_str     0x00000bef       0x3a obj/aprs/bertos/mware/event.o
                                 0x100 (size before relaxing)
- .debug_str     0x00000c20      0x1f3 obj/aprs/bertos/cpu/avr/drv/ser_avr.o
+ .debug_str     0x00000c29      0x1f3 obj/aprs/bertos/cpu/avr/drv/ser_avr.o
                                 0x501 (size before relaxing)
- .debug_str     0x00000e13      0x16c obj/aprs/bertos/drv/ser.o
+ .debug_str     0x00000e1c      0x16c obj/aprs/bertos/drv/ser.o
                                 0x595 (size before relaxing)
- .debug_str     0x00000f7f       0x13 obj/aprs/bertos/mware/hex.o
+ .debug_str     0x00000f88       0x13 obj/aprs/bertos/mware/hex.o
                                  0x73 (size before relaxing)
- .debug_str     0x00000f92       0x5d obj/aprs/aprs/main.o
-                                0x50d (size before relaxing)
- .debug_str     0x00000fef       0x33 obj/aprs/aprs/hw/hw_afsk.o
+ .debug_str     0x00000f9b       0x2c obj/aprs/aprs/main.o
+                                0x4ea (size before relaxing)
+ .debug_str     0x00000fc7       0x33 obj/aprs/aprs/hw/hw_afsk.o
                                 0x3cc (size before relaxing)
- .debug_str     0x00001022       0x13 obj/aprs/bertos/mware/formatwr_P.o
+ .debug_str     0x00000ffa       0x13 obj/aprs/bertos/mware/formatwr_P.o
                                 0x343 (size before relaxing)
- .debug_str     0x00001035      0x109 obj/aprs/bertos/drv/kdebug_P.o
+ .debug_str     0x0000100d      0x109 obj/aprs/bertos/drv/kdebug_P.o
                                 0x251 (size before relaxing)
 
-.debug_loc      0x00000000     0x7713
+.debug_loc      0x00000000     0x7629
  *(.debug_loc)
  .debug_loc     0x00000000      0x60c obj/aprs/bertos/kern/kfile.o
  .debug_loc     0x0000060c      0xd72 obj/aprs/bertos/net/afsk.o
@@ -1130,17 +1107,17 @@ LOAD /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/avr5/libgcc.a
  .debug_loc     0x00003cc3       0x28 obj/aprs/bertos/mware/event.o
  .debug_loc     0x00003ceb      0x3f3 obj/aprs/bertos/cpu/avr/drv/ser_avr.o
  .debug_loc     0x000040de      0xf03 obj/aprs/bertos/drv/ser.o
- .debug_loc     0x00004fe1      0x23d obj/aprs/aprs/main.o
- .debug_loc     0x0000521e      0x149 obj/aprs/aprs/hw/hw_afsk.o
- .debug_loc     0x00005367     0x1ae6 obj/aprs/bertos/mware/formatwr_P.o
- .debug_loc     0x00006e4d      0x8c6 obj/aprs/bertos/drv/kdebug_P.o
+ .debug_loc     0x00004fe1      0x153 obj/aprs/aprs/main.o
+ .debug_loc     0x00005134      0x149 obj/aprs/aprs/hw/hw_afsk.o
+ .debug_loc     0x0000527d     0x1ae6 obj/aprs/bertos/mware/formatwr_P.o
+ .debug_loc     0x00006d63      0x8c6 obj/aprs/bertos/drv/kdebug_P.o
 
 .debug_macinfo
  *(.debug_macinfo)
 OUTPUT(images/aprs.elf elf32-avr)
 LOAD linker stubs
 
-.debug_ranges   0x00000000      0x4b8
+.debug_ranges   0x00000000      0x4b0
  .debug_ranges  0x00000000       0x58 obj/aprs/bertos/kern/kfile.o
  .debug_ranges  0x00000058       0x10 obj/aprs/bertos/cpu/avr/drv/timer_avr.o
  .debug_ranges  0x00000068      0x128 obj/aprs/bertos/net/afsk.o
@@ -1151,10 +1128,10 @@ LOAD linker stubs
  .debug_ranges  0x000002b0       0x18 obj/aprs/bertos/mware/event.o
  .debug_ranges  0x000002c8       0x80 obj/aprs/bertos/cpu/avr/drv/ser_avr.o
  .debug_ranges  0x00000348       0xa8 obj/aprs/bertos/drv/ser.o
- .debug_ranges  0x000003f0       0x20 obj/aprs/aprs/main.o
- .debug_ranges  0x00000410       0x18 obj/aprs/aprs/hw/hw_afsk.o
- .debug_ranges  0x00000428       0x10 obj/aprs/bertos/mware/formatwr_P.o
- .debug_ranges  0x00000438       0x80 obj/aprs/bertos/drv/kdebug_P.o
+ .debug_ranges  0x000003f0       0x18 obj/aprs/aprs/main.o
+ .debug_ranges  0x00000408       0x18 obj/aprs/aprs/hw/hw_afsk.o
+ .debug_ranges  0x00000420       0x10 obj/aprs/bertos/mware/formatwr_P.o
+ .debug_ranges  0x00000430       0x80 obj/aprs/bertos/drv/kdebug_P.o
 
 Cross Reference Table
 
@@ -1162,7 +1139,6 @@ Symbol                                            File
 HEX_tab                                           obj/aprs/bertos/mware/hex.o
                                                   obj/aprs/bertos/mware/formatwr_P.o
                                                   obj/aprs/bertos/mware/formatwr.o
-KISS_ify                                          obj/aprs/aprs/main.o
 __addsf3                                          /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libm.a(addsf3.o)
 __addsf3x                                         /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libm.a(addsf3x.o)
                                                   /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libm.a(addsf3.o)
@@ -1404,7 +1380,6 @@ kfile_printf                                      obj/aprs/bertos/kern/kfile.o
                                                   obj/aprs/aprs/main.o
                                                   obj/aprs/bertos/net/ax25.o
 kfile_putc                                        obj/aprs/bertos/kern/kfile.o
-                                                  obj/aprs/aprs/main.o
                                                   obj/aprs/bertos/net/ax25.o
 kfile_resync                                      obj/aprs/bertos/kern/kfile.o
 kprintf_P                                         obj/aprs/bertos/drv/kdebug_P.o
@@ -1428,10 +1403,6 @@ ser_setbaudrate                                   obj/aprs/bertos/drv/ser.o
                                                   obj/aprs/aprs/main.o
 ser_setparity                                     obj/aprs/bertos/drv/ser.o
 spimaster_init                                    obj/aprs/bertos/drv/ser.o
-strcat                                            /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libc.a(strcat.o)
-                                                  obj/aprs/aprs/main.o
-strncat                                           /usr/local/CrossPack-AVR-20121207/lib/gcc/avr/4.6.2/../../../../avr/lib/avr5/libc.a(strncat.o)
-                                                  obj/aprs/aprs/main.o
 synctimer_add                                     obj/aprs/bertos/drv/timer.o
 synctimer_poll                                    obj/aprs/bertos/drv/timer.o
 timer_abort                                       obj/aprs/bertos/drv/timer.o
