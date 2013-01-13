@@ -126,7 +126,7 @@ int main(void)
 		if (timer_clock() - start > ms_to_ticks(60000L))
 		{
 			start = timer_clock();
-			kfile_printf(&ser.fd, "TNC %d\n", count);
+			kfile_printf(&ser.fd, "TNC %d\r\n", count);
             count++;
 		}
 	}
