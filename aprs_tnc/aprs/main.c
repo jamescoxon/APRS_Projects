@@ -64,6 +64,8 @@ static Serial ser;
 
 #define ADC_CH 0
 
+int count = 0, pkts_rxed = 0;
+
 /*
  * Print on console the message that we have received.
  */
@@ -75,6 +77,7 @@ static void message_callback(struct AX25Msg *msg)
 		kfile_printf(&ser.fd, "via: [%.6s-%d]\r\n", msg->rpt_lst[i].call, msg->rpt_lst[i].ssid);
 
 	kfile_printf(&ser.fd, "DATA: %.*s\r\n", msg->len, msg->info);
+    pkts_rxed++;
 }
 
 static void init(void)
@@ -105,8 +108,6 @@ static AX25Call path[] = AX25_PATH(AX25_CALL("apzbrt", 0), AX25_CALL("nocall", 0
 
 #define APRS_MSG    ">Test BeRTOS APRS http://www.bertos.org"
 
-int count = 0;
-
 int main(void)
 {
 	init();
@@ -126,7 +127,7 @@ int main(void)
 		if (timer_clock() - start > ms_to_ticks(15000L))
 		{
 			start = timer_clock();
-			kfile_printf(&ser.fd, "Count: %d\r\n", count);
+			kfile_printf(&ser.fd, "Count: %d, Pkts rx'd: %d\r\n", count, pkts_rxed);
             count++;
 		}
 	}
