@@ -16,3 +16,8 @@ b) Disconnect battery line.
 2/ When HX1 board powers up get a short across PSU.
 
 Since GPS module and Radio were fitted. 
+
+
+Notes for Rev 2 
+
+Add MPL3115A2  ?
