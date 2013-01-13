@@ -50,8 +50,8 @@ static const uint8_t PROGMEM _sine_table[] = {
 RF22 rf22;
 /*
 /* CONFIGURABLE BITS */
-*/
-#define POWERSAVING      // Comment out to turn power saving off
+
+//#define POWERSAVING      // Comment out to turn power saving off
 #define APRS_TX_INTERVAL  1  // APRS TX Interval in Minutes
 #define ASCII 7          // ASCII 7 or 8
 #define STOPBITS 2       // Either 1 or 2
@@ -120,7 +120,7 @@ unsigned long _aprs_tx_timer;
 void setup() {
   pinMode(STATUS_LED, OUTPUT); 
   pinMode(GPS_ENABLE, OUTPUT);
-  digitalWrite(GPS_ENABLE,HIGH); // Turn the GPS On
+  digitalWrite(GPS_ENABLE,LOW); // Turn the GPS On
   blinkled(6);
   Serial.begin(9600);
   blinkled(5);
@@ -193,7 +193,7 @@ void loop()
   if( (_aprs_tx_timer+(APRS_TX_INTERVAL*60000))>=millis()) {
     aprs_tx_status=0;
     // Initiated APRS transmission here
-    //  send_APRS();
+    send_APRS();
   }
 
 
@@ -572,8 +572,8 @@ ISR(TIMER1_COMPA_vect)
       maxalt=alt;
     }
     lockvariables=1;
-    sprintf(txstring, "$$$$$AVA,%i,%02d:%02d:%02d,%s%i.%05ld,%s%i.%05ld,%ld,%d,%i",count, hour, minute, second,lat < 0 ? "-" : "",lat_int,lat_dec,lon < 0 ? "-" : "",lon_int,lon_dec, maxalt,sats,rfm_temp);
-    sprintf(txstring, "%s,%i",txstring,errorstatus);
+    sprintf(txstring, "$$$$$AVATEST,%i,%02d:%02d:%02d,%s%i.%05ld,%s%i.%05ld,%ld,%d,%i",count, hour, minute, second,lat < 0 ? "-" : "",lat_int,lat_dec,lon < 0 ? "-" : "",lon_int,lon_dec, maxalt,sats,rfm_temp);
+    sprintf(txstring, "%s,%i,%i",txstring,errorstatus,tslf);
     sprintf(txstring, "%s*%04X\n", txstring, gps_CRC16_checksum(txstring));
     maxalt=0;
     lockvariables=0;

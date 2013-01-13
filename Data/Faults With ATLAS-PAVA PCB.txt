@@ -1,0 +1,17 @@
+Faults with ATLAS/PAVA
+
+1/ HX1TXD Pin fouls ICSP header			- Just deal with it and fix in R2
+2/ Holes for Samtec headers too large	- Just deal with it and fix in R2
+3/ Polygon Priority mistake has left VBATT connected directly to GND. - Fix with scalpel and fix in R2
+
+To Fix :
+
+1/ GPS getting time but then freezes before getting a lock. Not power saving related. 
+
+Replicate known working setup :
+a) Hardwire on.
+b) Disconnect battery line.
+
+2/ When HX1 board powers up get a short across PSU.
+
+Since GPS module and Radio were fitted. 
