@@ -9,13 +9,13 @@ To Fix :
 
 1/ GPS getting time but then freezes before getting a lock. Not power saving related. 
 
-Replicate known working setup :
-a) Hardwire on.
-b) Disconnect battery line.
+Code related. When using RF22 library GPS locks up, using RFM22 library it seems to work. Fixed by using RFM22 library but unsure as to cause.
 
-2/ When HX1 board powers up get a short across PSU.
+2/ When HX1 board powers up board resets/power sags. 
 
-Since GPS module and Radio were fitted. 
+Since GPS module and Radio were fitted ?
+5V enable is ok.
+Problem occurs on bringing HX1EN high.
 
 
 Notes for Rev 2 

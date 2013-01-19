@@ -18,7 +18,7 @@ NSEL = PB2 (Arduino 10)
 
 GPS
 
-Enable = PD5 (Arduino 5)
+Enable = PD5 (Arduino 5) (LOW = On)
 
 HX1 Board
 
@@ -28,7 +28,7 @@ HX1 TXD		 = PB3 (Arduino 11)
 
 #define RFM22B_PIN 10
 #define RFM22B_SDN A5
-#define STATUS_LED 4        
+#define STATUS_LED 7        
 #define GPS_ENABLE 5
 #define HX1_POWER  6
 #define HX1_ENABLE 4
@@ -55,7 +55,7 @@ HX1 TXD		 = PB3 (Arduino 11)
 /* along with this program. If not, see <http://www.gnu.org/licenses/>.  */
 
 #include <stdint.h>
-#include <avr/pgmspace.h>
+#include <avr/pgmspace.h>bas
 
 /* The geofence array contains an outline of the area where
  * APRS usage is not permitted */
