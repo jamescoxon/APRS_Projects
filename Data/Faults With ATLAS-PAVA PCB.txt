@@ -13,10 +13,7 @@ Code related. When using RF22 library GPS locks up, using RFM22 library it seems
 
 2/ When HX1 board powers up board resets/power sags. 
 
-Since GPS module and Radio were fitted ?
-5V enable is ok.
-Problem occurs on bringing HX1EN high.
-
+Fixed. Step up is very inefficient and draws 1.2A @ 1.8V for 5V causing bench PSU to sag. Switched PSU to 2A mode and its fine, however increasing input voltage to 3.2V draws 364mA and to 4.8V draws 243mA.
 
 Notes for Rev 2 
 
