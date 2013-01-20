@@ -40,18 +40,14 @@
 //#include <avr/sleep.h>
 #include <util/crc16.h>
 #include <SPI.h>
-#include <RF22.h>
+#include <RFM22.h>
 #include "ax25modem.h"
 #include "geofence.h"
 static const uint8_t PROGMEM _sine_table[] = {
 #include "sine_table.h"
 };
 
-RF22 rf22;
-/*
 /* CONFIGURABLE BITS */
-
-//#define POWERSAVING      // Comment out to turn power saving off
 #define APRS_TX_INTERVAL  1  // APRS TX Interval in Minutes
 #define ASCII 7          // ASCII 7 or 8
 #define STOPBITS 2       // Either 1 or 2
@@ -60,7 +56,7 @@ RF22 rf22;
 #define RADIO_FREQUENCY 434.331
 #define RADIO_POWER  0x04
 /*
- 0x02  5db (3mW)
+                       0x02  5db (3mW)
  0x03  8db (6mW)
  0x04 11db (12mW)
  0x05 14db (25mW)
@@ -70,12 +66,11 @@ RF22 rf22;
 
 #define RFM22B_PIN 10
 #define RFM22B_SDN A5
-#define STATUS_LED 7            // PAVA/ATLAS R7 Boards have an LED on PIN7
+#define STATUS_LED 7            // PAVA R7 Boards have an LED on PIN4
 #define GPS_ENABLE 5
 #define HX1_POWER  6
 #define HX1_ENABLE 4
-#define HX1_TXD    11
-
+#define HX1_TXD    3
 #define BAUD_RATE      (1200)
 #define TABLE_SIZE     (512)
 #define PREAMBLE_BYTES (25)
@@ -86,6 +81,7 @@ RF22 rf22;
 #define PHASE_DELTA_1200 (((TABLE_SIZE * 1200L) << 7) / PLAYBACK_RATE)
 #define PHASE_DELTA_2200 (((TABLE_SIZE * 2200L) << 7) / PLAYBACK_RATE)
 #define PHASE_DELTA_XOR  (PHASE_DELTA_1200 ^ PHASE_DELTA_2200)
+#define POWERSAVING      // Comment out to turn power saving off
 
 uint8_t buf[60]; 
 char txstring[80];
@@ -104,10 +100,9 @@ uint8_t oldhour = 0, oldminute = 0, oldsecond = 0;
 int navmode = 0, battv=0, rawbattv=0, GPSerror = 0, lat_int=0,lon_int=0,txnulls=10;
 int32_t lat = 0, lon = 0, alt = 0, maxalt = 0, lat_dec = 0, lon_dec =0, battvaverage=0;
 int psm_status = 0;
-int rfm_temp, aprs_tx_status = 0;
+int aprs_tx_status = 0;
 int32_t tslf=0;
-int errorstatus=0; /* 
- Bit 0 = GPS Error Condition Noted Switch to Max Performance Mode
+int errorstatus=0; /* Bit 0 = GPS Error Condition Noted Switch to Max Performance Mode
  Bit 1 = GPS Error Condition Noted Cold Boot GPS
  Bit 2 = RFM22B Error Condition Noted, RFM22B Power Cycled
  Bit 3 = Current Dynamic Model 0 = Flight 1 = Pedestrian
@@ -116,11 +111,20 @@ int errorstatus=0; /*
  */
 char comment[3];
 unsigned long _aprs_tx_timer;
+rfm22 radio1(RFM22B_PIN);
 
 void setup() {
   pinMode(STATUS_LED, OUTPUT); 
-  pinMode(GPS_ENABLE, OUTPUT);
-  digitalWrite(GPS_ENABLE,LOW); // Turn the GPS On
+  pinMode(GPS_ENABLE, OUTPUT); 
+  pinMode(HX1_POWER, OUTPUT); 
+  pinMode(HX1_ENABLE, OUTPUT); 
+  pinMode(RFM22B_SDN, OUTPUT);
+  digitalWrite(HX1_POWER,LOW);
+  digitalWrite(HX1_ENABLE,LOW);
+  digitalWrite(GPS_ENABLE, LOW);
+  digitalWrite(STATUS_LED, HIGH);
+  wait(500);
+
   blinkled(6);
   Serial.begin(9600);
   blinkled(5);
@@ -133,7 +137,6 @@ void setup() {
   setupGPS();
   blinkled(1);
   initialise_interrupt();
-
 #ifdef POWERSAVING
   ADCSRA = 0;
 #endif
@@ -145,6 +148,9 @@ void loop()
   oldhour=hour;
   oldminute=minute;
   oldsecond=second;
+
+
+
   gps_check_nav();
 
   if(lock!=3) // Blink LED to indicate no lock
@@ -159,7 +165,7 @@ void loop()
     errorstatus &= ~(1 << 5);
   }
 
-  if(alt<1000) {
+  if(alt<=1000) {
     if(navmode != 3)
     {
       setGPS_DynamicModel3();
@@ -185,19 +191,9 @@ void loop()
     errorstatus &= ~(1 << 4);
   }
 #endif
-  if (aprs_tx_status==0)
-  {
-    _aprs_tx_timer=millis();
-    aprs_tx_status=1;
-  }
-  if( (_aprs_tx_timer+(APRS_TX_INTERVAL*60000))>=millis()) {
-    aprs_tx_status=0;
-    // Initiated APRS transmission here
+  if((count % 5) == 0){
     send_APRS();
   }
-
-
-
 
   if(!lockvariables) {
 
@@ -234,8 +230,8 @@ void loop()
       wait(125);
       setupGPS();
     }
-    rfm_temp = (rf22.temperatureRead( RF22_TSRANGE_M64_64C,0 ) / 2) - 64;
-    if(rf22.spiRead(0x07) != 0x09 )
+
+    if(radio1.read(0x07) != 0x08 )
     {    
       digitalWrite(RFM22B_SDN, HIGH);
       errorstatus |=(1 << 2);
@@ -274,7 +270,7 @@ void sendUBX(uint8_t *MSG, uint8_t len) {
 uint8_t gps_check_nav(void)
 {
   uint8_t request[8] = {
-    0xB5, 0x62, 0x06, 0x24, 0x00, 0x00, 0x2A, 0x84                                                 };
+    0xB5, 0x62, 0x06, 0x24, 0x00, 0x00, 0x2A, 0x84                                                   };
   sendUBX(request, 8);
 
   // Get the message back from the GPS
@@ -394,7 +390,7 @@ void gps_check_lock()
   // Construct the request to the GPS
   uint8_t request[8] = {
     0xB5, 0x62, 0x01, 0x06, 0x00, 0x00,
-    0x07, 0x16                                                                                                        };
+    0x07, 0x16                                                                                                          };
   sendUBX(request, 8);
 
   // Get the message back from the GPS
@@ -434,7 +430,7 @@ void setGPS_DynamicModel6()
     0x03, 0x00, 0x00, 0x00, 0x00, 0x10, 0x27, 0x00, 0x00,
     0x05, 0x00, 0xFA, 0x00, 0xFA, 0x00, 0x64, 0x00, 0x2C,
     0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x16, 0xDC                                                 };
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x16, 0xDC                                                   };
   while(!gps_set_sucess)
   {
     sendUBX(setdm6, sizeof(setdm6)/sizeof(uint8_t));
@@ -450,7 +446,7 @@ void setGPS_DynamicModel3()
     0x03, 0x00, 0x00, 0x00, 0x00, 0x10, 0x27, 0x00, 0x00,
     0x05, 0x00, 0xFA, 0x00, 0xFA, 0x00, 0x64, 0x00, 0x2C,
     0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x13, 0x76                                                 };
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x13, 0x76                                                   };
   while(!gps_set_sucess)
   {
     sendUBX(setdm3, sizeof(setdm3)/sizeof(uint8_t));
@@ -464,7 +460,7 @@ void gps_get_position()
   // Request a NAV-POSLLH message from the GPS
   uint8_t request[8] = {
     0xB5, 0x62, 0x01, 0x02, 0x00, 0x00, 0x03,
-    0x0A                                                                                                    };
+    0x0A                                                                                                      };
   sendUBX(request, 8);
 
   // Get the message back from the GPS
@@ -509,7 +505,7 @@ void gps_get_time()
   // Send a NAV-TIMEUTC message to the receiver
   uint8_t request[8] = {
     0xB5, 0x62, 0x01, 0x21, 0x00, 0x00,
-    0x22, 0x67                                                                                                  };
+    0x22, 0x67                                                                                                    };
   sendUBX(request, 8);
 
   // Get the message back from the GPS
@@ -572,8 +568,8 @@ ISR(TIMER1_COMPA_vect)
       maxalt=alt;
     }
     lockvariables=1;
-    sprintf(txstring, "$$$$$AVATEST,%i,%02d:%02d:%02d,%s%i.%05ld,%s%i.%05ld,%ld,%d,%i",count, hour, minute, second,lat < 0 ? "-" : "",lat_int,lat_dec,lon < 0 ? "-" : "",lon_int,lon_dec, maxalt,sats,rfm_temp);
-    sprintf(txstring, "%s,%i,%i",txstring,errorstatus,tslf);
+    sprintf(txstring, "$$$$$AVA,%i,%02d:%02d:%02d,%s%i.%05ld,%s%i.%05ld,%ld,%d",count, hour, minute, second,lat < 0 ? "-" : "",lat_int,lat_dec,lon < 0 ? "-" : "",lon_int,lon_dec, maxalt,sats);
+    sprintf(txstring, "%s,%i",txstring,errorstatus);
     sprintf(txstring, "%s*%04X\n", txstring, gps_CRC16_checksum(txstring));
     maxalt=0;
     lockvariables=0;
@@ -633,24 +629,26 @@ void rtty_txbit (int bit)
 {
   if (bit)
   {
-    rf22.spiWrite(0x73,0x03); // High
+    radio1.write(0x73,0x03); // High
   }
   else
   {
-    rf22.spiWrite(0x73,0x00); // Low
+    radio1.write(0x73,0x00); // Low
   }
 }
 
 void setupRadio(){
-  pinMode(RFM22B_SDN, OUTPUT);    // RFM22B SDN is on ARDUINO A3
   digitalWrite(RFM22B_SDN, LOW);
   wait(1000);
-  rf22.init();
-  rf22.setTxPower(RADIO_POWER);
-  rf22.setFrequency(RADIO_FREQUENCY);
-  rf22.setModeTx();
-  rf22.setModemConfig(RF22::UnmodulatedCarrier);
-  rf22.spiWrite(0x073, 0x03); 
+  rfm22::initSPI();
+  radio1.init();
+  radio1.write(0x71, 0x00); // unmodulated carrier
+  //This sets up the GPIOs to automatically switch the antenna depending on Tx or Rx state, only needs to be done at start up
+  radio1.write(0x0b,0x12);
+  radio1.write(0x0c,0x15);
+  radio1.setFrequency(RADIO_FREQUENCY);
+  radio1.write(0x6D, RADIO_POWER);
+  radio1.write(0x07, 0x08); 
 
 }
 
@@ -662,26 +660,26 @@ void setGPS_Cyclic() {
     0x10, 0x27, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 
     0x00, 0x00, 0x00, 0x2C, 0x01, 0x00, 0x00, 0x4F, 0xC1, 
     0x03, 0x00, 0x87, 0x02, 0x00, 0x00, 0xFF, 0x00, 0x00, 
-    0x00, 0x64, 0x40, 0x01, 0x00, 0xE3, 0x65                                     };
+    0x00, 0x64, 0x40, 0x01, 0x00, 0xE3, 0x65                                       };
   sendUBX(setCyclic, sizeof(setCyclic)/sizeof(uint8_t));
 }
 
 void setGPS_PowerSaveMode() {
   // Power Save Mode 
   uint8_t setPSM[] = { 
-    0xB5, 0x62, 0x06, 0x11, 0x02, 0x00, 0x08, 0x01, 0x22, 0x92                                                                 }; // Setup for Power Save Mode (Default Cyclic 1s)
+    0xB5, 0x62, 0x06, 0x11, 0x02, 0x00, 0x08, 0x01, 0x22, 0x92                                                                   }; // Setup for Power Save Mode (Default Cyclic 1s)
   sendUBX(setPSM, sizeof(setPSM)/sizeof(uint8_t));
 }
 
 void setGps_MaxPerformanceMode() {
   //Set GPS for Max Performance Mode
   uint8_t setMax[] = { 
-    0xB5, 0x62, 0x06, 0x11, 0x02, 0x00, 0x08, 0x00, 0x21, 0x91                                                                 }; // Setup for Max Power Mode
+    0xB5, 0x62, 0x06, 0x11, 0x02, 0x00, 0x08, 0x00, 0x21, 0x91                                                                   }; // Setup for Max Power Mode
   sendUBX(setMax, sizeof(setMax)/sizeof(uint8_t));
 }
 void resetGPS() {
   uint8_t set_reset[] = {
-    0xB5, 0x62, 0x06, 0x04, 0x04, 0x00, 0xFF, 0x87, 0x00, 0x00, 0x94, 0xF5                                       };
+    0xB5, 0x62, 0x06, 0x04, 0x04, 0x00, 0xFF, 0x87, 0x00, 0x00, 0x94, 0xF5                                         };
   sendUBX(set_reset, sizeof(set_reset)/sizeof(uint8_t));
 }
 
@@ -723,6 +721,7 @@ void wait(unsigned long delaytime) // Arduino Delay doesn't get CPU Speeds below
   while((_delaytime+delaytime)>=millis()){
   }
 }
+
 
 char *ax25_base91enc(char *s, uint8_t n, uint32_t v)
 {
@@ -775,7 +774,7 @@ void tx_aprs()
 void ax25_init(void)
 {
   /* Fast PWM mode, non-inverting output on OC2A */
-  TCCR2A = _BV(COM2A1) | _BV(WGM21) | _BV(WGM20);
+  TCCR2A = _BV(COM2B1) | _BV(WGM21) | _BV(WGM20);
   TCCR2B = _BV(CS20);
 
   /* Make sure radio is not enabled */
@@ -790,11 +789,11 @@ void ax25_init(void)
 void send_APRS() {
   ax25_init();
   digitalWrite(HX1_POWER, HIGH);
-  wait(100);
+  wait(500);
   digitalWrite(HX1_ENABLE, HIGH);
-  wait(100);
+  wait(1000);
   tx_aprs();
-  wait(100);
+  wait(1000);
   digitalWrite(HX1_POWER, LOW);
   digitalWrite(HX1_ENABLE, LOW);
 }
@@ -866,7 +865,7 @@ ISR(TIMER2_OVF_vect)
   static int8_t bc       = 0;
 
   /* Update the PWM output */
-  OCR2A = pgm_read_byte(&_sine_table[(phase >> 7) & 0x1FF]);
+  OCR2B = pgm_read_byte(&_sine_table[(phase >> 7) & 0x1FF]);
   phase += step;
 
   if(++sample < SAMPLES_PER_BAUD) return;
@@ -931,6 +930,16 @@ ISR(TIMER2_OVF_vect)
 
   byte >>= 1;
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
