@@ -273,6 +273,7 @@ void tx_aprs()
   aprs_lon = aprs_lon / 26 - aprs_lon / 2710 + aprs_lon / 15384615;
   int32_t aprs_alt = alt * 32808 / 10000;
 
+
   /* Construct the compressed telemetry format */
   ax25_base91enc(stlm + 0, 2, seq);
 
