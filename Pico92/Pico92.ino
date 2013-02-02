@@ -88,7 +88,7 @@ static const uint8_t PROGMEM _sine_table[] = {
 #define PHASE_DELTA_2200 (((TABLE_SIZE * 2200L) << 7) / PLAYBACK_RATE)
 #define PHASE_DELTA_XOR  (PHASE_DELTA_1200 ^ PHASE_DELTA_2200)
 
-char txstring[80];
+char txstring[120];  // THIS SHOULD BE 80, INCREASED FOR TESTING
 volatile static uint8_t *_txbuf = 0;
 volatile static uint8_t  _txlen = 0;
 volatile int txstatus=1;
@@ -161,7 +161,11 @@ void loop() {
 
     }
   }
+/* XXXXX */
+
   geofence_location(lat,lon);
+  
+  
   if (aprs_tx_status==0)
   {
     _aprs_tx_timer=millis();
@@ -225,14 +229,14 @@ static int pointinpoly(const int32_t *poly, int points, int32_t x, int32_t y)
 
 int geofence_location(int32_t lat_poly, int32_t lon_poly)
 {
-  if(pointinpoly(UKgeofence, 9, lat_poly, lon_poly) == true)
+  if(pointinpoly(UKgeofence, 50, lat_poly, lon_poly) == true)
   {
     inuk=1;
     comment[0] = ' ';
     comment[1] = 'M';
   }
   else {
-    inuk=0;
+ inuk=0;
   }
 }
 
@@ -678,7 +682,7 @@ ISR(TIMER1_COMPA_vect)
     }
     lockvariables=1;
     sprintf(txstring, "$$$$$AVA,%i,%02d:%02d:%02d,%s%i.%05ld,%s%i.%05ld,%ld,%d",count, hour, minute, second,lat < 0 ? "-" : "",lat_int,lat_dec,lon < 0 ? "-" : "",lon_int,lon_dec, maxalt,sats);
-    sprintf(txstring, "%s,%i,%i",txstring,errorstatus,inuk);
+    sprintf(txstring, "%s,%i,%i,%ld,%ld",txstring,errorstatus,inuk,lat,lon);
     sprintf(txstring, "%s*%04X\n", txstring, gps_CRC16_checksum(txstring));
     maxalt=0;
     lockvariables=0;
