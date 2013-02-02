@@ -1,14 +1,25 @@
-/*
-* Eurus 70cm Tracker (434.200Mhz) - James Coxon jacoxon@googlemail.com
- * Long duration, East to West, High Altitude balloon flight - based up on the code of PicoAtlas.
- * Components - Arduino328, UBlox 6 GPS (Falcom FSA-03), RFM22b Radio
- *
- * Continous Transmission of RTTY.
- *
- * Latest code can be found: https://github.com/jamescoxon/Eurus
- *
- * GPS Code from jonsowman and Joey flight computer CUSF
- * https://github.com/cuspaceflight/joey-m/tree/master/firmware
+ /*
+ AVA/ATLAS 70cm/2Mtr RTTY/APRS Tracker
+ 
+ By Anthony Stirk M0UPU / James Coxon M6JCX
+ 
+ Latest code can be found: https://github.com/jamescoxon/APRS_Projects / https://github.com/Upuaut/APRS_Projects
+  
+ Thanks and credits :
+ 
+ Interrupt Driven RTTY Code :
+ Evolved from Rob Harrison's RTTY Code.
+ Thanks to : 
+ http://www.engblaze.com/microcontroller-tutorial-avr-and-arduino-timer-interrupts/
+ http://gammon.com.au/power
+ Suggestion to use Frequency Shift Registers by Dave Akerman (Daveake)/Richard Cresswell (Navrac)
+ Suggestion to lock variables when making the telemetry string & Compare match register calculation from Phil Heron.
+ 
+ RFM22B Code from James Coxon http://ukhas.org.uk/guides:rfm22b 
+ 
+ GPS Code from jonsowman and Joey flight computer CUSF
+ https://github.com/cuspaceflight/joey-m/tree/master/firmware
+ Big thanks to Dave Akerman!
  
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -18,12 +29,12 @@
  This program is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.\
- You should have received a copy of the GNU General Public License
- along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ GNU General Public License for more details.
+ 
+ See <http://www.gnu.org/licenses/>.
  */
+ 
 #include <util/crc16.h>
-
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #include <string.h>
@@ -31,13 +42,15 @@
 #include <stdarg.h>
 #include <SPI.h>
 #include <RFM22.h>
-#include <avr/pgmspace.h>    // needed for PROGMEM
+#include <avr/pgmspace.h>
 #include "ax25modem.h"
 #include "geofence.h"
 
 static const uint8_t PROGMEM _sine_table[] = {
 #include "sine_table.h"
 };
+
+/* CONFIGURABLE BITS */
 
 #define APRS_TX_INTERVAL  1  // APRS TX Interval in Minutes
 #define ASCII 7          // ASCII 7 or 8
@@ -54,6 +67,8 @@ static const uint8_t PROGMEM _sine_table[] = {
  0x06 17db (50mW)
  0x07 20db (100mW)
  */
+#define POWERSAVING      // Comment out to turn Power Saving modes off
+
 #define RFM22B_PIN 10
 #define RFM22B_SDN A5
 #define STATUS_LED 7            // PAVA R7 Boards have an LED on PIN4
@@ -61,7 +76,6 @@ static const uint8_t PROGMEM _sine_table[] = {
 #define HX1_POWER  6
 #define HX1_ENABLE 4
 #define HX1_TXD    3
-#define POWERSAVING
 
 #define BAUD_RATE      (1200)
 #define TABLE_SIZE     (512)
@@ -74,8 +88,6 @@ static const uint8_t PROGMEM _sine_table[] = {
 #define PHASE_DELTA_2200 (((TABLE_SIZE * 2200L) << 7) / PLAYBACK_RATE)
 #define PHASE_DELTA_XOR  (PHASE_DELTA_1200 ^ PHASE_DELTA_2200)
 
-// Data to be transmitted
-
 char txstring[80];
 volatile static uint8_t *_txbuf = 0;
 volatile static uint8_t  _txlen = 0;
@@ -85,23 +97,18 @@ volatile char txc;
 volatile int txi;
 volatile int txj;
 volatile boolean lockvariables = 0;
-#define ONEPPM 1.0e-6
-#define DEBUG false
 
-//Variables
-uint8_t oldhour = 0, oldminute = 0, oldsecond = 0;
 int32_t lat = 514981000, lon = -530000, alt = 36000,maxalt = 0,lat_dec = 0, lon_dec =0;
 uint8_t hour = 0, minute = 0, second = 0, month = 0, day = 0, lock = 0, sats = 0;
-int GPSerror = 0, count = 1, n, gpsstatus, navmode = 0, battV = 0,lat_int=0,lon_int=0,errorstatus;
-int elevation = 0, azimuth = 0, aprs_status = 0, aprs_attempts = 0;
-long int doppler = 0;
-int psm_status = 0;
-
+int GPSerror = 0, count = 1, n, navmode = 0, lat_int=0,lon_int=0,errorstatus;
+int aprs_status = 0, aprs_attempts = 0, psm_status = 0;
 uint8_t buf[60]; //GPS receive buffer
-char superbuffer [80]; //Telem string buffer
-rfm22 radio1(RFM22B_PIN);
 char comment[3];
 unsigned long _aprs_tx_timer, aprs_tx_status = 0;
+
+int inuk=0;
+
+rfm22 radio1(RFM22B_PIN);
 
 void setup() {
   pinMode(HX1_POWER, OUTPUT);   
@@ -109,10 +116,8 @@ void setup() {
   pinMode(GPS_ENABLE, OUTPUT); 
   digitalWrite(GPS_ENABLE, LOW);
   wait(500);
-  //pinMode(RFM22B_SDN, OUTPUT);
   digitalWrite(HX1_POWER, LOW);
   digitalWrite(HX1_ENABLE, LOW);
-  // wait(500);
   Serial.begin(9600);
   wait(150);
   resetGPS();
@@ -121,18 +126,13 @@ void setup() {
   wait(500);
   setupRadio();
   initialise_interrupt();
-  #ifdef POWERSAVING
+#ifdef POWERSAVING
   ADCSRA = 0;
 #endif
 }
-// DIAL 434.192.50 
-
-// THIS CODE SEEMS TO USE VERY LITTLE POWER FOR SOME REASON ~ 60mA in PSM whilst TXing APRS
 
 void loop() {
-    oldhour=hour;
-  oldminute=minute;
-  oldsecond=second;
+  
   gps_check_nav();
   if(lock!=3) // Blink LED to indicate no lock
   {
@@ -161,11 +161,7 @@ void loop() {
 
     }
   }
-  //  if(count % 2 == 0)
-  // {
-  //  geofence_location(lat, lon);
-  // }
-
+  geofence_location(lat,lon);
   if (aprs_tx_status==0)
   {
     _aprs_tx_timer=millis();
@@ -173,8 +169,6 @@ void loop() {
   }
   if( (_aprs_tx_timer+(APRS_TX_INTERVAL*60000))<=millis()) {
     aprs_tx_status=0;
-//    aprs_status = 1;
-    //Transmit APRS data now
     send_APRS();
     aprs_attempts++;
   }
@@ -231,30 +225,15 @@ static int pointinpoly(const int32_t *poly, int points, int32_t x, int32_t y)
 
 int geofence_location(int32_t lat_poly, int32_t lon_poly)
 {
-  if(pointinpoly(UKgeofence, 50, lat_poly, lon_poly) == true)
+  if(pointinpoly(UKgeofence, 9, lat_poly, lon_poly) == true)
   {
+    inuk=1;
     comment[0] = ' ';
-    comment[1] = ' ';
+    comment[1] = 'M';
   }
-
-  else if(pointinpoly(Netherlands_geofence, 50, lat_poly, lon_poly) == true)
-  {
-    comment[0] = ' ';
-    comment[1] = 'P';
+  else {
+    inuk=0;
   }
-
-  else if(pointinpoly(Belgium_geofence, 60, lat_poly, lon_poly) == true)
-  {
-    comment[0] = ' ';
-    comment[1] = 'O';
-  }
-
-  else if(pointinpoly(France_geofence, 60, lat_poly, lon_poly) == true)
-  {
-    comment[0] = ' ';
-    comment[1] = 'F';
-  }
-
 }
 
 void tx_aprs()
@@ -497,7 +476,7 @@ void setGPS_DynamicModel3()
     0x03, 0x00, 0x00, 0x00, 0x00, 0x10, 0x27, 0x00, 0x00,
     0x05, 0x00, 0xFA, 0x00, 0xFA, 0x00, 0x64, 0x00, 0x2C,
     0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x13, 0x76                                                     };
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x13, 0x76                                                       };
   while(!gps_set_sucess)
   {
     sendUBX(setdm3, sizeof(setdm3)/sizeof(uint8_t));
@@ -573,7 +552,7 @@ void gps_check_lock()
   // Construct the request to the GPS
   uint8_t request[8] = {
     0xB5, 0x62, 0x01, 0x06, 0x00, 0x00,
-    0x07, 0x16                                                                                                            };
+    0x07, 0x16                                                                                                              };
   sendUBX(request, 8);
 
   // Get the message back from the GPS
@@ -648,7 +627,7 @@ uint8_t* ckb)
 }
 void resetGPS() {
   uint8_t set_reset[] = {
-    0xB5, 0x62, 0x06, 0x04, 0x04, 0x00, 0xFF, 0x87, 0x00, 0x00, 0x94, 0xF5                                           };
+    0xB5, 0x62, 0x06, 0x04, 0x04, 0x00, 0xFF, 0x87, 0x00, 0x00, 0x94, 0xF5                                             };
   sendUBX(set_reset, sizeof(set_reset)/sizeof(uint8_t));
 }
 void setupRadio(){
@@ -699,7 +678,7 @@ ISR(TIMER1_COMPA_vect)
     }
     lockvariables=1;
     sprintf(txstring, "$$$$$AVA,%i,%02d:%02d:%02d,%s%i.%05ld,%s%i.%05ld,%ld,%d",count, hour, minute, second,lat < 0 ? "-" : "",lat_int,lat_dec,lon < 0 ? "-" : "",lon_int,lon_dec, maxalt,sats);
-    sprintf(txstring, "%s,%i",txstring,errorstatus);
+    sprintf(txstring, "%s,%i,%i",txstring,errorstatus,inuk);
     sprintf(txstring, "%s*%04X\n", txstring, gps_CRC16_checksum(txstring));
     maxalt=0;
     lockvariables=0;
@@ -786,7 +765,7 @@ uint16_t gps_CRC16_checksum (char *string)
 uint8_t gps_check_nav(void)
 {
   uint8_t request[8] = {
-    0xB5, 0x62, 0x06, 0x24, 0x00, 0x00, 0x2A, 0x84                                                     };
+    0xB5, 0x62, 0x06, 0x24, 0x00, 0x00, 0x2A, 0x84                                                       };
   sendUBX(request, 8);
 
   // Get the message back from the GPS
@@ -815,7 +794,7 @@ void setGPS_DynamicModel6()
     0x03, 0x00, 0x00, 0x00, 0x00, 0x10, 0x27, 0x00, 0x00,
     0x05, 0x00, 0xFA, 0x00, 0xFA, 0x00, 0x64, 0x00, 0x2C,
     0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x16, 0xDC                                                     };
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x16, 0xDC                                                       };
   while(!gps_set_sucess)
   {
     sendUBX(setdm6, sizeof(setdm6)/sizeof(uint8_t));
@@ -839,7 +818,7 @@ void gps_get_position()
   // Request a NAV-POSLLH message from the GPS
   uint8_t request[8] = {
     0xB5, 0x62, 0x01, 0x02, 0x00, 0x00, 0x03,
-    0x0A                                                                                                        };
+    0x0A                                                                                                          };
   sendUBX(request, 8);
 
   // Get the message back from the GPS
@@ -884,7 +863,7 @@ void gps_get_time()
   // Send a NAV-TIMEUTC message to the receiver
   uint8_t request[8] = {
     0xB5, 0x62, 0x01, 0x21, 0x00, 0x00,
-    0x22, 0x67                                                                                                      };
+    0x22, 0x67                                                                                                        };
   sendUBX(request, 8);
 
   // Get the message back from the GPS
@@ -915,8 +894,10 @@ void gps_get_time()
 void setGPS_PowerSaveMode() {
   // Power Save Mode 
   uint8_t setPSM[] = { 
-    0xB5, 0x62, 0x06, 0x11, 0x02, 0x00, 0x08, 0x01, 0x22, 0x92                                                                   }; // Setup for Power Save Mode (Default Cyclic 1s)
+    0xB5, 0x62, 0x06, 0x11, 0x02, 0x00, 0x08, 0x01, 0x22, 0x92                                                                     }; // Setup for Power Save Mode (Default Cyclic 1s)
   sendUBX(setPSM, sizeof(setPSM)/sizeof(uint8_t));
 }
+
+
 
 
