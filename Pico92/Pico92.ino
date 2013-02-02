@@ -1,10 +1,10 @@
- /*
+/*
  AVA/ATLAS 70cm/2Mtr RTTY/APRS Tracker
  
  By Anthony Stirk M0UPU / James Coxon M6JCX
  
  Latest code can be found: https://github.com/jamescoxon/APRS_Projects / https://github.com/Upuaut/APRS_Projects
-  
+ 
  Thanks and credits :
  
  Interrupt Driven RTTY Code :
@@ -33,7 +33,7 @@
  
  See <http://www.gnu.org/licenses/>.
  */
- 
+
 #include <util/crc16.h>
 #include <avr/io.h>
 #include <avr/interrupt.h>
@@ -88,7 +88,7 @@ static const uint8_t PROGMEM _sine_table[] = {
 #define PHASE_DELTA_2200 (((TABLE_SIZE * 2200L) << 7) / PLAYBACK_RATE)
 #define PHASE_DELTA_XOR  (PHASE_DELTA_1200 ^ PHASE_DELTA_2200)
 
-char txstring[120];  // THIS SHOULD BE 80, INCREASED FOR TESTING
+char txstring[80];  
 volatile static uint8_t *_txbuf = 0;
 volatile static uint8_t  _txlen = 0;
 volatile int txstatus=1;
@@ -132,7 +132,7 @@ void setup() {
 }
 
 void loop() {
-  
+
   gps_check_nav();
   if(lock!=3) // Blink LED to indicate no lock
   {
@@ -161,20 +161,21 @@ void loop() {
 
     }
   }
-/* XXXXX */
+  /* XXXXX */
 
   geofence_location(lat,lon);
-  
-  
-  if (aprs_tx_status==0)
-  {
-    _aprs_tx_timer=millis();
-    aprs_tx_status=1;
-  }
-  if( (_aprs_tx_timer+(APRS_TX_INTERVAL*60000))<=millis()) {
-    aprs_tx_status=0;
-    send_APRS();
-    aprs_attempts++;
+
+  if(inuk) { // Change to !inuk for flight
+    if (aprs_tx_status==0)
+    {
+      _aprs_tx_timer=millis();
+      aprs_tx_status=1;
+    }
+    if( (_aprs_tx_timer+(APRS_TX_INTERVAL*60000))<=millis()) {
+      aprs_tx_status=0;
+      send_APRS();
+      aprs_attempts++;
+    }
   }
 #ifdef POWERSAVING
   if((lock==3) && (psm_status==0) && (sats>=5) &&((errorstatus & (1 << 0))==0)&&((errorstatus & (1 << 1))==0))
@@ -233,10 +234,10 @@ int geofence_location(int32_t lat_poly, int32_t lon_poly)
   {
     inuk=1;
     comment[0] = ' ';
-    comment[1] = 'M';
+    comment[1] = ' ';
   }
   else {
- inuk=0;
+    inuk=0;
   }
 }
 
@@ -480,7 +481,7 @@ void setGPS_DynamicModel3()
     0x03, 0x00, 0x00, 0x00, 0x00, 0x10, 0x27, 0x00, 0x00,
     0x05, 0x00, 0xFA, 0x00, 0xFA, 0x00, 0x64, 0x00, 0x2C,
     0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x13, 0x76                                                       };
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x13, 0x76                                                         };
   while(!gps_set_sucess)
   {
     sendUBX(setdm3, sizeof(setdm3)/sizeof(uint8_t));
@@ -556,7 +557,7 @@ void gps_check_lock()
   // Construct the request to the GPS
   uint8_t request[8] = {
     0xB5, 0x62, 0x01, 0x06, 0x00, 0x00,
-    0x07, 0x16                                                                                                              };
+    0x07, 0x16                                                                                                                };
   sendUBX(request, 8);
 
   // Get the message back from the GPS
@@ -631,7 +632,7 @@ uint8_t* ckb)
 }
 void resetGPS() {
   uint8_t set_reset[] = {
-    0xB5, 0x62, 0x06, 0x04, 0x04, 0x00, 0xFF, 0x87, 0x00, 0x00, 0x94, 0xF5                                             };
+    0xB5, 0x62, 0x06, 0x04, 0x04, 0x00, 0xFF, 0x87, 0x00, 0x00, 0x94, 0xF5                                               };
   sendUBX(set_reset, sizeof(set_reset)/sizeof(uint8_t));
 }
 void setupRadio(){
@@ -682,7 +683,8 @@ ISR(TIMER1_COMPA_vect)
     }
     lockvariables=1;
     sprintf(txstring, "$$$$$AVA,%i,%02d:%02d:%02d,%s%i.%05ld,%s%i.%05ld,%ld,%d",count, hour, minute, second,lat < 0 ? "-" : "",lat_int,lat_dec,lon < 0 ? "-" : "",lon_int,lon_dec, maxalt,sats);
-    sprintf(txstring, "%s,%i,%i,%ld,%ld",txstring,errorstatus,inuk,lat,lon);
+   // sprintf(txstring, "%s,%i,%i,%ld,%ld,%i",txstring,errorstatus,inuk,lat,lon,aprs_attempts);
+    sprintf(txstring, "%s,%i,%i,%i",txstring,errorstatus,inuk,aprs_attempts);
     sprintf(txstring, "%s*%04X\n", txstring, gps_CRC16_checksum(txstring));
     maxalt=0;
     lockvariables=0;
@@ -769,7 +771,7 @@ uint16_t gps_CRC16_checksum (char *string)
 uint8_t gps_check_nav(void)
 {
   uint8_t request[8] = {
-    0xB5, 0x62, 0x06, 0x24, 0x00, 0x00, 0x2A, 0x84                                                       };
+    0xB5, 0x62, 0x06, 0x24, 0x00, 0x00, 0x2A, 0x84                                                         };
   sendUBX(request, 8);
 
   // Get the message back from the GPS
@@ -798,7 +800,7 @@ void setGPS_DynamicModel6()
     0x03, 0x00, 0x00, 0x00, 0x00, 0x10, 0x27, 0x00, 0x00,
     0x05, 0x00, 0xFA, 0x00, 0xFA, 0x00, 0x64, 0x00, 0x2C,
     0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x16, 0xDC                                                       };
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x16, 0xDC                                                         };
   while(!gps_set_sucess)
   {
     sendUBX(setdm6, sizeof(setdm6)/sizeof(uint8_t));
@@ -822,7 +824,7 @@ void gps_get_position()
   // Request a NAV-POSLLH message from the GPS
   uint8_t request[8] = {
     0xB5, 0x62, 0x01, 0x02, 0x00, 0x00, 0x03,
-    0x0A                                                                                                          };
+    0x0A                                                                                                            };
   sendUBX(request, 8);
 
   // Get the message back from the GPS
@@ -867,7 +869,7 @@ void gps_get_time()
   // Send a NAV-TIMEUTC message to the receiver
   uint8_t request[8] = {
     0xB5, 0x62, 0x01, 0x21, 0x00, 0x00,
-    0x22, 0x67                                                                                                        };
+    0x22, 0x67                                                                                                          };
   sendUBX(request, 8);
 
   // Get the message back from the GPS
@@ -898,9 +900,10 @@ void gps_get_time()
 void setGPS_PowerSaveMode() {
   // Power Save Mode 
   uint8_t setPSM[] = { 
-    0xB5, 0x62, 0x06, 0x11, 0x02, 0x00, 0x08, 0x01, 0x22, 0x92                                                                     }; // Setup for Power Save Mode (Default Cyclic 1s)
+    0xB5, 0x62, 0x06, 0x11, 0x02, 0x00, 0x08, 0x01, 0x22, 0x92                                                                       }; // Setup for Power Save Mode (Default Cyclic 1s)
   sendUBX(setPSM, sizeof(setPSM)/sizeof(uint8_t));
 }
+
 
 
 
