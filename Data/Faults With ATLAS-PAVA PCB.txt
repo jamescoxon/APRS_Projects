@@ -19,3 +19,7 @@ Fixed. Step up is very inefficient and draws 1.2A @ 1.8V for 5V causing bench PS
 Notes for Rev 2 
 
 Add MPL3115A2  ?
+90' programming header
+
+  setupRadio();
+  radio1.write(0x07, 0x08);  
