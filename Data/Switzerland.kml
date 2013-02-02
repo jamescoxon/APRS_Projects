@@ -1,0 +1,37 @@
+<kml xmlns="http://earth.google.com/kml/2.0">
+<Placemark>
+  <name>Switzerland</name>
+  <Style>
+    <LineStyle>
+      <color>ff0000ff</color>
+    </LineStyle>
+  </Style>
+  <LineString>
+<altitudeMode>clampToGround</altitudeMode>
+    <coordinates>
+7.57355,47.58689 <!-- Sw/De -->
+7.12158,47.39487
+6.07512,46.42070
+5.96051,46.12561
+6.76786,46.37177
+7.04013,45.92849 <!-- Sw/It N -->
+7.795,45.914
+8.429,46.456
+9.013,45.821
+9.281,46.470
+10.157,46.245
+10.070,46.600
+10.444,46.540
+10.468,46.852 <!-- Ch/At/It -->
+9.484,47.064
+9.657,47.450
+9.149,47.664
+8.550,47.780
+8.412,47.666
+8.629,47.644
+8.488,47.583
+7.57355,47.58689 <!-- Sw/De -->
+   </coordinates>
+  </LineString>
+</Placemark>
+</kml>
