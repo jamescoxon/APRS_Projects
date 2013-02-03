@@ -4,7 +4,9 @@
  
  By Anthony Stirk M0UPU / James Coxon M6JCX
 
- Additional code from Project Swift
+ Additional code from :
+ Project Swift
+ Steve Randall
 
  Copyright 2010-2012 Nigel Smart <nigel@projectswift.co.uk>            
  And Philip Heron <phil@sanslogic.co.uk>                               
