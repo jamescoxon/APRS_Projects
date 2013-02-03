@@ -108,8 +108,6 @@ uint8_t buf[60]; //GPS receive buffer
 char comment[3];
 unsigned long _aprs_tx_timer, aprs_tx_status = 0;
 
-int inuk=0;
-
 rfm22 radio1(RFM22B_PIN);
 
 void setup() {
@@ -137,8 +135,8 @@ void loop() {
   oldhour=hour;
   oldminute=minute;
   oldsecond=second;
-  oldlat=lat;
-  oldlon=lon;
+  //oldlat=lat;
+ // oldlon=lon;
   gps_check_nav();
   if(lock!=3) // Blink LED to indicate no lock
   {
@@ -170,7 +168,7 @@ void loop() {
 
   geofence_location(lat,lon);
 
-  if(inuk) { // Change to !inuk for flight
+  if(comment[1]=='M') { // Change to !=  for flight
     if (aprs_tx_status==0)
     {
       _aprs_tx_timer=millis();
@@ -275,12 +273,31 @@ int geofence_location(int32_t lat_poly, int32_t lon_poly)
 {
   if(pointinpoly(UKgeofence, 9, lat_poly, lon_poly) == true)
   {
-    inuk=1;
     comment[0] = ' ';
-    comment[1] = ' ';
+    comment[1] = 'M';
   }
-  else {
-    inuk=0;
+
+  else if(pointinpoly(Netherlands_geofence, 50, lat_poly, lon_poly) == true)
+  {
+    comment[0] = ' ';
+    comment[1] = 'P';
+  }
+
+  else if(pointinpoly(Belgium_geofence, 60, lat_poly, lon_poly) == true)
+  {
+    comment[0] = ' ';
+    comment[1] = 'O';
+  }
+
+  else if(pointinpoly(France_geofence, 60, lat_poly, lon_poly) == true)
+  {
+    comment[0] = ' ';
+    comment[1] = 'F';
+  }
+  else
+  {
+    comment[0] = ' ';
+    comment[1] = '#';
   }
 }
 
@@ -727,7 +744,7 @@ ISR(TIMER1_COMPA_vect)
     lockvariables=1;
     sprintf(txstring, "$$$$$AVA,%i,%02d:%02d:%02d,%s%i.%05ld,%s%i.%05ld,%ld,%d",count, hour, minute, second,lat < 0 ? "-" : "",lat_int,lat_dec,lon < 0 ? "-" : "",lon_int,lon_dec, maxalt,sats);
     // sprintf(txstring, "%s,%i,%i,%ld,%ld,%i",txstring,errorstatus,inuk,lat,lon,aprs_attempts);
-    sprintf(txstring, "%s,%i,%i,%i",txstring,errorstatus,inuk,aprs_attempts);
+    sprintf(txstring, "%s,%i,%c,%i",txstring,errorstatus,comment[1],aprs_attempts);
     sprintf(txstring, "%s*%04X\n", txstring, gps_CRC16_checksum(txstring));
     maxalt=0;
     lockvariables=0;
