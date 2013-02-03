@@ -276,7 +276,7 @@ int geofence_location(int32_t lat_poly, int32_t lon_poly)
     comment[0] = ' ';
     comment[1] = 'M';
   }
-
+/*
   else if(pointinpoly(Netherlands_geofence, 50, lat_poly, lon_poly) == true)
   {
     comment[0] = ' ';
@@ -293,7 +293,7 @@ int geofence_location(int32_t lat_poly, int32_t lon_poly)
   {
     comment[0] = ' ';
     comment[1] = 'F';
-  }
+  }*/
   else
   {
     comment[0] = ' ';
