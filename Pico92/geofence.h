@@ -47,7 +47,7 @@ PROGMEM static const int32_t UKgeofence[9 * 2] =
 /* 
   Netherlands Geofence
 */
-PROGMEM static const int32_t PROGMEM Netherlands_geofence[18 * 2] =
+PROGMEM static const int32_t Netherlands_geofence[18 * 2] =
 {
 	507411600,60422900,
 	507485500,57239900,
@@ -73,7 +73,7 @@ PROGMEM static const int32_t PROGMEM Netherlands_geofence[18 * 2] =
 /* 
   Belgium Geofence
 */
-PROGMEM static const int32_t PROGMEM Belgium_geofence[25 * 2] =
+PROGMEM static const int32_t Belgium_geofence[25 * 2] =
 {
 	503115000,37138100,
 	503584900,40254500,
@@ -101,7 +101,7 @@ PROGMEM static const int32_t PROGMEM Belgium_geofence[25 * 2] =
 	505310100,32899100,
 	504554300,36626300,
 };
-PROGMEM static const int32_t PROGMEM Luxembourg_geofence[11 * 2] =
+PROGMEM static const int32_t Luxembourg_geofence[11 * 2] =
 {
   	495496100,58244800,
 	496623100,59179800,
@@ -115,7 +115,7 @@ PROGMEM static const int32_t PROGMEM Luxembourg_geofence[11 * 2] =
 	495117100,62429500,
 	494528400,59776200,
 };
-PROGMEM static const int32_t PROGMEM Switzerland_geofence[22 * 2] =
+PROGMEM static const int32_t Switzerland_geofence[22 * 2] =
 {
   	475868900,75735500,
 	473948700,71215800,
@@ -140,7 +140,7 @@ PROGMEM static const int32_t PROGMEM Switzerland_geofence[22 * 2] =
 	475830000,84880000,
 	475868900,75735500,
 };
-PROGMEM static const int32_t PROGMEM Spain_geofence[29 * 2] =
+PROGMEM static const int32_t Spain_geofence[29 * 2] =
 {
   	419290000,32160000,
 	410860000,10460000,
@@ -172,7 +172,7 @@ PROGMEM static const int32_t PROGMEM Spain_geofence[29 * 2] =
 	424340000,31660000,
 	419290000,32160000,
 };
-PROGMEM static const int32_t PROGMEM Portugal_geofence[19 * 2] =
+PROGMEM static const int32_t Portugal_geofence[19 * 2] =
 {
 	371700000,-73920000,
 	375500000,-75250000,
@@ -199,7 +199,7 @@ PROGMEM static const int32_t PROGMEM Portugal_geofence[19 * 2] =
 /* 
   France Geofence
 */
-PROGMEM static const int32_t PROGMEM France_geofence[48 * 2] =
+PROGMEM static const int32_t France_geofence[48 * 2] =
 {
 	510979700,25490300,
 	506962200,28987100,
@@ -249,7 +249,6 @@ PROGMEM static const int32_t PROGMEM France_geofence[48 * 2] =
 	501270000,15440000,
 	508910000,16440000,
 	510979700,25490300,
-
 };
 
 
