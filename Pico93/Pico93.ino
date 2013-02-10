@@ -123,7 +123,7 @@ void setup() {
 void loop() {
   
   //Regularly reset everything in case of an error
-  if(count % 100 == 0){
+  if(count % 50 == 0){
     re_setup();
   }
   
@@ -750,7 +750,7 @@ uint16_t gps_CRC16_checksum (char *string)
   crc = 0xFFFF;
 
   // Calculate checksum ignoring the first two $s
-  for (i = 5; i < strlen(string); i++)
+  for (i = 2; i < strlen(string); i++)
   {
     c = string[i];
     crc = _crc_xmodem_update (crc, c);
@@ -890,14 +890,14 @@ void gps_get_time()
 void setGPS_PowerSaveMode() {
   // Power Save Mode 
   uint8_t setPSM[] = { 
-    0xB5, 0x62, 0x06, 0x11, 0x02, 0x00, 0x08, 0x01, 0x22, 0x92                                                                         }; // Setup for Power Save Mode (Default Cyclic 1s)
+    0xB5, 0x62, 0x06, 0x11, 0x02, 0x00, 0x08, 0x01, 0x22, 0x92}; // Setup for Power Save Mode (Default Cyclic 1s)
   sendUBX(setPSM, sizeof(setPSM)/sizeof(uint8_t));
   psm_status=1;
 }
 void setGps_MaxPerformanceMode() {
   //Set GPS for Max Performance Mode
   uint8_t setMax[] = { 
-    0xB5, 0x62, 0x06, 0x11, 0x02, 0x00, 0x08, 0x00, 0x21, 0x91                                                             }; // Setup for Max Power Mode
+    0xB5, 0x62, 0x06, 0x11, 0x02, 0x00, 0x08, 0x00, 0x21, 0x91}; // Setup for Max Power Mode
   sendUBX(setMax, sizeof(setMax)/sizeof(uint8_t));
   psm_status=0;
 }
