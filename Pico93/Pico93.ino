@@ -100,13 +100,15 @@ volatile boolean lockvariables = 0;
 
 int32_t lat = 514981000, lon = -530000, alt = 36000,maxalt = 0,lat_dec = 0, lon_dec =0, oldlat, oldlon;
 uint8_t hour = 0, minute = 0, second = 0, month = 0, day = 0, lock = 0, sats = 0;
-int GPSerror = 0, count = 1, n, navmode = 0, lat_int=0,lon_int=0,errorstatus;
+int GPSerror = 0, count = 1, n, navmode = 0, lat_int=0,lon_int=0,errorstatus, radiostatus, gpsstatus;
 uint8_t oldhour = 0, oldminute = 0, oldsecond = 0;
 int aprs_status = 0, aprs_attempts = 0, psm_status = 0;
 int32_t tslf=0;
 uint8_t buf[60]; //GPS receive buffer
 char comment[3];
 unsigned long _aprs_tx_timer, aprs_tx_status = 0;
+char superbuffer [80]; //Telem string buffer
+unsigned long startTime;
 
 rfm22 radio1(RFM22B_PIN);
 
@@ -115,133 +117,80 @@ void setup() {
   pinMode(HX1_ENABLE, OUTPUT);
   pinMode(GPS_ENABLE, OUTPUT); 
   digitalWrite(GPS_ENABLE, LOW);
-  wait(500);
   digitalWrite(HX1_POWER, LOW);
   digitalWrite(HX1_ENABLE, LOW);
   Serial.begin(9600);
   wait(150);
-  resetGPS();
+  gpsPower(2); //reset the GPS
   wait(500);
   setupGPS();
   wait(500);
   setupRadio();
-  initialise_interrupt();
-#ifdef POWERSAVING
-  ADCSRA = 0;
-#endif
+  
+  startTime = millis();
 }
 
 void loop() {
-  oldhour=hour;
-  oldminute=minute;
-  oldsecond=second;
-  //oldlat=lat;
- // oldlon=lon;
-  gps_check_nav();
-  if(lock!=3) // Blink LED to indicate no lock
-  {
-    digitalWrite(STATUS_LED, HIGH);   
-    wait(750);               
-    digitalWrite(STATUS_LED, LOW); 
-    errorstatus |=(1 << 5);     
+  //Regularly reset everything in case of an error
+  if(count % 100 == 0){
+    re_setup();
   }
-  else
-  {
-    errorstatus &= ~(1 << 5);
-  }
-
-  if(alt<=1000) {
-    if(navmode != 3)
-    {
-      setGPS_DynamicModel3();
-      errorstatus |=(1 << 3);      
+  
+  //If GPS is ON every 5 strings check the nav mode
+  if(gpsstatus == 1){
+    if((count % 5) == 0){
+      gps_check_nav();
+      if(navmode != 6){
+        setGPS_DynamicModel6();
+      }
+        
     }
   }
-  else
-  {
-    if(navmode != 6){
-      setGPS_DynamicModel6();
-      errorstatus &= ~(1 << 3);
-
-    }
-  }
-
-  geofence_location(lat,lon);
-
-  if(comment[1]=='M') { // Change to !=  for flight
-    if (aprs_tx_status==0)
-    {
-      _aprs_tx_timer=millis();
-      aprs_tx_status=1;
-    }
-    if( (_aprs_tx_timer+(APRS_TX_INTERVAL*60000))<=millis()) {
-      aprs_tx_status=0;
+  
+  if(count > 10){
+    //If 2 minutes have passed send a new APRS packet and restart the timer
+    if (millis() - startTime > 120000) {
+      //Find out where we are
+      geofence_location(lat,lon);
+      
+      //Send APRS
       send_APRS();
-      aprs_attempts++;
+      
+      //Reset the clock
+      startTime = millis();
     }
+    
   }
-#ifdef POWERSAVING
-  if((lock==3) && (psm_status==0) && (sats>=5) &&((errorstatus & (1 << 0))==0)&&((errorstatus & (1 << 1))==0))
-  {
-    setGPS_PowerSaveMode();
-    wait(1000);
-    pinMode(STATUS_LED, INPUT); 
-    psm_status=1;
-    errorstatus &= ~(1 << 4);
-  }
-#endif
-  if(!lockvariables) {
+  
+  prepData();
+  rtty_txstring(superbuffer);
 
-    prepare_data();
-    if(alt>maxalt)
-    {
-      maxalt=alt;
-    }
-
-    /* XXXXX */
-    if((oldhour==hour&&oldminute==minute&&oldsecond==second)||sats<=3) {
-      tslf++;
-    }
-    else
-    {
-      tslf=0;
-      errorstatus &= ~(1 << 0);
-      errorstatus &= ~(1 << 1);
-    }
-    if((tslf>10 && ((errorstatus & (1 << 0))==0)&&((errorstatus & (1 << 1))==0))) {
-      setupGPS();
-      wait(125);
-      setGps_MaxPerformanceMode();
-      wait(125);
-      //    errorstatus=1;
-      errorstatus |=(1 << 0);
-      psm_status=0;
-      errorstatus |=(1 << 4); 
-    }
-    if(tslf>100 && ((errorstatus & (1 << 0))==1)&&((errorstatus & (1 << 1))==0)) {
-      errorstatus |=(1 << 0);
-      errorstatus |=(1 << 1);
-      Serial.flush();
-      resetGPS(); // Modify this to turn the GPS off ?
-      wait(125);
-      setupGPS();
-    }
- if(radio1.read(0x07) != 0x08 )
-    {    
-      digitalWrite(RFM22B_SDN, HIGH);
-      errorstatus |=(1 << 2);
-      wait(500);
-      setupRadio();
-      wait(500);
-    }
-
-  } 
-
-  delay(5000);
 
 }
 
 //************Other Functions*****************
+
+void prepData() {
+  if(gpsstatus == 1){
+    gps_check_lock();
+    gps_get_position();
+    gps_get_time();
+  }
+  count++;
+  n=sprintf (superbuffer, "$$ATLAS,%d,%02d:%02d:%02d,%ld,%ld,%ld,%d,%d", count, hour, minute, second, lat, lon, alt, sats, navmode);
+  n = sprintf (superbuffer, "%s*%04X\n", superbuffer, gps_CRC16_checksum(superbuffer));
+}
+
+void re_setup(){
+    //Send commands to GPS
+    gpsPower(1);
+    
+    //Reboot Radio
+    digitalWrite(RFM22B_SDN, HIGH);
+    radiostatus = 0;
+    delay(1000);
+    setupRadio();
+}
 
 static int pointinpoly(const int32_t *poly, int points, int32_t x, int32_t y)
 {
@@ -517,29 +466,13 @@ void setupGPS() {
   sendUBX(setNMEAoff, sizeof(setNMEAoff)/sizeof(uint8_t));
   
   wait(1000);
-  setGPS_DynamicModel3();
+  setGPS_DynamicModel6();
   wait(1000);
 }
 void wait(unsigned long delaytime) // Arduino Delay doesn't get CPU Speeds below 8Mhz
 {
   unsigned long _delaytime=millis();
   while((_delaytime+delaytime)>=millis()){
-  }
-}
-
-void setGPS_DynamicModel3()
-{
-  int gps_set_sucess=0;
-  uint8_t setdm3[] = {
-    0xB5, 0x62, 0x06, 0x24, 0x24, 0x00, 0xFF, 0xFF, 0x03,
-    0x03, 0x00, 0x00, 0x00, 0x00, 0x10, 0x27, 0x00, 0x00,
-    0x05, 0x00, 0xFA, 0x00, 0xFA, 0x00, 0x64, 0x00, 0x2C,
-    0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x13, 0x76                                                           };
-  while(!gps_set_sucess)
-  {
-    sendUBX(setdm3, sizeof(setdm3)/sizeof(uint8_t));
-    gps_set_sucess=getUBX_ACK(setdm3);
   }
 }
 
@@ -684,11 +617,7 @@ uint8_t* ckb)
     data++;
   }
 }
-void resetGPS() {
-  uint8_t set_reset[] = {
-    0xB5, 0x62, 0x06, 0x04, 0x04, 0x00, 0xFF, 0x87, 0x00, 0x00, 0x94, 0xF5                                                 };
-  sendUBX(set_reset, sizeof(set_reset)/sizeof(uint8_t));
-}
+
 void setupRadio(){
   pinMode(RFM22B_SDN, OUTPUT);  
   digitalWrite(RFM22B_SDN, LOW);
@@ -704,107 +633,64 @@ void setupRadio(){
   radio1.write(0x07, 0x08); 
 
 }
-void initialise_interrupt() 
+
+// RTTY Functions - from RJHARRISON's AVR Code
+void rtty_txstring (char * string)
 {
-  // initialize Timer1
-  cli();          // disable global interrupts
-  TCCR1A = 0;     // set entire TCCR1A register to 0
-  TCCR1B = 0;     // same for TCCR1B
-  OCR1A = F_CPU / 1024 / RTTY_BAUD - 1;  // set compare match register to desired timer count:
-  TCCR1B |= (1 << WGM12);   // turn on CTC mode:
-  // Set CS10 and CS12 bits for:
-  TCCR1B |= (1 << CS10);
-  TCCR1B |= (1 << CS12);
-  // enable timer compare interrupt:
-  TIMSK1 |= (1 << OCIE1A);
-  sei();          // enable global interrupts
+
+	/* Simple function to sent a char at a time to 
+	** rtty_txbyte function. 
+	** NB Each char is one byte (8 Bits)
+	*/
+	char c;
+	c = *string++;
+	while ( c != '\0')
+	{
+		rtty_txbyte (c);
+		c = *string++;
+	}
 }
-ISR(TIMER1_COMPA_vect)
+
+void rtty_txbyte (char c)
 {
-  switch(txstatus) {
-  case 0: // This is the optional delay between transmissions.
-    txj++;
-    if(txj>(TXDELAY*RTTY_BAUD)) { 
-      txj=0;
-      txstatus=1;
-    }
-    break;
-  case 1: // Initialise transmission
-
-    if(alt>maxalt)
-    {
-      maxalt=alt;
-    }
-    lockvariables=1;
-    sprintf(txstring, "$$$$$AVA,%i,%02d:%02d:%02d,%s%i.%05ld,%s%i.%05ld,%ld,%d",count, hour, minute, second,lat < 0 ? "-" : "",lat_int,lat_dec,lon < 0 ? "-" : "",lon_int,lon_dec, maxalt,sats);
-    // sprintf(txstring, "%s,%i,%i,%ld,%ld,%i",txstring,errorstatus,inuk,lat,lon,aprs_attempts);
-    sprintf(txstring, "%s,%i,%c,%i",txstring,errorstatus,comment[1],aprs_attempts);
-    sprintf(txstring, "%s*%04X\n", txstring, gps_CRC16_checksum(txstring));
-    maxalt=0;
-    lockvariables=0;
-    txstringlength=strlen(txstring);
-    txstatus=2;
-    txj=0;
-    break;
-  case 2: // Grab a char and lets go transmit it. 
-    if ( txj < txstringlength)
-    {
-      txc = txstring[txj];
-      txj++;
-      txstatus=3;
-      rtty_txbit (0); // Start Bit;
-      txi=0;
-    }
-    else 
-    {
-      txstatus=0; // Should be finished
-      txj=0;
-      count++;
-    }
-    break;
-  case 3:
-    if(txi<ASCII)
-    {
-      txi++;
-      if (txc & 1) rtty_txbit(1); 
-      else rtty_txbit(0);	
-      txc = txc >> 1;
-      break;
-    }
-    else 
-    {
-      rtty_txbit (1); // Stop Bit
-      txstatus=4;
-      txi=0;
-      break;
-    } 
-  case 4:
-    if(STOPBITS==2)
-    {
-      rtty_txbit (1); // Stop Bit
-      txstatus=2;
-      break;
-    }
-    else
-    {
-      txstatus=2;
-      break;
-    }
-
-  }
+	/* Simple function to sent each bit of a char to 
+	** rtty_txbit function. 
+	** NB The bits are sent Least Significant Bit first
+	**
+	** All chars should be preceded with a 0 and 
+	** proceded with a 1. 0 = Start bit; 1 = Stop bit
+	**
+	** ASCII_BIT = 7 or 8 for ASCII-7 / ASCII-8
+	*/
+	int i;
+	rtty_txbit (0); // Start bit
+	// Send bits for for char LSB first	
+	for (i=0;i<8;i++)
+	{
+		if (c & 1) rtty_txbit(1); 
+			else rtty_txbit(0);	
+		c = c >> 1;
+	}
+	rtty_txbit (1); // Stop bit
+        rtty_txbit (1); // Stop bit
 }
 
 void rtty_txbit (int bit)
 {
-  if (bit)
-  {
-    radio1.write(0x73,0x03); // High
-  }
-  else
-  {
-    radio1.write(0x73,0x00); // Low
-  }
+		if (bit)
+		{
+		  // high
+                  radio1.write(0x073, 0x03);
+		}
+		else
+		{
+		  // low
+                  radio1.write(0x073, 0x00);
+		}
+                delayMicroseconds(19500); // 10000 = 100 BAUD 20150
+
 }
+
 uint16_t gps_CRC16_checksum (char *string)
 {
   size_t i;
@@ -963,6 +849,32 @@ void setGps_MaxPerformanceMode() {
     0xB5, 0x62, 0x06, 0x11, 0x02, 0x00, 0x08, 0x00, 0x21, 0x91                                                             }; // Setup for Max Power Mode
   sendUBX(setMax, sizeof(setMax)/sizeof(uint8_t));
 }
+
+void gpsPower(int i){
+  if(i == 0){
+    //turn off GPS
+    //  uint8_t GPSoff[] = {0xB5, 0x62, 0x02, 0x41, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00, 0x4D, 0x3B};
+    uint8_t GPSoff[] = {0xB5, 0x62, 0x06, 0x04, 0x04, 0x00, 0x00, 0x00, 0x08, 0x00, 0x16, 0x74};
+    sendUBX(GPSoff, sizeof(GPSoff)/sizeof(uint8_t));
+    gpsstatus = 0;
+  }
+  else if (i == 1){
+    //turn on GPS
+     //uint8_t GPSon[] = {0xB5, 0x62, 0x02, 0x41, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x4C, 0x37};
+    uint8_t GPSon[] = {0xB5, 0x62, 0x06, 0x04, 0x04, 0x00, 0x00, 0x00, 0x09, 0x00, 0x17, 0x76};
+    sendUBX(GPSon, sizeof(GPSon)/sizeof(uint8_t));
+    gpsstatus = 1;
+    delay(1000);
+    setupGPS();
+  }
+  else if( i == 2 ){
+    uint8_t set_reset[] = {0xB5, 0x62, 0x06, 0x04, 0x04, 0x00, 0xFF, 0x87, 0x00, 0x00, 0x94, 0xF5};
+    sendUBX(set_reset, sizeof(set_reset)/sizeof(uint8_t));
+  }
+  else {
+  }
+}
+
 
 
 
