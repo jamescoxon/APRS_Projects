@@ -91,22 +91,12 @@ static const uint8_t PROGMEM _sine_table[] = {
 char txstring[80];  
 volatile static uint8_t *_txbuf = 0;
 volatile static uint8_t  _txlen = 0;
-volatile int txstatus=1;
-volatile int txstringlength=0;
-volatile char txc;
-volatile int txi;
-volatile int txj;
-volatile boolean lockvariables = 0;
 
-int32_t lat = 514981000, lon = -530000, alt = 36000,maxalt = 0,lat_dec = 0, lon_dec =0, oldlat, oldlon;
+int32_t lat = 514981000, lon = -530000, alt = 36000, lat_dec = 0, lon_dec =0;
 uint8_t hour = 0, minute = 0, second = 0, month = 0, day = 0, lock = 0, sats = 0;
-int GPSerror = 0, count = 1, n, navmode = 0, lat_int=0,lon_int=0,errorstatus, radiostatus, gpsstatus;
-uint8_t oldhour = 0, oldminute = 0, oldsecond = 0;
-int aprs_status = 0, aprs_attempts = 0, psm_status = 0;
-int32_t tslf=0;
+int GPSerror = 0, count = 1, n, navmode = 0, lat_int=0,lon_int=0, errorstatus, radiostatus, gpsstatus, psm_status = 0;
 uint8_t buf[60]; //GPS receive buffer
 char comment[3];
-unsigned long _aprs_tx_timer, aprs_tx_status = 0;
 char superbuffer [80]; //Telem string buffer
 unsigned long startTime;
 
@@ -131,6 +121,7 @@ void setup() {
 }
 
 void loop() {
+  
   //Regularly reset everything in case of an error
   if(count % 100 == 0){
     re_setup();
@@ -145,6 +136,19 @@ void loop() {
       }
         
     }
+  }
+  
+  prepData();
+  
+  if((lock==3) && (sats>=5)){
+    if(psm_status==0) {
+      setGPS_PowerSaveMode();
+      wait(1000);
+    }
+  }
+  else{
+    setGps_MaxPerformanceMode();
+    wait(1000);
   }
   
   if(count > 10){
@@ -165,7 +169,6 @@ void loop() {
     
   }
   
-  prepData();
   rtty_txstring(superbuffer);
 
 
@@ -191,7 +194,7 @@ void re_setup(){
     //Reboot Radio
     digitalWrite(RFM22B_SDN, HIGH);
     radiostatus = 0;
-    delay(1000);
+    wait(1000);
     setupRadio();
 }
 
@@ -495,11 +498,11 @@ char *ax25_base91enc(char *s, uint8_t n, uint32_t v)
 void send_APRS() {
   ax25_init();
   digitalWrite(HX1_POWER, HIGH);
-  delay(500);
+  wait(500);
   digitalWrite(HX1_ENABLE, HIGH);
-  delay(1000);
+  wait(1000);
   tx_aprs();
-  delay(1000);
+  wait(1000);
   digitalWrite(HX1_POWER, LOW);
   digitalWrite(HX1_ENABLE, LOW);
 }
@@ -515,6 +518,7 @@ void setupGPS() {
   setGPS_DynamicModel6();
   wait(1000);
 }
+
 void wait(unsigned long delaytime) // Arduino Delay doesn't get CPU Speeds below 8Mhz
 {
   unsigned long _delaytime=millis();
@@ -888,12 +892,14 @@ void setGPS_PowerSaveMode() {
   uint8_t setPSM[] = { 
     0xB5, 0x62, 0x06, 0x11, 0x02, 0x00, 0x08, 0x01, 0x22, 0x92                                                                         }; // Setup for Power Save Mode (Default Cyclic 1s)
   sendUBX(setPSM, sizeof(setPSM)/sizeof(uint8_t));
+  psm_status=1;
 }
 void setGps_MaxPerformanceMode() {
   //Set GPS for Max Performance Mode
   uint8_t setMax[] = { 
     0xB5, 0x62, 0x06, 0x11, 0x02, 0x00, 0x08, 0x00, 0x21, 0x91                                                             }; // Setup for Max Power Mode
   sendUBX(setMax, sizeof(setMax)/sizeof(uint8_t));
+  psm_status=0;
 }
 
 void gpsPower(int i){
@@ -910,12 +916,15 @@ void gpsPower(int i){
     uint8_t GPSon[] = {0xB5, 0x62, 0x06, 0x04, 0x04, 0x00, 0x00, 0x00, 0x09, 0x00, 0x17, 0x76};
     sendUBX(GPSon, sizeof(GPSon)/sizeof(uint8_t));
     gpsstatus = 1;
-    delay(1000);
+    psm_status=0;
+    wait(1000);
     setupGPS();
   }
   else if( i == 2 ){
     uint8_t set_reset[] = {0xB5, 0x62, 0x06, 0x04, 0x04, 0x00, 0xFF, 0x87, 0x00, 0x00, 0x94, 0xF5};
     sendUBX(set_reset, sizeof(set_reset)/sizeof(uint8_t));
+    gpsstatus = 1;
+    psm_status=0;
   }
   else {
   }
