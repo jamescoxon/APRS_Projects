@@ -121,10 +121,15 @@ void setup() {
 }
 
 void loop() {
+
+  //Regularly checks the GPS powersaving mode - don't want to miss it about to freeze up
+  // In this case we check here before the potential for reseting the GPS/Radio
+  gps_PSM();
   
   //Regularly reset everything in case of an error
   if(count % 50 == 0){
     re_setup();
+    wait(5000);
   }
   
   //If GPS is ON every 5 strings check the nav mode
@@ -137,20 +142,7 @@ void loop() {
         
     }
   }
-  
-  prepData();
-  
-  if((lock==3) && (sats>=5)){
-    if(psm_status==0) {
-      setGPS_PowerSaveMode();
-      wait(1000);
-    }
-  }
-  else{
-    setGps_MaxPerformanceMode();
-    wait(1000);
-  }
-  
+ gps_PSM(); 
   if(count > 10){
     //If 2 minutes have passed send a new APRS packet and restart the timer
     if (millis() - startTime > APRS_TX_INTERVAL) {
@@ -169,7 +161,12 @@ void loop() {
     
   }
   
+  gps_PSM();
+  prepData();
   rtty_txstring(superbuffer);
+  gps_PSM();
+  
+  //Sometimes we might put a delay at the end of the loop
 
 
 }
@@ -798,15 +795,6 @@ void setGPS_DynamicModel6()
   }
 }
 
-void prepare_data() {
-
-  gps_check_lock();
-  gps_get_position();
-  gps_get_time();
-}
-
-
-
 void gps_get_position()
 {
   GPSerror = 0;
@@ -927,6 +915,20 @@ void gpsPower(int i){
     psm_status=0;
   }
   else {
+  }
+}
+
+void gps_PSM(){
+  gps_check_lock()
+  if((lock==3) && (sats>=5)){
+    if(psm_status==0) {
+      setGPS_PowerSaveMode();
+      wait(1000);
+    }
+  }
+  else{
+    setGps_MaxPerformanceMode();
+    wait(1000);
   }
 }
 
