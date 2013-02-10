@@ -1,0 +1,31 @@
+<kml xmlns="http://earth.google.com/kml/2.0">
+<Placemark>
+  <name>Denmark</name>
+  <Style>
+    <LineStyle>
+      <color>ff0000ff</color>
+    </LineStyle>
+  </Style>
+  <LineString>
+<altitudeMode>clampToGround</altitudeMode>
+    <coordinates>
+
+8.133281,54.927142,0.0
+7.745361,56.950966,0.0 
+10.706177,57.792089,0.0
+12.634277,56.053635,0.0 
+12.733154,55.391592,0.0
+12.733154,55.391592,0.0 
+13.721924,54.794352,0.0 
+11.90918,54.452477,0.0 
+9.470215,54.851315,0.0 
+8.133281,54.927142,0.0
+
+    </coordinates>
+  </LineString>
+</Placemark>
+</kml>
+
+
+ 
+

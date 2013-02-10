@@ -3,16 +3,23 @@ Faults with ATLAS/PAVA
 1/ HX1TXD Pin fouls ICSP header			- Just deal with it and fix in R2
 2/ Holes for Samtec headers too large	- Just deal with it and fix in R2
 3/ Polygon Priority mistake has left VBATT connected directly to GND. - Fix with scalpel and fix in R2
-4/ µC Board was done on 1.6mm PCB - Just deal with it and fix in R2 
+4/ µC Board was done on 1.6mm PCB - Just deal with it and fix in R2
+5/ HX1 APRS TXD is pin 11 which is shared with RFM22B. Needs to move to Pin 3. 
 
 To Fix :
 
 1/ GPS getting time but then freezes before getting a lock. Not power saving related. 
 
-Replicate known working setup :
-a) Hardwire on.
-b) Disconnect battery line.
+Code related. When using RF22 library GPS locks up, using RFM22 library it seems to work. Fixed by using RFM22 library but unsure as to cause.
 
-2/ When HX1 board powers up get a short across PSU.
+2/ When HX1 board powers up board resets/power sags. 
 
-Since GPS module and Radio were fitted. 
+Fixed. Step up is very inefficient and draws 1.2A @ 1.8V for 5V causing bench PSU to sag. Switched PSU to 2A mode and its fine, however increasing input voltage to 3.2V draws 364mA and to 4.8V draws 243mA.
+
+Notes for Rev 2 
+
+Add MPL3115A2  ?
+90' programming header
+
+  setupRadio();
+  radio1.write(0x07, 0x08);  

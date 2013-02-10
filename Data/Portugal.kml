@@ -1,0 +1,35 @@
+<kml xmlns="http://earth.google.com/kml/2.0">
+<Placemark>
+  <name>Portugal</name>
+  <Style>
+    <LineStyle>
+      <color>ff0000ff</color>
+    </LineStyle>
+  </Style>
+  <LineString>
+<altitudeMode>clampToGround</altitudeMode>
+    <coordinates>
+-7.392,37.170 <!-- Sea/Pt S -->
+-7.525,37.550
+-7.256,37.984
+-7.000,38.036
+-7.342,38.463
+-6.984,39.045
+-7.532,39.650
+-7.000,39.666
+-6.922,41.022
+-6.198,41.574
+-8.200,42.150
+-8.872,41.875 <!-- Sea/Pt N -->
+-8.627,41.102
+-9.508,38.734
+-8.825,38.486
+-8.932,37.036
+-8.519,37.126
+-7.900,36.981
+-7.392,37.170 <!-- Sea/Pt S -->
+    </coordinates>
+  </LineString>
+</Placemark>
+</kml>
+

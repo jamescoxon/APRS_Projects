@@ -3,7 +3,7 @@
 <Document><name>KML file with UK Territorial Waters</name>
 <description>Source http://www.ukho.gov.uk/ProductsandServices/Services/Documents/UK%20Territorial%20Sea%20Limits.pdf</description>
 <Style id="rangecolour">
-<LineStyle><color>660000FF</color><width>1</width></LineStyle>
+<LineStyle><color>660000FF</color><width>3</width></LineStyle>
 <PolyStyle><color>660000FF</color></PolyStyle>
 </Style>
 <Style id="linecolour">

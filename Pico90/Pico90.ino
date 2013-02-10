@@ -173,7 +173,7 @@ ISR(TIMER2_OVF_vect)
   static int8_t bc       = 0;
 
   /* Update the PWM output */
-  OCR2A = pgm_read_byte(&_sine_table[(phase >> 7) & 0x1FF]);
+  OCR2B = pgm_read_byte(&_sine_table[(phase >> 7) & 0x1FF]);
   phase += step;
 
   if(++sample < SAMPLES_PER_BAUD) return;
@@ -242,7 +242,7 @@ ISR(TIMER2_OVF_vect)
 void ax25_init(void)
 {
   /* Fast PWM mode, non-inverting output on OC2A */
-  TCCR2A = _BV(COM2A1) | _BV(WGM21) | _BV(WGM20);
+  TCCR2A = _BV(COM2B1) | _BV(WGM21) | _BV(WGM20);
   TCCR2B = _BV(CS20);
 
   /* Make sure radio is not enabled */
@@ -250,7 +250,7 @@ void ax25_init(void)
 
   /* Enable pins for output (Port A pin 4 and Port D pin 7) */
   //DDRA |= TXENABLE;
-  pinMode(11, OUTPUT);
+  pinMode(3, OUTPUT);
 }
 
 static uint8_t *_ax25_callsign(uint8_t *s, char *callsign, char ssid)

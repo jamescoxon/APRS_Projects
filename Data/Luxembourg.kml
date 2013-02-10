@@ -1,0 +1,27 @@
+<kml xmlns="http://earth.google.com/kml/2.0">
+<Placemark>
+  <name>Luxembourg</name>
+  <Style>
+    <LineStyle>
+      <color>ff0000ff</color>
+    </LineStyle>
+  </Style>
+  <LineString>
+<altitudeMode>clampToGround</altitudeMode>
+    <coordinates>
+5.82448,49.54961
+5.91798,49.66231
+5.73238,49.89551
+5.96328,50.16544
+6.13420,50.14201
+6.16623,49.97544
+6.31151,49.86921
+6.51924,49.81303
+6.36653,49.46734
+6.24295,49.51171
+5.97762,49.45284
+  </coordinates>
+  </LineString>
+</Placemark>
+</kml>
+
