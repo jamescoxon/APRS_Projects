@@ -142,7 +142,9 @@ void loop() {
         
     }
   }
- gps_PSM(); 
+  
+  gps_PSM(); 
+  
   if(count > 10){
     //If 2 minutes have passed send a new APRS packet and restart the timer
     if (millis() - startTime > APRS_TX_INTERVAL) {
@@ -162,8 +164,10 @@ void loop() {
   }
   
   gps_PSM();
+  
   prepData();
   rtty_txstring(superbuffer);
+  
   gps_PSM();
   
   //Sometimes we might put a delay at the end of the loop
@@ -919,6 +923,12 @@ void gpsPower(int i){
 }
 
 void gps_PSM(){
+  //No point putting everything into powersaving too early, return from this function if we 
+  // are less then 30 counts in, will also avoid repeatitive reset loopss
+  if(count < 30){
+    return;
+  }
+  
   gps_check_lock()
   if((lock==3) && (sats>=5)){
     if(psm_status==0) {
