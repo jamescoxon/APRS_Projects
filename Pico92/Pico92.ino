@@ -511,17 +511,11 @@ void send_APRS() {
 
 
 void setupGPS() {
-  Serial.println("$PUBX,40,GLL,0,0,0,0*5C");
-  wait(1000);
-  Serial.println("$PUBX,40,GGA,0,0,0,0*5A");
-  wait(1000);
-  Serial.println("$PUBX,40,GSA,0,0,0,0*4E");
-  wait(1000);
-  Serial.println("$PUBX,40,RMC,0,0,0,0*47");
-  wait(1000);
-  Serial.println("$PUBX,40,GSV,0,0,0,0*59");
-  wait(1000);
-  Serial.println("$PUBX,40,VTG,0,0,0,0*5E");
+  //Turning off all GPS NMEA strings apart on the uBlox module
+  // Taken from Project Swift (rather than the old way of sending ascii text)
+  uint8_t setNMEAoff[] = {0xB5, 0x62, 0x06, 0x00, 0x14, 0x00, 0x01, 0x00, 0x00, 0x00, 0xD0, 0x08, 0x00, 0x00, 0x80, 0x25, 0x00, 0x00, 0x07, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0xA0, 0xA9};
+  sendUBX(setNMEAoff, sizeof(setNMEAoff)/sizeof(uint8_t));
+  
   wait(1000);
   setGPS_DynamicModel3();
   wait(1000);
