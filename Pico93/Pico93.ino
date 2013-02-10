@@ -52,8 +52,8 @@ static const uint8_t PROGMEM _sine_table[] = {
 
 /* CONFIGURABLE BITS */
 
-#define APRS_TX_INTERVAL  1  // APRS TX Interval in Minutes
-#define ASCII 7          // ASCII 7 or 8
+#define APRS_TX_INTERVAL  120000  // APRS TX Interval
+#define ASCII 8          // ASCII 7 or 8
 #define STOPBITS 2       // Either 1 or 2
 #define TXDELAY 0        // Delay between sentence TX's
 #define RTTY_BAUD 50     // Baud rate for use with RFM22B Max = 600
@@ -149,12 +149,15 @@ void loop() {
   
   if(count > 10){
     //If 2 minutes have passed send a new APRS packet and restart the timer
-    if (millis() - startTime > 120000) {
+    if (millis() - startTime > APRS_TX_INTERVAL) {
       //Find out where we are
       geofence_location(lat,lon);
       
-      //Send APRS
-      send_APRS();
+      //Do not send APRS data if inside the UK
+      if(comment[0] != 'X'){
+        //Send APRS
+        send_APRS();
+      }
       
       //Reset the clock
       startTime = millis();
@@ -218,14 +221,26 @@ static int pointinpoly(const int32_t *poly, int points, int32_t x, int32_t y)
   return(c);
 }
 
+/*
+******* LIST OF COUNTRIES ******* 
+  UK - NO TRANSMISSION
+  Netherlands P/CALLSIGN
+  Belgium O/CALLSIGN
+  Luxembourg LX/CALLSIGN
+  Switzerland HB/CALLSIGN
+  Spain EA/CALLSIGN
+  Portugal CT/CALLSIGN
+  France F/CALLSIGN
+  Germany DA/CALLSIGN
+*/
+
 int geofence_location(int32_t lat_poly, int32_t lon_poly)
 {
   if(pointinpoly(UKgeofence, 9, lat_poly, lon_poly) == true)
   {
-    comment[0] = ' ';
-    comment[1] = 'M';
+    comment[0] = 'X';
+    comment[1] = 'X';
   }
-/*
   else if(pointinpoly(Netherlands_geofence, 50, lat_poly, lon_poly) == true)
   {
     comment[0] = ' ';
@@ -237,12 +252,43 @@ int geofence_location(int32_t lat_poly, int32_t lon_poly)
     comment[0] = ' ';
     comment[1] = 'O';
   }
+  
+  else if(pointinpoly(Luxembourg_geofence, 11, lat_poly, lon_poly) == true)
+  {
+    comment[0] = 'L';
+    comment[1] = 'X';
+  }
 
+  else if(pointinpoly(Switzerland_geofence, 22, lat_poly, lon_poly) == true)
+  {
+    comment[0] = 'H';
+    comment[1] = 'B';
+  }
+  
+  else if(pointinpoly(Spain_geofence, 29, lat_poly, lon_poly) == true)
+  {
+    comment[0] = 'E';
+    comment[1] = 'A';
+  }
+  
+  else if(pointinpoly(Portugal_geofence, 19, lat_poly, lon_poly) == true)
+  {
+    comment[0] = 'C';
+    comment[1] = 'T';
+  }
+  
   else if(pointinpoly(France_geofence, 60, lat_poly, lon_poly) == true)
   {
     comment[0] = ' ';
     comment[1] = 'F';
-  }*/
+  }
+  
+  else if(pointinpoly(Germany_geofence, 76, lat_poly, lon_poly) == true)
+  {
+    comment[0] = 'D';
+    comment[1] = 'A';
+  }
+
   else
   {
     comment[0] = ' ';
@@ -276,7 +322,7 @@ void tx_aprs()
   //0, 0, 0, 0,
   "WIDE1", 1, "WIDE2",1,
   //"WIDE2", 1,
-  "!/%s%sO   /A=%06ld|%s|%s/M0UPU,%d",
+  "!/%s%sO   /A=%06ld|%s|%s/M6JCX,%d",
   ax25_base91enc(slat, 4, aprs_lat),
   ax25_base91enc(slng, 4, aprs_lon),
   aprs_alt, stlm, comment, count

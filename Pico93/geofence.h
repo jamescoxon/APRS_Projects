@@ -26,6 +26,18 @@
 /* You should have received a copy of the GNU General Public License     */
 /* along with this program. If not, see <http://www.gnu.org/licenses/>.  */
 
+/*
+******* LIST OF COUNTRIES ******* 
+  UK
+  Netherlands
+  Belgium
+  Luxembourg
+  Switzerland
+  Spain
+  Portugal
+  France
+  Germany
+*/
 #include <stdint.h>
 #include <avr/pgmspace.h>
 
@@ -103,6 +115,10 @@ PROGMEM static const int32_t Belgium_geofence[25 * 2] =
 	505310100,32899100,
 	504554300,36626300,
 };
+
+/*
+  Luxembourg Geofence
+*/
 PROGMEM static const int32_t Luxembourg_geofence[11 * 2] =
 {
   	495496100,58244800,
