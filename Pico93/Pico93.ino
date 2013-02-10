@@ -929,7 +929,8 @@ void gps_PSM(){
     return;
   }
   
-  gps_check_lock()
+  gps_check_lock();
+  
   if((lock==3) && (sats>=5)){
     if(psm_status==0) {
       setGPS_PowerSaveMode();
