@@ -184,11 +184,15 @@ void prepData() {
     gps_get_time();
   }
   count++;
-  n=sprintf (superbuffer, "$$ATLAS,%d,%02d:%02d:%02d,%ld,%ld,%ld,%d,%d", count, hour, minute, second, lat, lon, alt, sats, navmode);
+  n=sprintf (superbuffer, "$$ATLAS,%d,%02d:%02d:%02d,%ld,%ld,%ld,%d,%d,%d", count, hour, minute, second, lat, lon, alt, sats, navmode, psm_status);
   n = sprintf (superbuffer, "%s*%04X\n", superbuffer, gps_CRC16_checksum(superbuffer));
 }
 
 void re_setup(){
+    //ensure HX1 is turned off
+    digitalWrite(HX1_POWER, LOW);
+    digitalWrite(HX1_ENABLE, LOW);
+    
     //Send commands to GPS
     gpsPower(1);
     
@@ -228,14 +232,14 @@ static int pointinpoly(const int32_t *poly, int points, int32_t x, int32_t y)
 /*
 ******* LIST OF COUNTRIES ******* 
   UK - NO TRANSMISSION
-  Netherlands P/CALLSIGN
-  Belgium O/CALLSIGN
+  Netherlands PA/CALLSIGN
+  Belgium ON/CALLSIGN
   Luxembourg LX/CALLSIGN
   Switzerland HB/CALLSIGN
   Spain EA/CALLSIGN
   Portugal CT/CALLSIGN
   France F/CALLSIGN
-  Germany DA/CALLSIGN
+  Germany DL/CALLSIGN
 */
 
 int geofence_location(int32_t lat_poly, int32_t lon_poly)
@@ -247,14 +251,14 @@ int geofence_location(int32_t lat_poly, int32_t lon_poly)
   }
   else if(pointinpoly(Netherlands_geofence, 50, lat_poly, lon_poly) == true)
   {
-    comment[0] = ' ';
-    comment[1] = 'P';
+    comment[0] = 'P';
+    comment[1] = 'A';
   }
 
   else if(pointinpoly(Belgium_geofence, 60, lat_poly, lon_poly) == true)
   {
-    comment[0] = ' ';
-    comment[1] = 'O';
+    comment[0] = 'O';
+    comment[1] = 'N';
   }
   
   else if(pointinpoly(Luxembourg_geofence, 11, lat_poly, lon_poly) == true)
@@ -290,7 +294,7 @@ int geofence_location(int32_t lat_poly, int32_t lon_poly)
   else if(pointinpoly(Germany_geofence, 76, lat_poly, lon_poly) == true)
   {
     comment[0] = 'D';
-    comment[1] = 'A';
+    comment[1] = 'L';
   }
 
   else
