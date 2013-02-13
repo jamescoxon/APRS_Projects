@@ -152,7 +152,7 @@ void loop() {
       geofence_location(lat,lon);
       
       //Do not send APRS data if inside the UK
-      if(comment[0] != 'X'){
+      if((comment[0] != 'X') || (alt < 300)){
         //Send APRS
         send_APRS();
       }
@@ -917,6 +917,7 @@ void gpsPower(int i){
     setupGPS();
   }
   else if( i == 2 ){
+    //Reset GPS rather then turn it off or on
     uint8_t set_reset[] = {0xB5, 0x62, 0x06, 0x04, 0x04, 0x00, 0xFF, 0x87, 0x00, 0x00, 0x94, 0xF5};
     sendUBX(set_reset, sizeof(set_reset)/sizeof(uint8_t));
     gpsstatus = 1;
