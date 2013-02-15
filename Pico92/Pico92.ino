@@ -52,7 +52,7 @@ static const uint8_t PROGMEM _sine_table[] = {
 
 /* CONFIGURABLE BITS */
 
-#define APRS_TX_INTERVAL  1  // APRS TX Interval in Minutes
+#define APRS_TX_INTERVAL  30000  // APRS TX Interval 
 #define ASCII 7          // ASCII 7 or 8
 #define STOPBITS 2       // Either 1 or 2
 #define TXDELAY 0        // Delay between sentence TX's
@@ -106,7 +106,8 @@ int aprs_status = 0, aprs_attempts = 0, psm_status = 0;
 int32_t tslf=0;
 uint8_t buf[60]; //GPS receive buffer
 char comment[3];
-unsigned long _aprs_tx_timer, aprs_tx_status = 0;
+unsigned long startTime;
+int aprs_tx_status = 0;
 
 rfm22 radio1(RFM22B_PIN);
 
@@ -150,7 +151,7 @@ void loop() {
     errorstatus &= ~(1 << 5);
   }
 
-  if(alt<=1000) {
+  if(alt<=1000&&sats>4) {
     if(navmode != 3)
     {
       setGPS_DynamicModel3();
@@ -168,13 +169,13 @@ void loop() {
 
   geofence_location(lat,lon);
 
-  if(comment[1]=='M') { // Change to !=  for flight
+  if(comment[1]!='M' || (alt<300)) {
     if (aprs_tx_status==0)
     {
-      _aprs_tx_timer=millis();
+      startTime=millis();
       aprs_tx_status=1;
     }
-    if( (_aprs_tx_timer+(APRS_TX_INTERVAL*60000))<=millis()) {
+    if(millis() - startTime > APRS_TX_INTERVAL) {
       aprs_tx_status=0;
       send_APRS();
       aprs_attempts++;
@@ -198,7 +199,6 @@ void loop() {
       maxalt=alt;
     }
 
-    /* XXXXX */
     if((oldhour==hour&&oldminute==minute&&oldsecond==second)||sats<=3) {
       tslf++;
     }
@@ -268,7 +268,18 @@ static int pointinpoly(const int32_t *poly, int points, int32_t x, int32_t y)
 
   return(c);
 }
-
+/*
+******* LIST OF COUNTRIES ******* 
+  UK - NO TRANSMISSION
+  Netherlands PA/CALLSIGN
+  Belgium ON/CALLSIGN
+  Luxembourg LX/CALLSIGN
+  Switzerland HB/CALLSIGN
+  Spain EA/CALLSIGN
+  Portugal CT/CALLSIGN
+  France F/CALLSIGN
+  Germany DL/CALLSIGN
+*/
 int geofence_location(int32_t lat_poly, int32_t lon_poly)
 {
   if(pointinpoly(UKgeofence, 9, lat_poly, lon_poly) == true)
@@ -276,31 +287,60 @@ int geofence_location(int32_t lat_poly, int32_t lon_poly)
     comment[0] = ' ';
     comment[1] = 'M';
   }
-/*
   else if(pointinpoly(Netherlands_geofence, 50, lat_poly, lon_poly) == true)
   {
-    comment[0] = ' ';
-    comment[1] = 'P';
+    comment[0] = 'P';
+    comment[1] = 'A';
   }
 
   else if(pointinpoly(Belgium_geofence, 60, lat_poly, lon_poly) == true)
   {
-    comment[0] = ' ';
-    comment[1] = 'O';
+    comment[0] = 'O';
+    comment[1] = 'N';
+  }
+  
+  else if(pointinpoly(Luxembourg_geofence, 11, lat_poly, lon_poly) == true)
+  {
+    comment[0] = 'L';
+    comment[1] = 'X';
   }
 
+  else if(pointinpoly(Switzerland_geofence, 22, lat_poly, lon_poly) == true)
+  {
+    comment[0] = 'H';
+    comment[1] = 'B';
+  }
+  
+  else if(pointinpoly(Spain_geofence, 29, lat_poly, lon_poly) == true)
+  {
+    comment[0] = 'E';
+    comment[1] = 'A';
+  }
+  
+  else if(pointinpoly(Portugal_geofence, 19, lat_poly, lon_poly) == true)
+  {
+    comment[0] = 'C';
+    comment[1] = 'T';
+  }
+  
   else if(pointinpoly(France_geofence, 60, lat_poly, lon_poly) == true)
   {
     comment[0] = ' ';
     comment[1] = 'F';
-  }*/
+  }
+  
+  else if(pointinpoly(Germany_geofence, 76, lat_poly, lon_poly) == true)
+  {
+    comment[0] = 'D';
+    comment[1] = 'L';
+  }
+
   else
   {
     comment[0] = ' ';
     comment[1] = '#';
   }
 }
-
 void tx_aprs()
 {
   char slat[5];
@@ -511,17 +551,10 @@ void send_APRS() {
 
 
 void setupGPS() {
-  Serial.println("$PUBX,40,GLL,0,0,0,0*5C");
-  wait(1000);
-  Serial.println("$PUBX,40,GGA,0,0,0,0*5A");
-  wait(1000);
-  Serial.println("$PUBX,40,GSA,0,0,0,0*4E");
-  wait(1000);
-  Serial.println("$PUBX,40,RMC,0,0,0,0*47");
-  wait(1000);
-  Serial.println("$PUBX,40,GSV,0,0,0,0*59");
-  wait(1000);
-  Serial.println("$PUBX,40,VTG,0,0,0,0*5E");
+ //Turning off all GPS NMEA strings apart on the uBlox module
+  // Taken from Project Swift (rather than the old way of sending ascii text)
+  uint8_t setNMEAoff[] = {0xB5, 0x62, 0x06, 0x00, 0x14, 0x00, 0x01, 0x00, 0x00, 0x00, 0xD0, 0x08, 0x00, 0x00, 0x80, 0x25, 0x00, 0x00, 0x07, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0xA0, 0xA9};
+  sendUBX(setNMEAoff, sizeof(setNMEAoff)/sizeof(uint8_t));
   wait(1000);
   setGPS_DynamicModel3();
   wait(1000);
