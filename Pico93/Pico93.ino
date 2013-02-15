@@ -52,7 +52,7 @@ static const uint8_t PROGMEM _sine_table[] = {
 
 /* CONFIGURABLE BITS */
 
-#define APRS_TX_INTERVAL  120000  // APRS TX Interval
+#define APRS_TX_INTERVAL  30000  // APRS TX Interval
 #define ASCII 8          // ASCII 7 or 8
 #define STOPBITS 2       // Either 1 or 2
 #define TXDELAY 0        // Delay between sentence TX's
@@ -103,9 +103,13 @@ unsigned long startTime;
 rfm22 radio1(RFM22B_PIN);
 
 void setup() {
+  pinMode(STATUS_LED, OUTPUT);
+  digitalWrite(STATUS_LED, HIGH);
   pinMode(HX1_POWER, OUTPUT);   
   pinMode(HX1_ENABLE, OUTPUT);
-  pinMode(GPS_ENABLE, OUTPUT); 
+  pinMode(GPS_ENABLE, OUTPUT);
+  pinMode(A5, OUTPUT);  
+  digitalWrite(A5, HIGH);
   digitalWrite(GPS_ENABLE, LOW);
   digitalWrite(HX1_POWER, LOW);
   digitalWrite(HX1_ENABLE, LOW);
@@ -116,6 +120,7 @@ void setup() {
   setupGPS();
   wait(500);
   setupRadio();
+  digitalWrite(STATUS_LED, LOW);
   
   startTime = millis();
 }
@@ -124,7 +129,7 @@ void loop() {
 
   //Regularly checks the GPS powersaving mode - don't want to miss it about to freeze up
   // In this case we check here before the potential for reseting the GPS/Radio
-  gps_PSM();
+  //gps_PSM();
   
   //Regularly reset everything in case of an error
   if(count % 50 == 0){
@@ -143,7 +148,7 @@ void loop() {
     }
   }
   
-  gps_PSM(); 
+  //gps_PSM(); 
   
   if(count > 10){
     //If 2 minutes have passed send a new APRS packet and restart the timer
@@ -163,12 +168,12 @@ void loop() {
     
   }
   
-  gps_PSM();
+  //gps_PSM();
   
   prepData();
   rtty_txstring(superbuffer);
   
-  gps_PSM();
+  //gps_PSM();
   
   //Sometimes we might put a delay at the end of the loop
 
@@ -330,10 +335,10 @@ void tx_aprs()
   //0, 0, 0, 0,
   "WIDE1", 1, "WIDE2",1,
   //"WIDE2", 1,
-  "!/%s%sO   /A=%06ld|%s|%s/M6JCX,%d",
+  "!/%s%sO   /A=%06ld|%s|%s/M6JCX,%d,%d,%d",
   ax25_base91enc(slat, 4, aprs_lat),
   ax25_base91enc(slng, 4, aprs_lon),
-  aprs_alt, stlm, comment, count
+  aprs_alt, stlm, comment, count, sats, navmode
     );
 
   seq++;
@@ -673,9 +678,8 @@ uint8_t* ckb)
   }
 }
 
-void setupRadio(){
-  pinMode(RFM22B_SDN, OUTPUT);  
-  digitalWrite(RFM22B_SDN, LOW);
+void setupRadio(){ 
+  digitalWrite(A5, LOW);
   wait(1000);
   rfm22::initSPI();
   radio1.init();
@@ -683,9 +687,10 @@ void setupRadio(){
   //This sets up the GPIOs to automatically switch the antenna depending on Tx or Rx state, only needs to be done at start up
   radio1.write(0x0b,0x12);
   radio1.write(0x0c,0x15);
-  radio1.setFrequency(RADIO_FREQUENCY);
+  radio1.setFrequency(434.201);
   radio1.write(0x6D, RADIO_POWER);
   radio1.write(0x07, 0x08); 
+  wait(1000);
 
 }
 
@@ -736,13 +741,15 @@ void rtty_txbit (int bit)
 		{
 		  // high
                   radio1.write(0x073, 0x03);
+                  digitalWrite(STATUS_LED, HIGH);
 		}
 		else
 		{
 		  // low
                   radio1.write(0x073, 0x00);
+                  digitalWrite(STATUS_LED, LOW);
 		}
-                delayMicroseconds(19500); // 10000 = 100 BAUD 20150
+                delayMicroseconds(9750); // 10000 = 100 BAUD 20150
 
 }
 
