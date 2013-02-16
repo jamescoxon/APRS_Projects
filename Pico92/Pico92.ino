@@ -100,7 +100,7 @@ volatile boolean lockvariables = 0;
 
 int32_t lat = 514981000, lon = -530000, alt = 0,maxalt = 0,lat_dec = 0, lon_dec =0;
 uint8_t hour = 0, minute = 0, second = 0, month = 0, day = 0, lock = 0, sats = 0;
-int GPSerror = 0, count = 999, n, navmode = 0, lat_int=0,lon_int=0,errorstatus;
+int GPSerror = 0, count = 1, n, navmode = 0, lat_int=0,lon_int=0,errorstatus;
 uint8_t oldhour = 0, oldminute = 0, oldsecond = 0;
 int aprs_status = 0, aprs_attempts = 0, psm_status = 0;
 int32_t tslf=0;
@@ -760,7 +760,7 @@ ISR(TIMER1_COMPA_vect)
       maxalt=alt;
     }
     lockvariables=1;
-    sprintf(txstring, "$$$$$AVAAPRS,%i,%02d:%02d:%02d,%s%i.%05ld,%s%i.%05ld,%ld,%d",count, hour, minute, second,lat < 0 ? "-" : "",lat_int,lat_dec,lon < 0 ? "-" : "",lon_int,lon_dec, maxalt,sats);
+    sprintf(txstring, "$$AVA,%i,%02d:%02d:%02d,%s%i.%05ld,%s%i.%05ld,%ld,%d",count, hour, minute, second,lat < 0 ? "-" : "",lat_int,lat_dec,lon < 0 ? "-" : "",lon_int,lon_dec, maxalt,sats);
     //sprintf(txstring, "%s,%i,%i,%ld,%ld,%i",txstring,errorstatus,inuk,lat,lon,aprs_attempts);
     sprintf(txstring, "%s,%i,%c%c,%i",txstring,errorstatus,comment[0]==' ' ? 'X' : comment[0],comment[1],aprs_attempts);
     sprintf(txstring, "%s*%04X\n", txstring, gps_CRC16_checksum(txstring));
@@ -838,7 +838,7 @@ uint16_t gps_CRC16_checksum (char *string)
   crc = 0xFFFF;
 
   // Calculate checksum ignoring the first two $s
-  for (i = 5; i < strlen(string); i++)
+  for (i = 2; i < strlen(string); i++)
   {
     c = string[i];
     crc = _crc_xmodem_update (crc, c);
