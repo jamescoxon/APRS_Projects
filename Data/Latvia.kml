@@ -1,0 +1,33 @@
+<kml xmlns="http://earth.google.com/kml/2.0">
+<Placemark>
+  <name>Latvia</name>
+  <Style>
+    <LineStyle>
+      <color>ff0000ff</color>
+    </LineStyle>
+  </Style>
+  <LineString>
+<altitudemode>clampToGround</altitudemode>
+    <coordinates>	
+	
+
+21.005859,56.072035,0.0 
+22.236328,56.450349,0.0 
+24.89502,56.438204,0.0
+26.629819,55.680536,0 <!-- EU/YL/LY -->
+27.597656,55.807456,0.0 
+28.151387,56.170446,0.0 <!-- EU/R/YL -->
+27.347031,57.527823,0
+26.499023,57.562995,0.0 
+25.3125,58.066256,0.0 
+24.3585,57.8633,0
+20.808105,57.621875,0.0 
+21.005859,56.072035,0.0 
+</coordinates>
+  </LineString>
+</Placemark>
+</kml>
+
+	
+	
+	

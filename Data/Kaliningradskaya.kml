@@ -1,0 +1,22 @@
+<kml xmlns="http://earth.google.com/kml/2.0">
+<Placemark>
+  <name>Kaliningradskaya (Russian Federation)</name>
+  <Style>
+    <LineStyle>
+      <color>ff0000ff</color>
+    </LineStyle>
+  </Style>
+  <LineString>
+<altitudemode>clampToGround</altitudemode>
+    <coordinates>
+
+19.665527,54.495568,0.0 
+21.401367,54.329338,0.0 
+	22.7926444,54.36342310,0 <!-- PL/LT/RU-KGD -->
+22.576904,55.065787,0.0 
+20.9729,55.282244,0.0
+19.665527,54.495568,0.0 
+</coordinates>
+  </LineString>
+</Placemark>
+</kml>
