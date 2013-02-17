@@ -1,0 +1,51 @@
+<kml xmlns="http://earth.google.com/kml/2.0">
+<Placemark>
+  <name>Montenegro</name>
+  <Style>
+    <LineStyle>
+      <color>ff0000ff</color>
+    </LineStyle>
+  </Style>
+  <LineString>
+<altitudeMode>clampToGround</altitudeMode>
+    <coordinates>
+19.217555,43.529259,0.0	
+	20.302734,42.892064,0.0 
+
+20.072021,42.557127,0.0 <!-- Montenegro/Serbia/Albania-->
+19.813843,42.484251,0.0 	
+19.720459,42.658202,0.0 	
+19.308472,42.208176,0.0 
+19.385376,42.118599,0.0 	
+19.363403,41.857288,0.0 	
+18.495483,42.419401,0.0 
+18.44371,42.562605,0.0 <!-- Bosnia/Montenegro/Croatia -->
+18.533936,42.633959,0.0 <!-- Bosnia/Montenegro/Croatia -->
+18.643799,43.068888,0.0 
+18.885498,43.373112,0.0 
+18.984375,43.269206,0.0 
+19.039307,43.34915,0.0 
+18.95832,43.520585,0.0
+19.217555,43.529259,0.0
+
+
+
+
+
+
+
+
+
+</coordinates>
+  </LineString>
+</Placemark>
+</kml>
+
+
+
+ 
+
+
+
+
+

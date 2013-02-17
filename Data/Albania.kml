@@ -1,0 +1,33 @@
+<kml xmlns="http://earth.google.com/kml/2.0">
+<Placemark>
+  <name>Albania</name>
+  <Style>
+    <LineStyle>
+      <color>ff0000ff</color>
+    </LineStyle>
+  </Style>
+  <LineString>
+<altitudeMode>clampToGround</altitudeMode>
+    <coordinates>
+20.594500,41.877776,0.0 <!--Serbia/Montenegro/Macendonia-->
+	20.072021,42.557127,0.0 <!-- Montenegro/Serbia/Albania-->
+19.813843,42.484251,0.0 	
+19.720459,42.658202,0.0 	
+19.308472,42.208176,0.0 
+19.385376,42.118599,0.0
+19.363403,41.857288,0.0 	
+19.127197,40.229218,0.0 
+20.00061,39.702961,0.0 <!-- Albania/Greece -->
+20.209351,39.656456,0.0 
+20.407104,39.829632,0.0 
+20.297241,39.989747,0.0 
+20.670776,40.11589,0.0 
+20.841064,40.480381,0.0 
+ 20.985614,40.854999,0.0 <!-- Albania/Macedonia/Greece -->
+20.725708,40.921814,0.0 
+20.478516,41.3397,0.0 
+20.594500,41.877776,0.0 <!--Serbia/Montenegro/Macendonia-->
+	</coordinates>
+  </LineString>
+</Placemark>
+</kml>
