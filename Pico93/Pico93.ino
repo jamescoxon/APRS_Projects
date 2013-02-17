@@ -157,7 +157,7 @@ void loop() {
       geofence_location(lat,lon);
       
       //Do not send APRS data if inside the UK
-      if((comment[0] != 'X') || (alt < 300)){
+      if((comment[0] != 'X') || (alt < 100)){
         //Send APRS
         send_APRS();
       }
@@ -506,6 +506,12 @@ char *ax25_base91enc(char *s, uint8_t n, uint32_t v)
 }
 
 void send_APRS() {
+  
+  //Shutdown RFM22
+  SPI.end();
+  digitalWrite(RFM22B_SDN, HIGH);
+  wait(1000);
+  
   ax25_init();
   digitalWrite(HX1_POWER, HIGH);
   wait(500);
@@ -515,6 +521,9 @@ void send_APRS() {
   wait(1000);
   digitalWrite(HX1_POWER, LOW);
   digitalWrite(HX1_ENABLE, LOW);
+  wait(500);
+  setupRadio();
+  
 }
 
 
