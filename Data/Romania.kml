@@ -1,0 +1,32 @@
+<kml xmlns="http://earth.google.com/kml/2.0">
+<Placemark>
+  <name>Romania</name>
+  <Style>
+    <LineStyle>
+      <color>ff0000ff</color>
+    </LineStyle>
+  </Style>
+  <LineString>
+<altitudeMode>clampToGround</altitudeMode>
+    <coordinates>
+29.641113,45.259422,0.0 <!-- UK/RO -->	
+28.146973,45.490946,0.0 
+28.114014,46.942762,0.0 
+26.629575,48.261680,0.0 <!--UK/ER/RO-->
+24.938965,47.754098,0.0 
+22.8961939,47.954065,0 <!-- HU/RO/UK -->
+22.313232,47.743017,0.0 
+21.296997,46.426499,0.0 
+20.264491,46.126367,0 <!-- HU/CS/RO -->
+22.670503,44.21451,0 <!-- CS/RO/LZ -->	
+22.983398,43.850374,0.0 
+25.378418,43.675818,0.0 
+26.850586,44.103365,0.0 
+28.564453,43.786958,0.0 <!-- RO/LZ -->
+29.641113,45.259422,0.0 <!-- UK/RO -->
+	</coordinates>
+  </LineString>
+</Placemark>
+</kml>
+
+

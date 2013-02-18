@@ -1,0 +1,24 @@
+<kml xmlns="http://earth.google.com/kml/2.0">
+<Placemark>
+  <name>Moldova</name>
+  <Style>
+    <LineStyle>
+      <color>ff0000ff</color>
+    </LineStyle>
+  </Style>
+  <LineString>
+<altitudeMode>clampToGround</altitudeMode>
+    <coordinates>
+	
+26.629575,48.261680,0.0 <!--UK/ER/RO-->
+27.663574,48.443778,0.0 
+29.223633,47.945786,0.0 
+30.080566,46.392411,0.0
+29.003906,46.528635,0.0
+28.146973,45.490946,0.0 
+28.114014,46.942762,0.0 
+26.629575,48.261680,0.0 <!--UK/ER/RO-->
+</coordinates>
+  </LineString>
+</Placemark>
+</kml>
