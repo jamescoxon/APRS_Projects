@@ -52,7 +52,7 @@ static const uint8_t PROGMEM _sine_table[] = {
 
 /* CONFIGURABLE BITS */
 
-#define APRS_TX_INTERVAL  30000  // APRS TX Interval
+#define APRS_TX_INTERVAL  120000  // APRS TX Interval
 #define ASCII 8          // ASCII 7 or 8
 #define STOPBITS 2       // Either 1 or 2
 #define TXDELAY 0        // Delay between sentence TX's
@@ -94,7 +94,8 @@ volatile static uint8_t  _txlen = 0;
 
 int32_t lat = 514981000, lon = -530000, alt = 36000, lat_dec = 0, lon_dec =0;
 uint8_t hour = 0, minute = 0, second = 0, month = 0, day = 0, lock = 0, sats = 0;
-int GPSerror = 0, count = 1, n, navmode = 0, lat_int=0,lon_int=0, errorstatus, radiostatus, gpsstatus, psm_status = 0;
+int GPSerror = 0, count = 1, n, navmode = 0, lat_int=0,lon_int=0, errorstatus, radiostatus, gpsstatus, psm_status = 0, aprs_count = 0;
+int lock_count = 0;
 uint8_t buf[60]; //GPS receive buffer
 char comment[3];
 char superbuffer [80]; //Telem string buffer
@@ -126,10 +127,6 @@ void setup() {
 }
 
 void loop() {
-
-  //Regularly checks the GPS powersaving mode - don't want to miss it about to freeze up
-  // In this case we check here before the potential for reseting the GPS/Radio
-  //gps_PSM();
   
   //Regularly reset everything in case of an error
   if(count % 50 == 0){
@@ -148,9 +145,26 @@ void loop() {
     }
   }
   
-  //gps_PSM(); 
+  //Regularly checks the GPS powersaving mode - don't want to miss it about to freeze up
+  // In this case we check here before the potential for reseting the GPS/Radio
+  gps_PSM();
   
-  if(count > 10){
+  if(lock == 3){
+    lock_count++;
+  }
+  else {
+    lock_count = 0;
+  }
+  
+  //If we've had a lock for 5 loops, still have more then 4 sats and power saving
+  // is not turned on yet - turn it on
+  // gps_PSM is now a function to check for losing lock nad therefore quickly 
+  // switching off powersaving
+  if((lock_count > 5) && (sats > 4) && (psm_status == 0)){
+    setGPS_PowerSaveMode();
+  }
+  
+  if((count > 10) && (sats > 4)){
     //If 2 minutes have passed send a new APRS packet and restart the timer
     if (millis() - startTime > APRS_TX_INTERVAL) {
       //Find out where we are
@@ -168,12 +182,9 @@ void loop() {
     
   }
   
-  //gps_PSM();
-  
   prepData();
+  rtty_txstring("$$");
   rtty_txstring(superbuffer);
-  
-  //gps_PSM();
   
   //Sometimes we might put a delay at the end of the loop
 
@@ -184,12 +195,12 @@ void loop() {
 
 void prepData() {
   if(gpsstatus == 1){
-    gps_check_lock();
+    //gps_check_lock();
     gps_get_position();
     gps_get_time();
   }
   count++;
-  n=sprintf (superbuffer, "$$ATLAS,%d,%02d:%02d:%02d,%ld,%ld,%ld,%d,%d,%d", count, hour, minute, second, lat, lon, alt, sats, navmode, psm_status);
+  n=sprintf (superbuffer, "$$ATLAS,%d,%02d:%02d:%02d,%ld,%ld,%ld,%d,%d,%d,%d,%d", count, hour, minute, second, lat, lon, alt, sats, navmode, psm_status, aprs_count, lock);
   n = sprintf (superbuffer, "%s*%04X\n", superbuffer, gps_CRC16_checksum(superbuffer));
 }
 
@@ -519,10 +530,15 @@ void send_APRS() {
   wait(1000);
   tx_aprs();
   wait(1000);
-  digitalWrite(HX1_POWER, LOW);
   digitalWrite(HX1_ENABLE, LOW);
+  wait(500  );
+  digitalWrite(HX1_POWER, LOW);
+  
+  
   wait(500);
   setupRadio();
+  
+  aprs_count++;
   
 }
 
@@ -614,8 +630,8 @@ void gps_check_lock()
   uint8_t request[8] = {
     0xB5, 0x62, 0x01, 0x06, 0x00, 0x00,
     0x07, 0x16                                                                                                                  };
-  sendUBX(request, 8);
 
+  sendUBX(request, 8);
   // Get the message back from the GPS
   gps_get_data();
   // Verify the sync and header bits
@@ -647,12 +663,14 @@ void gps_check_lock()
 
 void gps_get_data()
 {
+  
   Serial.flush();
   // Clear buf[i]
   for(int i = 0;i<60;i++) 
   {
     buf[i] = 0; // clearing buffer  
-  }  
+  }
+  
   int i = 0;
   unsigned long startTime = millis();
 
@@ -750,13 +768,11 @@ void rtty_txbit (int bit)
 		{
 		  // high
                   radio1.write(0x073, 0x03);
-                  digitalWrite(STATUS_LED, HIGH);
 		}
 		else
 		{
 		  // low
                   radio1.write(0x073, 0x00);
-                  digitalWrite(STATUS_LED, LOW);
 		}
                 delayMicroseconds(9750); // 10000 = 100 BAUD 20150
 
@@ -783,8 +799,9 @@ uint8_t gps_check_nav(void)
 {
   uint8_t request[8] = {
     0xB5, 0x62, 0x06, 0x24, 0x00, 0x00, 0x2A, 0x84};
-  sendUBX(request, 8);
 
+  sendUBX(request, 8);
+  
   // Get the message back from the GPS
   gps_get_data();
 
@@ -803,6 +820,7 @@ uint8_t gps_check_nav(void)
   // Return the navigation mode and let the caller analyse it
   navmode = buf[8];
 }
+
 void setGPS_DynamicModel6()
 {
   int gps_set_sucess=0;
@@ -827,8 +845,8 @@ void gps_get_position()
   uint8_t request[8] = {
     0xB5, 0x62, 0x01, 0x02, 0x00, 0x00, 0x03,
     0x0A                                                                                                              };
-  sendUBX(request, 8);
 
+  sendUBX(request, 8);
   // Get the message back from the GPS
   gps_get_data();
 
@@ -872,8 +890,8 @@ void gps_get_time()
   uint8_t request[8] = {
     0xB5, 0x62, 0x01, 0x21, 0x00, 0x00,
     0x22, 0x67                                                                                                            };
-  sendUBX(request, 8);
 
+  sendUBX(request, 8);
   // Get the message back from the GPS
   gps_get_data();
 
@@ -944,23 +962,15 @@ void gpsPower(int i){
 }
 
 void gps_PSM(){
-  //No point putting everything into powersaving too early, return from this function if we 
-  // are less then 30 counts in, will also avoid repeatitive reset loopss
-  if(count < 30){
-    return;
-  }
   
   gps_check_lock();
   
-  if((lock==3) && (sats>=5)){
-    if(psm_status==0) {
-      setGPS_PowerSaveMode();
+  if(psm_status == 1){
+    
+    if((lock == 0) || (sats < 5)){
+      setGps_MaxPerformanceMode();
       wait(1000);
     }
-  }
-  else{
-    setGps_MaxPerformanceMode();
-    wait(1000);
   }
 }
 
