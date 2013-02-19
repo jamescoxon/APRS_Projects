@@ -145,6 +145,7 @@ void loop() {
     }
   }
   
+  //************** POWERSAVING *************//
   //Regularly checks the GPS powersaving mode - don't want to miss it about to freeze up
   // In this case we check here before the potential for reseting the GPS/Radio
   gps_PSM();
@@ -164,6 +165,7 @@ void loop() {
     setGPS_PowerSaveMode();
   }
   
+  //************** APRS *************//
   if((count > 10) && (sats > 4)){
     //If 2 minutes have passed send a new APRS packet and restart the timer
     if (millis() - startTime > APRS_TX_INTERVAL) {
@@ -182,6 +184,7 @@ void loop() {
     
   }
   
+  //************** RTTY *************//
   prepData();
   rtty_txstring("$$");
   rtty_txstring(superbuffer);
@@ -529,9 +532,9 @@ void send_APRS() {
   digitalWrite(HX1_ENABLE, HIGH);
   wait(1000);
   tx_aprs();
-  wait(1000);
+  wait(1000); //tried to reduce the length of this but packet didn't decode
   digitalWrite(HX1_ENABLE, LOW);
-  wait(500  );
+  wait(500 );
   digitalWrite(HX1_POWER, LOW);
   
   
